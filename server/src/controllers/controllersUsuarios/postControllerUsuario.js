@@ -17,9 +17,11 @@ const crearUsuario = async (usuario) => {
 
 		const nuevoUsuario = await Usuarios.create(usuario);
 
-		delete nuevoUsuario.password;
+		const usuarioPlano = nuevoUsuario.toObject();
 
-		return nuevoUsuario;
+		delete usuarioPlano.password;
+
+		return usuarioPlano;
 	} catch (error) {
 		return error;
 	}

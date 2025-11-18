@@ -20,6 +20,14 @@ const usuarioSchema = new mongoose.Schema(
 			default: false,
 			required: true,
 		},
+		twoFactorEnabled: { type: Boolean, default: false },
+		twoFactorSecret: { type: String, default: null },
+		dispositivos: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Dispositivos',
+			},
+		],
 	},
 	{
 		timestamps: false,
