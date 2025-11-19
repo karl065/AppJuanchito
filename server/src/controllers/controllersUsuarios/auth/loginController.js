@@ -5,6 +5,7 @@ import Dispositivos from '../../../models/DispositivosConfiables.js';
 
 import dotenv from 'dotenv';
 import sanitizarUsuario from '../../../helpers/sanitizadores/sanitizarUsuario.js';
+import putControllerUsuario from './../putControllerUsuario';
 dotenv.config();
 
 const { SECRETA } = process.env;
@@ -13,6 +14,9 @@ const loginController = async ({ correo, password, fingerprint }) => {
 	try {
 		const usuario = await Usuarios.findOne({ correo }).populate('dispositivos');
 		if (!usuario) throw new Error('Correo o contraseña incorrectos');
+
+		if (usuario.userStatus)
+			throw new Error('Usuario conectado, si no eres tu contacta con soporte');
 
 		const passOk = await bcryptjs.compare(password, usuario.password);
 		if (!passOk) throw new Error('Correo o contraseña incorrectos');
@@ -47,6 +51,8 @@ const loginController = async ({ correo, password, fingerprint }) => {
 				SECRETA,
 				{ expiresIn: '7d' }
 			);
+
+			await putControllerUsuario({ userStatus: true }, usuario._id);
 
 			return {
 				loginApproved: true,

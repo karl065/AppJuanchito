@@ -7,6 +7,7 @@ import verificar2FASetupHandler from '../../handlers/handlersUsuarios/auth/verif
 import verificar2FALoginHandler from '../../handlers/handlersUsuarios/auth/verificar2FALoginHandler.js';
 import authMiddle from '../../middlewares/auth/authMiddle.js';
 import handlerAutenticado from '../../handlers/handlersUsuarios/auth/usuarioAutenticadoHandler.js';
+import logoutHandler from '../../handlers/handlersUsuarios/auth/logoutHandler.js';
 
 const router = Router();
 
@@ -24,5 +25,8 @@ router.post('/login-2fa', verificar2FALoginHandler);
 
 // 🔥 Nueva ruta: Revalidar token (relogin)
 router.get('/relogin', authMiddle, handlerAutenticado);
+
+// Logout
+router.put('/logout/:id', authMiddle, logoutHandler);
 
 export default router;
