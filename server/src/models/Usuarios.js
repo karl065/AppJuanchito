@@ -28,6 +28,12 @@ const usuarioSchema = new mongoose.Schema(
 				ref: 'Dispositivos',
 			},
 		],
+		movimientos: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Movimiento',
+			},
+		],
 	},
 	{
 		timestamps: false,

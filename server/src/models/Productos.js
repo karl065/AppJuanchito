@@ -32,6 +32,12 @@ const productosSchema = new mongoose.Schema({
 		enum: ['disponible', 'agotado', 'descontinuado'],
 		default: 'disponible',
 	},
+	movimientos: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Movimiento',
+		},
+	],
 });
 
 const Productos = connection.model('Productos', productosSchema);

@@ -14,7 +14,7 @@ const generarConfigDesdeSchema = (schema) => {
 	return config;
 };
 
-const filtroAvanzadoAuto = (filters = {}, schema) => {
+const filtroAvanzado = (filters = {}, schema) => {
 	const config = generarConfigDesdeSchema(schema);
 	const where = {};
 	for (const key in config) {
@@ -47,4 +47,4 @@ const filtroAvanzadoAuto = (filters = {}, schema) => {
 	return where;
 };
 
-export default filtroAvanzadoAuto;
+export default filtroAvanzado;
