@@ -10,7 +10,7 @@ const getControllerUsuario = async (query) => {
 		}
 
 		// Filtro avanzado
-		const filtro = filtroAvanzado(query);
+		const filtro = filtroAvanzado(query, Usuarios.schema);
 
 		const usuarios = await Usuarios.find(
 			Object.keys(filtro).length > 0 ? filtro : {}
