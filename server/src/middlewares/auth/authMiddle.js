@@ -1,4 +1,4 @@
-import { verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 const { SECRETA } = process.env;
@@ -10,7 +10,7 @@ const authMiddle = async (req, res, next) => {
 			return res.status(401).json({ msg: 'Token no valido' });
 		}
 
-		const decoded = verify(token, SECRETA);
+		const decoded = jwt.verify(token, SECRETA);
 		req.usuario = decoded;
 		next();
 	} catch (error) {
