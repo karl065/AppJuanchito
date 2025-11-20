@@ -5,7 +5,7 @@ import Dispositivos from '../../../models/DispositivosConfiables.js';
 
 import dotenv from 'dotenv';
 import sanitizarUsuario from '../../../helpers/sanitizadores/sanitizarUsuario.js';
-import putControllerUsuario from './../putControllerUsuario';
+import putControllerUsuario from './../putControllerUsuario.js';
 dotenv.config();
 
 const { SECRETA } = process.env;
