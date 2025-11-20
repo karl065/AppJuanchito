@@ -1,6 +1,6 @@
 import filtroAvanzado from '../../helpers/filtros/filtroAvanzado.js';
 import Usuarios from './../../models/Usuarios.js';
-import sanitizarUsuario from './../../helpers/sanitizadores/sanitizarUsuario';
+import sanitizarUsuario from './../../helpers/sanitizadores/sanitizarUsuario.js';
 
 const getControllerUsuario = async (query) => {
 	try {
