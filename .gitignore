@@ -9,6 +9,7 @@ lerna-debug.log*
 bs-config.js
 estructura.txt
 fixImport.js
+generarEndpoins.js
 
 node_modules
 .env

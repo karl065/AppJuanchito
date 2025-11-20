@@ -11,7 +11,8 @@
 		"babel-node": "babel-node --presets=@babel/preset-env",
 		"dev": "nodemon --exec npm run babel-node index.js",
 		"start": "node index.js",
-		"fixImport": "node fixImport.js"
+		"fixImport": "node fixImport.js",
+		"endpoints": "node generarEndpoins.js"
 	},
 	"dependencies": {
 		"bcryptjs": "^3.0.3",
