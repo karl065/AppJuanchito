@@ -1,4 +1,4 @@
-import postControllerMovimientos from '../../controllers/controllerMovimientos/postControllerMovimientos';
+import postControllerMovimientos from '../../controllers/controllerMovimientos/postControllerMovimientos.js';
 
 const postHandlerMovimientos = async (req, res) => {
 	try {
