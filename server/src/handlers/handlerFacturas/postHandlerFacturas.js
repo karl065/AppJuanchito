@@ -1,4 +1,4 @@
-import procesarVenta from '../../helpers/ventas/procesarVentas';
+import procesarVenta from '../../helpers/ventas/procesarVentas.js';
 
 const postHandlerFacturas = async (req, res) => {
 	try {

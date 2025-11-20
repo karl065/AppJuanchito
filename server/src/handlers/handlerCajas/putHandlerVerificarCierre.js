@@ -1,4 +1,4 @@
-import putControllerVerificarCierre from '../../controllers/controllerCajas/putControllerVerificarCierre';
+import putControllerVerificarCierre from '../../controllers/controllerCajas/putControllerVerificarCierre.js';
 
 const putHandlerVerificarCierre = async (req, res) => {
 	try {
