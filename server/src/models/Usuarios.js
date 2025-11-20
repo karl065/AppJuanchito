@@ -34,6 +34,18 @@ const usuarioSchema = new mongoose.Schema(
 				ref: 'Movimiento',
 			},
 		],
+		facturas: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Factura',
+			},
+		],
+		caja: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Caja',
+			},
+		],
 	},
 	{
 		timestamps: false,

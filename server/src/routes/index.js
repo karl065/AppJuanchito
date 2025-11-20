@@ -6,6 +6,8 @@ import auth from './rutasAuth/rutasAuth.js';
 import categorias from './rutasCategorias/rutasCategorias.js';
 import productos from './rutasProductos/rutasProductos.js';
 import movimientos from './rutasMovimientos/rutasMovimientos.js';
+import facturas from './rutasFacturas/rutasFacturas.js';
+import cajas from './rutasCaja/rutasCaja.js';
 
 const router = Router();
 
@@ -15,5 +17,7 @@ router.use('/dispositivos', dispositivos);
 router.use('/categorias', categorias);
 router.use('/productos', productos);
 router.use('/movimientos', movimientos);
+router.use('/facturas', facturas);
+router.use('/cajas', cajas);
 
 export default router;

@@ -13,7 +13,16 @@ const movimientosSchema = new mongoose.Schema({
 	},
 	tipo: {
 		type: String,
-		enum: ['entrada', 'salida', 'venta'],
+		enum: [
+			'entrada',
+			'salida',
+			'venta',
+			'cortesía',
+			'préstamo_salida',
+			'préstamo_entrada',
+			'devolución_entrada',
+			'devolución_salida',
+		],
 	},
 	producto: {
 		type: mongoose.Schema.Types.ObjectId,
