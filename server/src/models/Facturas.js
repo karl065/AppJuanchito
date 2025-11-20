@@ -10,7 +10,7 @@ const facturaSchema = new mongoose.Schema(
 		},
 
 		detallePago: {
-			efectivo: { type: Number, default: 0 },
+			efectivoCliente: { type: Number, default: 0 },
 			daviplata: { type: Number, default: 0 },
 			nequi: { type: Number, default: 0 },
 			totalPagado: { type: Number, required: true },

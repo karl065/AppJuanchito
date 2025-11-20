@@ -1,3 +1,4 @@
+import actualizarCajaEnVenta from '../../helpers/ventas/actualizarCajaEnVentas.js';
 import Caja from '../../models/Caja.js';
 import Factura from '../../models/Facturas.js';
 import Usuarios from '../../models/Usuarios.js';
@@ -13,6 +14,8 @@ const postControllerFacturas = async (facturaData) => {
 		await Usuarios.findByIdAndUpdate(facturaData.usuario, {
 			$push: { facturas: facturaNueva._id },
 		});
+
+		await actualizarCajaEnVenta(facturaNueva);
 
 		// Populate opcional: usuario, productos, movimientos
 		return await facturaNueva.populate([

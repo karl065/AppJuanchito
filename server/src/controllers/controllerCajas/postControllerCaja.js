@@ -3,6 +3,7 @@ import Usuarios from './../../models/Usuarios.js';
 
 const postControllerCaja = async (datos) => {
 	try {
+		datos.totalEfectivo = datos.apertura.baseInicial;
 		// Crear la caja
 		const cajaNueva = await Caja.create(datos);
 

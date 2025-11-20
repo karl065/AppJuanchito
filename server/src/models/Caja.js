@@ -10,14 +10,14 @@ const CajaSchema = new mongoose.Schema(
 			required: true,
 		},
 
-		// Estado de la caja
+		// Estado: abierta o cerrada por el cajero
 		estado: {
 			type: String,
 			enum: ['abierta', 'cerrada'],
 			default: 'abierta',
 		},
 
-		// Subdocumento: apertura de caja
+		// Subdocumento: apertura
 		apertura: {
 			horaApertura: {
 				type: Date,
@@ -30,7 +30,7 @@ const CajaSchema = new mongoose.Schema(
 			},
 		},
 
-		// Totales acumulados (actualizados en tiempo real)
+		// Totales acumulados en tiempo real por ventas
 		totalEfectivo: {
 			type: Number,
 			default: 0,
@@ -43,17 +43,38 @@ const CajaSchema = new mongoose.Schema(
 			type: Number,
 			default: 0,
 		},
-
 		totalVentas: {
 			type: Number,
 			default: 0,
 		},
 
-		// Subdocumento: cierre de caja (un snapshot simple)
+		// Cierre hecho por el cajero
 		cierre: {
 			horaCierre: Date,
-			totalFinal: Number,
+			conteoFisico: Number, // dinero real contado en caja
+			traspasoDigital: Number, // valor recibido por nequi/davi en cierre
+			totalSistema: Number, // suma de totales según sistema
+			diferencia: Number, // conteo - sistema
+			verificado: {
+				type: Boolean,
+				default: false,
+			},
 		},
+
+		// Resultado cuando el supervisor revisa
+		resultadoCierre: {
+			estado: {
+				type: String,
+				enum: ['ok', 'descuadre'],
+			},
+			verificadoPor: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Usuarios',
+			},
+			notas: String,
+		},
+
+		// Facturas asociadas a la caja
 		facturas: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
