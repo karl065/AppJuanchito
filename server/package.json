@@ -10,7 +10,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"babel-node": "babel-node --presets=@babel/preset-env",
 		"dev": "nodemon --exec npm run babel-node index.js",
-		"start": "node index.js"
+		"start": "node index.js",
+		"fixImport": "node fixImport.js"
 	},
 	"dependencies": {
 		"bcryptjs": "^3.0.3",

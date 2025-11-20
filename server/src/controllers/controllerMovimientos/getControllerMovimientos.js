@@ -1,5 +1,5 @@
-import filtroAvanzado from '../../helpers/filtros/filtroAvanzado';
-import Movimiento from './../../models/Movimientos';
+import filtroAvanzado from '../../helpers/filtros/filtroAvanzado.js';
+import Movimiento from './../../models/Movimientos.js';
 
 const getControllerMovimientos = async (query) => {
 	try {
