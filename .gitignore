@@ -1,4 +1,4 @@
-# Logs
+### --- LOGS --- ###
 logs
 *.log
 npm-debug.log*
@@ -6,19 +6,56 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+
+### --- ARCHIVOS TEMPORALES / UTILES PERO NO PARA GIT --- ###
 bs-config.js
 estructura.txt
 fixImport.js
 generarEndpoins.js
+tmp
+*.tmp
 
+### --- NODE --- ###
 node_modules
 .env
+.env.local
+.env.*.local
+
+### --- DIST / BUILD --- ###
 dist
 dist-ssr
+build
+out
+.Dist
+
+### --- VITE --- ###
 *.local
+*.tsbuildinfo
+
+### --- REACT --- ###
+.cache
+*.map
+
+### --- FRONT EXTRA --- ###
 FRONT2
 
-# Editor directories and files
+### --- CAPACITOR / IONIC --- ###
+android/
+ios/
+*.keystore
+app-release.aab
+app-release.apk
+capacitor.config.json.backup
+
+### --- SOCKET.IO / WEBPACK --- ###
+.cache/
+.parcel-cache/
+.next/
+.svelte-kit/
+vite.config.ts.timestamp*
+vite.config.js.timestamp*
+
+### --- EDITORES --- ###
 .vscode/*
 .vscode
 !.vscode/extensions.json
@@ -29,11 +66,13 @@ FRONT2
 *.njsproj
 *.sln
 *.sw?
-tmp
+
+### --- PINEGROW --- ###
 .anima
 pinegrow.json
-.anima
-.vscode
 _pgbackup
 _pginfo
-Pinegrow
+
+### --- SISTEMA / DEMÁS --- ###
+Thumbs.db
+desktop.ini

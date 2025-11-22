@@ -1,0 +1,70 @@
+# ============================
+# NORMALIZACIÓN DE SALTOS DE LÍNEA
+# ============================
+# Fuerza LF en todos los archivos de texto
+* text=auto eol=lf
+
+
+# ============================
+# ARCHIVOS DE CÓDIGO
+# ============================
+*.js     text eol=lf
+*.jsx    text eol=lf
+*.ts     text eol=lf
+*.tsx    text eol=lf
+*.json   text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.env.example text eol=lf
+
+
+# ============================
+# EVITAR DIFFS DE ARCHIVOS BINARIOS
+# ============================
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.svg    text   # SVG sí es texto
+*.ico    binary
+*.ttf    binary
+*.otf    binary
+*.woff   binary
+*.woff2  binary
+
+# Archivos generados por Android/Ionic/Capacitor
+*.aab    binary
+*.apk    binary
+*.aar    binary
+*.keystore binary
+
+# ZIP, RAR y otros empaquetados
+*.zip    binary
+*.rar    binary
+*.7z     binary
+
+
+# ============================
+# CONTROL DE MERGES
+# ============================
+# Mejor manejo de merges para archivos JSON (útil en package.json)
+*.json merge=union
+
+
+# ============================
+# IGNORAR DIFFS DE BUILD
+# ============================
+dist/**     binary
+build/**    binary
+android/**  -text
+ios/**      -text
+
+
+# ============================
+# FIN
+# ============================
