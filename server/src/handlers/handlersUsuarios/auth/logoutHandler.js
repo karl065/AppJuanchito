@@ -8,6 +8,13 @@ const logoutHandler = async (req, res) => {
 
 		const logout = await logoutController(dataUpdate, id);
 
+		// limpiar cookie
+		res.clearCookie('token', {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+		});
+
 		return res.status(200).json(logout);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });

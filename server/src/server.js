@@ -12,10 +12,11 @@ const httpServer = http.createServer(server); // Crea un servidor HTTP
 
 // ⚠️ Configura aquí los dominios permitidos
 const allowedOrigins = [
-	// 'https://tu-dominio-oficial.com', // PRODUCCIÓN
-	'capacitor://localhost', // App móvil
-	'http://localhost:5173', // DEV
-	'http://127.0.0.1:5173', // DEV
+	'http://localhost:5173',
+	'http://192.168.101.3:5173',
+	'capacitor://localhost',
+	'http://localhost',
+	'https://appjuanchitoserver.onrender.com',
 ];
 
 const io = new socketIO(httpServer, {

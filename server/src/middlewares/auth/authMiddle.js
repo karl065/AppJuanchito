@@ -5,7 +5,8 @@ const { SECRETA } = process.env;
 
 const authMiddle = async (req, res, next) => {
 	try {
-		const token = req.header('x-auth-token');
+		const token = req.cookies.token; // 👈 ahora viene de la cookie
+
 		if (!token) {
 			return res.status(401).json({ msg: 'Token no valido' });
 		}
