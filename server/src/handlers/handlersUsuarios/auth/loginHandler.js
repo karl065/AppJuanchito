@@ -2,6 +2,8 @@ import loginController from './../../../controllers/controllersUsuarios/auth/log
 
 const loginHandler = async (req, res) => {
 	try {
+		const respuesta = await loginController(req.body);
+
 		// Si aún no debe emitir token, retornar igual
 		if (!respuesta.loginApproved) {
 			return res.status(200).json(respuesta);

@@ -2,7 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { allRoutes } from './routes/routes.jsx';
 import { useSelector } from 'react-redux';
-import LoginForm from './views/formularios/Login/Login.jsx';
+import LoginFull from './views/formularios/Login/LoginFull.jsx';
 
 const App = () => {
 	const login = useSelector((state) => state.login.login);
@@ -11,7 +11,7 @@ const App = () => {
 
 	return (
 		<Routes>
-			<Route path="/" element={<LoginForm />} />
+			<Route path="/" element={<LoginFull />} />
 
 			{routesToRender.map(({ path, element, layout: Layout }, i) => (
 				<Route

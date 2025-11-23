@@ -1,15 +1,11 @@
 import { useFormik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
 import { CirclesWithBar, FallingLines } from 'react-loader-spinner';
-import { loadingAction } from '../../../redux/app/actions/loadingAction.jsx';
 import { loginAction } from '../../../redux/admin/actions/loginAction.jsx';
+import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx';
 
-const LoginForm = () => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
-
+const LoginForm = ({ dispatch, setStep, setTwoFAData }) => {
 	const loading = useSelector((state) => state.loading.isLoading);
 
 	// 📌 Validación
@@ -25,9 +21,15 @@ const LoginForm = () => {
 			password: '',
 		},
 		validationSchema,
-		onSubmit: (values) => {
-			loadingAction(true, dispatch);
-			loginAction(values, dispatch, navigate);
+		onSubmit: async (values) => {
+			const fingerprint = await obtenerFingerprint(); // fingerprint único del dispositivo
+			loginAction(
+				{ ...values, fingerprint },
+				dispatch,
+				null, // no navegamos directo desde aquí
+				setStep,
+				setTwoFAData
+			);
 		},
 	});
 
@@ -38,19 +40,12 @@ const LoginForm = () => {
 				<div
 					className="
 					relative flex items-center justify-center p-10
-					rounded-2xl border 
-					bg-linear-to-br from-black via-gray-900 to-black
-					border-red-700/60 shadow-[0_0_30px_rgba(255,0,0,0.45)]
+					rounded-2xl 
+					bg-transparent 
 					overflow-hidden
 				">
-					{/* EFECTO DE BRILLO METÁLICO */}
-					<div className="absolute inset-0 bg-linear-to-br from-red-900/20 via-transparent to-red-900/20 pointer-events-none"></div>
-
 					{/* Haz de luz superior */}
 					<div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-red-500 blur-md opacity-70"></div>
-
-					{/* Borde luminoso dinámico */}
-					<div className="absolute inset-0 rounded-2xl border border-red-800/40 shadow-[0_0_40px_rgba(255,0,0,0.3)] pointer-events-none"></div>
 
 					{/* LOADING */}
 					{loading ? (
@@ -96,11 +91,13 @@ const LoginForm = () => {
 										onBlur={formik.handleBlur}
 										value={formik.values.email}
 										placeholder="Email"
-										className={`w-full p-3 rounded-xl bg-black/80 text-white placeholder-gray-500 font-semibold border-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition ${
-											formik.touched.email && formik.errors.email
-												? 'border-red-600'
-												: 'border-red-900'
-										}`}
+										className={`w-full p-3 rounded-xl bg-black/80 text-white 
+											placeholder-gray-500 font-semibold focus:ring-2 shadow-[0_0_30px_rgba(255,0,0,0.45)]
+											focus:ring-red-500 focus:border-red-500 transition ${
+												formik.touched.email && formik.errors.email
+													? 'border-red-600'
+													: 'border-red-900'
+											}`}
 										autoComplete="off"
 									/>
 									{formik.touched.email && formik.errors.email && (
@@ -124,11 +121,13 @@ const LoginForm = () => {
 										onBlur={formik.handleBlur}
 										value={formik.values.password}
 										placeholder="Contraseña"
-										className={`w-full p-3 rounded-xl bg-black/80 text-white placeholder-gray-500 font-semibold border-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition ${
-											formik.touched.password && formik.errors.password
-												? 'border-red-600'
-												: 'border-red-900'
-										}`}
+										className={`w-full p-3 rounded-xl bg-black/80 text-white placeholder-gray-500 
+											font-semibold focus:ring-2 focus:ring-red-500 focus:border-red-500 
+											transition shadow-[0_0_30px_rgba(255,0,0,0.45)] ${
+												formik.touched.password && formik.errors.password
+													? 'border-red-600'
+													: 'border-red-900'
+											}`}
 									/>
 									{formik.touched.password && formik.errors.password && (
 										<p
