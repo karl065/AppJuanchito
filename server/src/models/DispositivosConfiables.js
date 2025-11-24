@@ -23,9 +23,9 @@ const dispositivosSchema = new mongoose.Schema(
 		},
 
 		// Si el usuario marcó "Confiar en este dispositivo"
-		trusted: {
+		confiable: {
 			type: Boolean,
-			default: true,
+			default: false,
 		},
 
 		// Fecha de expiración (ej: 60 días)

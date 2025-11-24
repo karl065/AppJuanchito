@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { alertSuccess, alertWarning } from '../../../helpers/Alertas.jsx';
 import { loadingAction } from '../../app/actions/loadingAction.jsx';
-import server from '../../../conexiones/conexiones.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; // función que veremos abajo
+import loginServices from '../../../services/auth/loginServices.jsx';
 
 export const loginAction = async (
 	userLogin,
@@ -18,7 +17,7 @@ export const loginAction = async (
 		// Obtener fingerprint del dispositivo
 		const fingerprint = await obtenerFingerprint();
 
-		const { data } = await axios.post(`${server.api.baseURL}auth/login`, {
+		const data = await loginServices({
 			...userLogin,
 			fingerprint,
 		});
@@ -32,16 +31,16 @@ export const loginAction = async (
 			set2FAData({ userId: data.userId, fingerprint: data.fingerprint });
 			setStep('login2FA'); // Cambia la vista al componente de login2FA
 		} else if (data.loginApproved) {
+			console.log(data);
 			// Login completo
 			dispatch(setLogin(data));
-			data.role === 'View' ? navigate('/view') : navigate('/admin');
-			alertSuccess(`Bienvenido ${data.primerNombre}`);
+			data.usuario.role === 'View' ? navigate('/view') : navigate('/admin');
+			alertSuccess(`Bienvenido ${data.usuario.nombre}`);
 		}
 
 		loadingAction(false, dispatch);
 	} catch (error) {
-		alertWarning(error.response?.data || error.message);
-		console.log(error.message);
+		alertWarning(error.response?.data.error || error.message);
 		loadingAction(false, dispatch);
 	}
 };

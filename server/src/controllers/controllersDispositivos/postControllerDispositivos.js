@@ -9,7 +9,8 @@ const { SECRETA } = process.env;
 const postControllerDispositivos = async (
 	userId,
 	fingerprint,
-	nombreDispositivo
+	nombreDispositivo,
+	recordar
 ) => {
 	// Token del dispositivo generado con JWT
 	const deviceToken = jwt.sign({ userId, fingerprint }, SECRETA, {
@@ -27,6 +28,7 @@ const postControllerDispositivos = async (
 		deviceToken,
 		expiresAt,
 		nombreDispositivo,
+		confiable: recordar,
 	});
 
 	// Asociarlo al usuario

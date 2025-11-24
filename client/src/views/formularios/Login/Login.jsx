@@ -4,20 +4,26 @@ import * as Yup from 'yup';
 import { CirclesWithBar, FallingLines } from 'react-loader-spinner';
 import { loginAction } from '../../../redux/admin/actions/loginAction.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { useState } from 'react';
 
-const LoginForm = ({ dispatch, setStep, setTwoFAData }) => {
+const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 	const loading = useSelector((state) => state.loading.isLoading);
+	const [verContrasena, setVerContrasena] = useState(false);
 
 	// 📌 Validación
 	const validationSchema = Yup.object({
-		email: Yup.string().required('Campo obligatorio'),
+		correo: Yup.string().required('Campo obligatorio'),
 		password: Yup.string().required('Campo obligatorio'),
 	});
+	const handleVerContrasena = () => {
+		setVerContrasena(!verContrasena);
+	};
 
 	// 📌 Formik
 	const formik = useFormik({
 		initialValues: {
-			email: '',
+			correo: '',
 			password: '',
 		},
 		validationSchema,
@@ -26,9 +32,9 @@ const LoginForm = ({ dispatch, setStep, setTwoFAData }) => {
 			loginAction(
 				{ ...values, fingerprint },
 				dispatch,
-				null, // no navegamos directo desde aquí
+				navigate,
 				setStep,
-				setTwoFAData
+				set2FAData
 			);
 		},
 	});
@@ -65,8 +71,14 @@ const LoginForm = ({ dispatch, setStep, setTwoFAData }) => {
 							</div>
 						</div>
 					) : (
-						<div className="flex flex-col p-2 space-y-4 w-full">
+						<div className="flex flex-col items-center justify-center p-2 space-y-4 w-full">
+							<img
+								src="https://res.cloudinary.com/dpjeltekx/image/upload/v1763975684/juanchito/logoBlancoCuadro_gz5fwi.png"
+								alt="logo"
+								className="w-[125px] h-[148px]"
+							/>
 							{/* TITULO METALIZADO */}
+
 							<h1
 								className="
 								text-3xl font-extrabold uppercase tracking-wide text-center
@@ -75,7 +87,7 @@ const LoginForm = ({ dispatch, setStep, setTwoFAData }) => {
 								drop-shadow-[0_0_10px_rgba(255,0,0,0.7)]
 								animate-[shine_3s_linear_infinite]
 							">
-								Juanchito App
+								Juanchito
 							</h1>
 
 							<form
@@ -85,56 +97,71 @@ const LoginForm = ({ dispatch, setStep, setTwoFAData }) => {
 								<div className="w-full">
 									<input
 										type="text"
-										name="email"
-										id="email"
+										name="correo"
+										id="correo"
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
-										value={formik.values.email}
-										placeholder="Email"
+										value={formik.values.correo}
+										placeholder="Correo"
 										className={`w-full p-3 rounded-xl bg-black/80 text-white 
 											placeholder-gray-500 font-semibold focus:ring-2 shadow-[0_0_30px_rgba(255,0,0,0.45)]
 											focus:ring-red-500 focus:border-red-500 transition ${
-												formik.touched.email && formik.errors.email
+												formik.touched.correo && formik.errors.correo
 													? 'border-red-600'
 													: 'border-red-900'
 											}`}
 										autoComplete="off"
 									/>
-									{formik.touched.email && formik.errors.email && (
+									{formik.touched.correo && formik.errors.correo && (
 										<p
 											className="text-xs font-semibold text-red-400 
 										bg-linear-to-r from-red-900/40 via-red-700/20 to-red-900/40
 										border border-red-800/40 rounded-md px-2 py-1 mt-1 
 										shadow-[0_0_8px_rgba(255,0,0,0.4)] tracking-wide animate-pulse">
-											{formik.errors.email}
+											{formik.errors.correo}
 										</p>
 									)}
 								</div>
 
 								{/* INPUT PASSWORD */}
-								<div className="w-full">
+								<div className="w-full relative">
 									<input
-										type="password"
+										type={verContrasena ? 'text' : 'password'}
 										name="password"
 										id="password"
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 										value={formik.values.password}
 										placeholder="Contraseña"
-										className={`w-full p-3 rounded-xl bg-black/80 text-white placeholder-gray-500 
-											font-semibold focus:ring-2 focus:ring-red-500 focus:border-red-500 
+										className={`w-full p-3 pr-12 rounded-xl bg-black/80 text-white 
+											placeholder-gray-500
+											font-semibold focus:ring-2 focus:ring-red-500
+											focus:border-red-500 
 											transition shadow-[0_0_30px_rgba(255,0,0,0.45)] ${
 												formik.touched.password && formik.errors.password
 													? 'border-red-600'
 													: 'border-red-900'
 											}`}
 									/>
+
+									{/* BOTÓN DE VER CONTRASEÑA DENTRO DEL INPUT */}
+									<button
+										type="button"
+										onClick={handleVerContrasena}
+										className="absolute inset-y-0 right-3 flex items-center text-gray-400">
+										{verContrasena ? (
+											<AiFillEyeInvisible className="text-xl" />
+										) : (
+											<AiFillEye className="text-xl" />
+										)}
+									</button>
+
 									{formik.touched.password && formik.errors.password && (
 										<p
-											className="text-xs font-semibold text-red-400 
-										bg-linear-to-r from-red-900/40 via-red-700/20 to-red-900/40 
-										border border-red-800/40 rounded-md px-2 py-1 mt-1
-										shadow-[0_0_8px_rgba(255,0,0,0.4)] tracking-wide animate-pulse">
+											className="text-xs font-semibold text-red-400
+											bg-linear-to-r from-red-900/40 via-red-700/20 to-red-900/40
+											border border-red-800/40 rounded-md px-2 py-1 mt-1
+											shadow-[0_0_8px_rgba(255,0,0,0.4)] tracking-wide animate-pulse">
 											{formik.errors.password}
 										</p>
 									)}

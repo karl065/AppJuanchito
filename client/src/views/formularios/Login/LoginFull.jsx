@@ -2,7 +2,6 @@ import { useState } from 'react';
 import LoginForm from './Login.jsx';
 import Setup2FA from './Setup2FA.jsx';
 import Login2FA from './Login2FA.jsx';
-import { loginAction } from '../../../redux/admin/actions/loginAction.jsx';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,9 +15,10 @@ const LoginFull = () => {
 		<>
 			{step === 'login' && (
 				<LoginForm
-					onSubmit={(values) =>
-						loginAction(values, dispatch, navigate, setStep, set2FAData)
-					}
+					dispatch={dispatch}
+					navigate={navigate}
+					setStep={setStep}
+					set2FAData={set2FAData}
 				/>
 			)}
 			{step === 'setup2FA' && <Setup2FA data={twoFAData} setStep={setStep} />}

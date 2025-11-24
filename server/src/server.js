@@ -14,6 +14,7 @@ const httpServer = http.createServer(server); // Crea un servidor HTTP
 const allowedOrigins = [
 	'http://localhost:5173',
 	'http://192.168.101.3:5173',
+	'http://192.168.101.7:5173',
 	'capacitor://localhost',
 	'http://localhost',
 	'https://appjuanchitoserver.onrender.com',
@@ -27,7 +28,8 @@ const io = new socketIO(httpServer, {
 }); // Crea una instancia de Socket.io
 
 server.use(morgan('dev'));
-server.use(express.json());
+server.use(express.json({ limit: '10mb' }));
+server.use(express.urlencoded({ extended: true, limit: '10mb' }));
 server.use(cookieParser());
 server.use(helmet());
 

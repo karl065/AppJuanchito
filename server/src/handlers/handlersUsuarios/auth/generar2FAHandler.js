@@ -4,7 +4,7 @@ const generar2FAHandler = async (req, res) => {
 	try {
 		const { userId } = req.body;
 		const data = await generar2FAController(userId);
-		return res.json(data);
+		return res.status(200).json(data);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}
