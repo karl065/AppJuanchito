@@ -3,7 +3,6 @@ import getControllerCategorias from '../../controllers/controllerCategorias/getC
 const getHandlerCategorias = async (req, res) => {
 	try {
 		const categorias = await getControllerCategorias();
-		console.log('categorias handler', categorias);
 
 		return res.status(200).json(categorias);
 	} catch (error) {

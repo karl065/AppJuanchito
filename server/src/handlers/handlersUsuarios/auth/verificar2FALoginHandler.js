@@ -3,7 +3,19 @@ import verificar2FALoginController from './../../../controllers/controllersUsuar
 const verificar2FALoginHandler = async (req, res) => {
 	try {
 		const data = await verificar2FALoginController(req.body);
-		return res.json(data);
+
+		const token = data.token;
+
+		const isCapacitor = req.headers.origin?.includes('capacitor://');
+
+		res.cookie('token', token, {
+			httpOnly: true,
+			secure: !isCapacitor, // Capacitor permite secure:false
+			sameSite: isCapacitor ? 'lax' : 'none',
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+		});
+
+		return res.json(data.usuario);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}

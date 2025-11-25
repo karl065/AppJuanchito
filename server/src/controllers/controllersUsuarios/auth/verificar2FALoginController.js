@@ -3,6 +3,11 @@ import Usuarios from '../../../models/Usuarios.js';
 import postControllerDispositivos from '../../controllersDispositivos/postControllerDispositivos.js';
 import sanitizarUsuario from '../../../helpers/sanitizadores/sanitizarUsuario.js';
 import putControllerUsuario from './../putControllerUsuario.js';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const { SECRETA } = process.env;
 
 const verificar2FALoginController = async ({
 	userId,
@@ -13,6 +18,7 @@ const verificar2FALoginController = async ({
 }) => {
 	try {
 		const usuario = await Usuarios.findById(userId).populate('dispositivos');
+
 		if (!usuario) throw new Error('Usuario no encontrado');
 
 		const validacion = speakeasy.totp.verify({
@@ -23,9 +29,11 @@ const verificar2FALoginController = async ({
 		});
 		if (!validacion) throw new Error('Código 2FA incorrecto');
 
+		let confiable;
+
 		// Si eligió recordar dispositivo
 		if (recordar) {
-			await postControllerDispositivos(
+			confiable = await postControllerDispositivos(
 				userId,
 				fingerprint,
 				nombreDispositivo,
@@ -37,13 +45,34 @@ const verificar2FALoginController = async ({
 			{ userStatus: true },
 			userId
 		);
+		const vigente = confiable && new Date(confiable.expiresAt) > new Date();
+
+		let tokenSesion;
+
+		if (vigente) {
+			// 🔥 Dispositivo confiable → generar token de sesión
+			tokenSesion = jwt.sign(
+				{
+					id: usuario._id,
+					role: usuario.role,
+					correo: usuario.correo,
+				},
+				SECRETA,
+				{ expiresIn: '7d' }
+			);
+		}
 
 		const usuarioSanitizado = await sanitizarUsuario(usuarioAutorizado[0]);
 		usuarioSanitizado.autorizado = true;
 
-		return usuarioSanitizado;
+		return {
+			loginApproved: true,
+			require2FA: false,
+			token: tokenSesion,
+			usuario: usuarioSanitizado,
+		};
 	} catch (error) {
-		return error;
+		throw new Error(error.message);
 	}
 };
 

@@ -14,11 +14,14 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 			nombreDispositivo,
 			recordar: datos.recordar,
 		});
+		console.log('Action: ', data);
 
 		dispatch(setLogin(data));
 		alertSuccess(`Bienvenido ${data.nombre}`);
 
-		if (data.autorizado) navigate('/admin');
+		if (data.autorizado) {
+			data.role === 'Mesero' ? navigate('/caja') : navigate('/informes');
+		}
 	} catch (err) {
 		alertWarning(err.response?.data || err.message);
 	}

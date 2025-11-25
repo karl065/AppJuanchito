@@ -13,10 +13,10 @@ const AuthLoader = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		reloginAction(dispatch, navigate);
 		obtenerProductosAction(dispatch);
 		obtenerCategoriasAction(dispatch);
 		obtenerUsuariosAction(dispatch);
+		reloginAction(dispatch, navigate);
 	}, []);
 
 	return null; // 👈 componente invisible

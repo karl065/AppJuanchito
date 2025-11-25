@@ -6,11 +6,17 @@ import { loginAction } from '../../../redux/admin/actions/loginAction.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useState } from 'react';
+import { Dropdown, DropdownItem } from 'flowbite-react';
 
 const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 	const loading = useSelector((state) => state.loading.isLoading);
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 	const [verContrasena, setVerContrasena] = useState(false);
+
+	// 📌 Estado para el nombre visible en el botón del Dropdown
+	const [nombreUsuarioSeleccionado, setNombreUsuarioSeleccionado] = useState(
+		'Seleccionar usuario'
+	);
 
 	// 📌 Validación
 	const validationSchema = Yup.object({
@@ -30,7 +36,7 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 		validationSchema,
 		onSubmit: async (values) => {
 			const fingerprint = await obtenerFingerprint(); // fingerprint único del dispositivo
-			console.log(values.correo);
+
 			loginAction(
 				{ ...values, fingerprint },
 				dispatch,
@@ -40,6 +46,14 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 			);
 		},
 	});
+
+	// 📌 Función para manejar la selección del dropdown
+	const handleDropdownSelect = (correo, nombre) => {
+		// Actualiza el valor que Formik enviará
+		formik.setFieldValue('correo', correo);
+		// Actualiza el texto visible del botón
+		setNombreUsuarioSeleccionado(nombre);
+	};
 
 	return (
 		<div className="flex items-center justify-center h-screen">
@@ -96,27 +110,33 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 								onSubmit={formik.handleSubmit}
 								className="flex flex-col items-center justify-center p-4 space-y-4 w-full">
 								{/* INPUT EMAIL */}
-								<div className="w-full">
-									<select
-										name="correo"
-										id="correo"
-										onChange={formik.handleChange}
-										onBlur={formik.handleBlur}
-										value={formik.values.correo}
-										className={`w-full p-3 rounded-xl bg-black/80 text-white 
-											placeholder-gray-500 font-semibold focus:ring-2 shadow-[0_0_30px_rgba(255,0,0,0.45)]
-											focus:ring-red-500 focus:border-red-500 transition ${
-												formik.touched.correo && formik.errors.correo
-													? 'border-red-600'
-													: 'border-red-900'
-											}`}>
-										<option value="">Seleccionar usuario</option>
+								<div className="w-full flex justify-center">
+									<Dropdown
+										label={nombreUsuarioSeleccionado}
+										dismissOnClick={true} // Se cierra al hacer clic
+										// Aplica tus estilos metálicos/rojos al botón del Dropdown
+										className={`
+                        bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] border-none 
+                        ${
+													formik.touched.correo && formik.errors.correo
+														? 'border-red-600 focus:ring-red-600'
+														: 'border-red-900 focus:ring-red-500'
+												}
+                    `}>
+										{/* Estiliza los elementos de la lista del Dropdown (estos sí aceptan clases) */}
 										{usuarios.map((usuario) => (
-											<option value={usuario.correo} key={usuario._id}>
+											<DropdownItem
+												key={usuario._id}
+												onClick={() =>
+													handleDropdownSelect(usuario.correo, usuario.nombre)
+												}
+												// Clases para las opciones individuales
+												className="bg-transparent rounded border-none hover:bg-black! focus:bg-black! active:bg-black!">
 												{usuario.nombre}
-											</option>
+											</DropdownItem>
 										))}
-									</select>
+									</Dropdown>
+
 									{formik.touched.correo && formik.errors.correo && (
 										<p
 											className="text-xs font-semibold text-red-400 
