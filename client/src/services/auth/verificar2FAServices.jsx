@@ -1,12 +1,11 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
 
-const loginServices = async (userLogin) => {
+const verificar2FAServices = async (verificar) => {
 	try {
 		const { data } = await axios.post(
-			`${server.api.baseURL}auth/login`,
-			userLogin,
-			{ withCredentials: true }
+			`${server.api.baseURL}auth/verificar-2fa-setup`,
+			verificar
 		);
 
 		return data;
@@ -15,4 +14,4 @@ const loginServices = async (userLogin) => {
 	}
 };
 
-export default loginServices;
+export default verificar2FAServices;

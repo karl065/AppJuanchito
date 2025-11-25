@@ -1,4 +1,4 @@
-import Informes from '../../views/paneles/admin/informes';
+import Informes from '../../views/paneles/admin/Informes.jsx';
 
 const rawRoutes = [{ path: '/admin', element: <Informes /> }];
 

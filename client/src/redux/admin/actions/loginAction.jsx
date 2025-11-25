@@ -1,4 +1,4 @@
-import { alertSuccess, alertWarning } from '../../../helpers/Alertas.jsx';
+import { alertSuccess, alertWarning } from '../../../helpers/alertas.jsx';
 import { loadingAction } from '../../app/actions/loadingAction.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; // función que veremos abajo
@@ -22,16 +22,17 @@ export const loginAction = async (
 			fingerprint,
 		});
 
+		data.fingerprint = fingerprint;
+
 		if (data.require2FASetup) {
 			// Paso 1: Usuario necesita configurar 2FA
-			set2FAData({ userId: data.userId, qrCode: null, secret: null });
+			set2FAData({ data, qrCode: null, secret: null });
 			setStep('setup2FA'); // Cambia la vista al componente de setup2FA
 		} else if (data.require2FA) {
 			// Paso 2: Usuario necesita ingresar código 2FA
 			set2FAData({ userId: data.userId, fingerprint: data.fingerprint });
 			setStep('login2FA'); // Cambia la vista al componente de login2FA
 		} else if (data.loginApproved) {
-			console.log(data);
 			// Login completo
 			dispatch(setLogin(data));
 			data.usuario.role === 'View' ? navigate('/view') : navigate('/admin');
@@ -40,7 +41,7 @@ export const loginAction = async (
 
 		loadingAction(false, dispatch);
 	} catch (error) {
-		alertWarning(error.response?.data.error || error.message);
+		alertWarning(error.message);
 		loadingAction(false, dispatch);
 	}
 };

@@ -5,21 +5,30 @@ const { SECRETA } = process.env;
 
 const authMiddle = async (req, res, next) => {
 	try {
-		const token = req.cookies.token; // 👈 ahora viene de la cookie
+		const token = req.cookies.token; // viene de cookie httpOnly
 
-		if (!token) {
-			return res.status(401).json({ msg: 'Token no valido' });
+		console.log(req.cookies);
+
+		console.log(token);
+
+		if (!token) throw new Error('Token no válido');
+
+		let decoded;
+
+		try {
+			decoded = jwt.verify(token, SECRETA);
+		} catch (err) {
+			if (err.name === 'TokenExpiredError') {
+				throw new Error('Token expirado');
+			}
+
+			throw new Error('Token no válido');
 		}
 
-		const decoded = jwt.verify(token, SECRETA);
 		req.usuario = decoded;
 		next();
 	} catch (error) {
-		if (error.name === 'TokenExpiredError') {
-			return res.status(401).json({ msg: 'Token expirado' });
-		}
-
-		return res.status(401).json({ msg: 'Token no valido' });
+		return res.status(401).json({ msg: error.message });
 	}
 };
 

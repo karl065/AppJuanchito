@@ -28,11 +28,6 @@ const usuariosSlice = createSlice({
 	},
 });
 
-export const {
-	cargarUsuarios,
-	cargarPredios,
-	agregarUsuario,
-	agregarPredio,
-	actualizarUsuario,
-} = usuariosSlice.actions;
+export const { cargarUsuarios, agregarUsuario, actualizarUsuario } =
+	usuariosSlice.actions;
 export default usuariosSlice.reducer;

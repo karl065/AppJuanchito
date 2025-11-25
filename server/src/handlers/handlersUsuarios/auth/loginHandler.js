@@ -3,7 +3,6 @@ import loginController from './../../../controllers/controllersUsuarios/auth/log
 const loginHandler = async (req, res) => {
 	try {
 		const respuesta = await loginController(req.body);
-
 		// Si aún no debe emitir token, retornar igual
 		if (!respuesta.loginApproved) {
 			return res.status(200).json(respuesta);
@@ -13,11 +12,12 @@ const loginHandler = async (req, res) => {
 		const token = respuesta.token;
 
 		// Setear cookie segura
+		const isCapacitor = req.headers.origin?.includes('capacitor://');
+
 		res.cookie('token', token, {
 			httpOnly: true,
-			secure: false,
-			// secure: true, // Cambiar a false si pruebas en http local
-			sameSite: 'none',
+			secure: !isCapacitor, // Capacitor permite secure:false
+			sameSite: isCapacitor ? 'lax' : 'none',
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 

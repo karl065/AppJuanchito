@@ -10,6 +10,7 @@ import helmet from 'helmet';
 const server = express();
 const httpServer = http.createServer(server); // Crea un servidor HTTP
 
+server.use(cookieParser());
 // ⚠️ Configura aquí los dominios permitidos
 const allowedOrigins = [
 	'http://localhost:5173',
@@ -30,7 +31,6 @@ const io = new socketIO(httpServer, {
 server.use(morgan('dev'));
 server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: true, limit: '10mb' }));
-server.use(cookieParser());
 server.use(helmet());
 
 // Cross-Origin-Opener-Policy configuration

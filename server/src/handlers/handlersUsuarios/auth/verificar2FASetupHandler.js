@@ -3,7 +3,7 @@ import verificar2FASetupController from './../../../controllers/controllersUsuar
 const verificar2FASetupHandler = async (req, res) => {
 	try {
 		const data = await verificar2FASetupController(req.body);
-		return res.json({ ok: data });
+		return res.status(200).json({ ok: data });
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}

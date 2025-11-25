@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 	const loading = useSelector((state) => state.loading.isLoading);
+	const usuarios = useSelector((state) => state.usuarios.usuarios);
 	const [verContrasena, setVerContrasena] = useState(false);
 
 	// 📌 Validación
@@ -29,6 +30,7 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 		validationSchema,
 		onSubmit: async (values) => {
 			const fingerprint = await obtenerFingerprint(); // fingerprint único del dispositivo
+			console.log(values.correo);
 			loginAction(
 				{ ...values, fingerprint },
 				dispatch,
@@ -95,23 +97,26 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 								className="flex flex-col items-center justify-center p-4 space-y-4 w-full">
 								{/* INPUT EMAIL */}
 								<div className="w-full">
-									<input
-										type="text"
+									<select
 										name="correo"
 										id="correo"
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
 										value={formik.values.correo}
-										placeholder="Correo"
 										className={`w-full p-3 rounded-xl bg-black/80 text-white 
 											placeholder-gray-500 font-semibold focus:ring-2 shadow-[0_0_30px_rgba(255,0,0,0.45)]
 											focus:ring-red-500 focus:border-red-500 transition ${
 												formik.touched.correo && formik.errors.correo
 													? 'border-red-600'
 													: 'border-red-900'
-											}`}
-										autoComplete="off"
-									/>
+											}`}>
+										<option value="">Seleccionar usuario</option>
+										{usuarios.map((usuario) => (
+											<option value={usuario.correo} key={usuario._id}>
+												{usuario.nombre}
+											</option>
+										))}
+									</select>
 									{formik.touched.correo && formik.errors.correo && (
 										<p
 											className="text-xs font-semibold text-red-400 

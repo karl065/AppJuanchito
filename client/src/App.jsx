@@ -7,7 +7,11 @@ import LoginFull from './views/formularios/Login/LoginFull.jsx';
 const App = () => {
 	const login = useSelector((state) => state.login.login);
 
-	const routesToRender = allRoutes[login.role] || [];
+	console.log(login.usuario);
+
+	const routesToRender = allRoutes[login?.usuario?.role] || [];
+
+	console.log(routesToRender);
 
 	return (
 		<Routes>

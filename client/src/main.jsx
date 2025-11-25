@@ -4,10 +4,12 @@ import App from './App.jsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.jsx';
 import { BrowserRouter } from 'react-router-dom';
+import AuthLoader from './components/AuthLoader.jsx';
 
 createRoot(document.getElementById('root')).render(
 	<Provider store={store}>
 		<BrowserRouter>
+			<AuthLoader />
 			<App />
 		</BrowserRouter>
 	</Provider>
