@@ -4,7 +4,6 @@ const usuariosSlice = createSlice({
 	name: 'usuarios',
 	initialState: {
 		usuarios: [],
-		predios: [],
 	},
 	reducers: {
 		cargarUsuarios: (state, action) => {

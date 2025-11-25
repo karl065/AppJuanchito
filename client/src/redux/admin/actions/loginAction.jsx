@@ -35,7 +35,9 @@ export const loginAction = async (
 		} else if (data.loginApproved) {
 			// Login completo
 			dispatch(setLogin(data));
-			data.usuario.role === 'View' ? navigate('/view') : navigate('/admin');
+			data.usuario.role === 'Mesero'
+				? navigate('/caja')
+				: navigate('/informes');
 			alertSuccess(`Bienvenido ${data.usuario.nombre}`);
 		}
 

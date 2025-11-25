@@ -1,6 +1,6 @@
 const Informes = () => {
 	return (
-		<div className="border border-white">
+		<div className="flex w-full h-full items-center justify-center">
 			<h1
 				className="text-base sm:text-3xl font-extrabold uppercase tracking-wide text-center
 							bg-linear-to-r from-red-700 via-red-300 to-red-700
