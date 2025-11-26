@@ -9,8 +9,8 @@ import {
 
 const MobileTable = ({ columns = [], data = [], onEdit, onDelete }) => {
 	return (
-		<div className="w-full overflow-x-auto">
-			<Table className="min-w-max text-sm">
+		<div className="w-full overflow-x-auto bg-transparent">
+			<Table className="min-w-max text-sm bg-transparent">
 				{/* ENCABEZADO */}
 				<TableHead>
 					{columns.map((col) => (
@@ -29,9 +29,9 @@ const MobileTable = ({ columns = [], data = [], onEdit, onDelete }) => {
 					{data.map((row, i) => (
 						<TableRow
 							key={i}
-							className="bg-gray-800 text-white hover:bg-gray-700 transition">
+							className="bg-[linear-gradient(60deg,#2b0000_0%,#0a0000_50%,#000000_100%)] text-white  transition">
 							{columns.map((col) => (
-								<TableCell key={col.key} className="p-2 text-center">
+								<TableCell key={col.key} className="p-2 text-center ">
 									{row[col.key]}
 								</TableCell>
 							))}
