@@ -66,23 +66,22 @@ const NavBar = () => {
 					{ItemsMenu.map((item, index) => (
 						<div key={index}>
 							{item.separator && <DropdownDivider />}
-							<DropdownItem
-								className="bg-transparent rounded border-none hover:bg-black! focus:bg-black! active:bg-black!"
-								as={Link}
-								href={item.route}>
-								<span
-									className="block text-sm sm:text-lg font-bold tracking-wide
+							<DropdownItem className="bg-transparent rounded border-none hover:bg-black! focus:bg-black! active:bg-black!">
+								<Link to={item.route}>
+									<span
+										className="block text-sm sm:text-lg font-bold tracking-wide
                                     bg-linear-to-r from-red-700 via-red-300 to-red-700
                                     text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(255,0,0,0.7)]
                                     animate-[shine_3s_linear_infinite]">
-									{item.label}
-								</span>
+										{item.label}
+									</span>
+								</Link>
 							</DropdownItem>
 						</div>
 					))}
 					<DropdownDivider />
-					<DropdownItem className="rounded">
-						<Button onClick={handlerLogout} className="bg-transparent">
+					<DropdownItem className="bg-transparent rounded border-none hover:bg-black! focus:bg-black! active:bg-black!">
+						<Button onClick={handlerLogout} className="bg-transparent!">
 							<span
 								className="block text-sm sm:text-lg font-bold tracking-wide
                                     bg-linear-to-r from-red-700 via-red-300 to-red-700

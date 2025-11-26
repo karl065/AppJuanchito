@@ -20,7 +20,7 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 		alertSuccess(`Bienvenido ${data.nombre}`);
 
 		if (data.autorizado) {
-			data.role === 'Mesero' ? navigate('/caja') : navigate('/informes');
+			data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
 		}
 	} catch (err) {
 		alertWarning(err.response?.data || err.message);

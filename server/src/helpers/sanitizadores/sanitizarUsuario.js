@@ -7,6 +7,7 @@ const sanitizarUsuario = (usuario) => {
 		correo: usuario.correo,
 		celular: usuario.celular,
 		role: usuario.role,
+		userStatus: usuario.userStatus,
 		dispositivos: usuario.dispositivos
 			? usuario.dispositivos.map((d) => sanitizarDispositivo(d))
 			: [],

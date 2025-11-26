@@ -25,32 +25,25 @@ body,
 	overflow-x: hidden;
 	background: linear-gradient(60deg, #2b0000 0%, #0a0000 50%, #000000 100%);
 	position: relative;
-}
-
-/* ============================
-   TEXTO “JUANCHITO” REPETIDO
-   ============================ */
-body::before {
 	content: 'Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito';
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	display: block;
-	z-index: 0;
-	transform: rotate(-60deg);
-	font-size: 4rem;
-	font-weight: 800;
-	letter-spacing: 1rem;
-	color: rgba(255, 0, 0, 0.05); /* Muy sutil */
-	white-space: nowrap;
-	pointer-events: none;
-	user-select: none;
-	text-align: center;
 }
 
 #root > * {
 	position: relative;
 	z-index: 1;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fade-in {
+	animation: fade-in 0.25s ease-out;
 }

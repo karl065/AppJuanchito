@@ -11,7 +11,7 @@ export const reloginAction = async (dispatch, navigate) => {
 
 		alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);
 
-		data.role === 'Mesero' ? navigate('/caja') : navigate('/informes');
+		data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
 
 		return true;
 	} catch (error) {

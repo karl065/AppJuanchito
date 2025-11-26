@@ -1,15 +1,23 @@
 const ItemsMenu = [
 	{
-		label: 'Dashboard',
-		route: '/dashboard',
+		label: 'Informes',
+		route: '/informes',
 	},
 	{
-		label: 'Settings',
-		route: '/settings',
+		label: 'Usuarios',
+		route: '/usuarios',
 	},
 	{
-		label: 'Earnings',
-		route: '/earnings',
+		label: 'Inventario',
+		route: '/inventario',
+	},
+	{
+		label: 'Facturas',
+		route: '/facturas',
+	},
+	{
+		label: 'Cajas',
+		route: '/cajas',
 	},
 	// {
 	// 	separator: true, // puedes agregar divisores si quieres controlar cuando poner un Divider
