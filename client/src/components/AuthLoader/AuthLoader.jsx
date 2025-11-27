@@ -21,8 +21,8 @@ const AuthLoader = () => {
 		obtenerCategoriasAction(dispatch);
 		obtenerUsuariosAction(dispatch);
 		obtenerRolesAction(dispatch);
-		// obtenerFacturasAction(dispatch);
-		// obtenerMovimientosAction(dispatch);
+		obtenerFacturasAction(dispatch);
+		obtenerMovimientosAction(dispatch);
 		obtenerCajasAction(dispatch);
 
 		reloginAction(dispatch, navigate);

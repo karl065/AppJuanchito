@@ -3,7 +3,9 @@ import server from '../../conexiones/conexiones.jsx';
 
 const obtenerFacturasServices = async () => {
 	try {
-		const { data } = await axios.get(`${server.api.baseURL}facturas`);
+		const { data } = await axios.get(`${server.api.baseURL}facturas`, {
+			withCredentials: true,
+		});
 
 		return data;
 	} catch (error) {
