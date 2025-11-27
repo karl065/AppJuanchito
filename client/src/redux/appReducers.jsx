@@ -17,6 +17,12 @@ import categoriasReducer from './categorias/slices/categoriasSlice.jsx';
 // facturas Slices
 import facturasReducer from './facturas/slices/facturasSlices.jsx';
 
+// movimientos Slices
+import movimientosReducer from './movimientos/slices/movimientosSlices.jsx';
+
+// cajas Slices
+import cajasReducer from './cajas/slices/cajasSlices.jsx';
+
 const appReducers = combineReducers({
 	// App Reducers
 	loading: loadingReducer,
@@ -34,6 +40,12 @@ const appReducers = combineReducers({
 
 	// facturas reducers
 	facturas: facturasReducer,
+
+	// movimientos reducers
+	movimientos: movimientosReducer,
+
+	// cajas reducers
+	cajas: cajasReducer,
 });
 
 export default appReducers;

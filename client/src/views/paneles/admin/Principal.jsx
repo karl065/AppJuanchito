@@ -7,6 +7,7 @@ import {
 	HiChartPie,
 	HiChevronDoubleDown,
 	HiChevronDoubleUp,
+	HiOutlineSwitchHorizontal,
 } from 'react-icons/hi';
 
 import Usuarios from './Usuarios.jsx';
@@ -14,6 +15,7 @@ import Inventario from './Inventario.jsx'; // Asegúrate de tener este component
 import Facturas from './Facturas.jsx'; // Asegúrate de tener este componente o comenta si no
 import Cajas from './Cajas.jsx'; // Asegúrate de tener este componente o comenta si no
 import Informes from './Informes.jsx';
+import Movimientos from './Movimientos.jsx';
 
 const Principal = () => {
 	const [tab, setTab] = useState(1); // Iniciamos en 1 (Inventario/Productos) para ver tu componente nuevo
@@ -30,9 +32,11 @@ const Principal = () => {
 			case 3:
 				return <Cajas />;
 			case 4:
+				return <Movimientos />;
+			case 5:
 				return <Informes />;
 			default:
-				return <Productos />;
+				return <Usuarios />;
 		}
 	};
 
@@ -105,8 +109,15 @@ const Principal = () => {
 					label="Cajas"
 				/>
 				<NavButton
-					icon={<HiChartPie size={24} />}
+					icon={<HiOutlineSwitchHorizontal size={24} />}
 					index={4}
+					tab={tab}
+					setTab={setTab}
+					label="Movimientos"
+				/>
+				<NavButton
+					icon={<HiChartPie size={24} />}
+					index={5}
 					tab={tab}
 					setTab={setTab}
 					label="Informes"

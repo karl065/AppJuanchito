@@ -9,6 +9,8 @@ import { obtenerProductosAction } from '../../redux/productos/actions/obtenerPro
 import { obtenerCategoriasAction } from '../../redux/categorias/actions/obtenerCategoriasAction.jsx';
 import { obtenerRolesAction } from '../../redux/admin/actions/obtenerRolesAction.jsx';
 import { obtenerFacturasAction } from '../../redux/facturas/actions/obtenerFacturasAction.jsx';
+import { obtenerMovimientosAction } from '../../redux/movimientos/actions/obtenerMovimientosAction.jsx';
+import { obtenerCajasAction } from '../../redux/cajas/actions/obtenerCajasAction.jsx';
 
 const AuthLoader = () => {
 	const dispatch = useDispatch();
@@ -19,7 +21,10 @@ const AuthLoader = () => {
 		obtenerCategoriasAction(dispatch);
 		obtenerUsuariosAction(dispatch);
 		obtenerRolesAction(dispatch);
-		obtenerFacturasAction(dispatch);
+		// obtenerFacturasAction(dispatch);
+		// obtenerMovimientosAction(dispatch);
+		obtenerCajasAction(dispatch);
+
 		reloginAction(dispatch, navigate);
 	}, []);
 
