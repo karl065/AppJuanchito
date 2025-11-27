@@ -11,6 +11,12 @@ import usuariosReducer from './admin/slices/usuariosSlice.jsx';
 // productos Slices
 import productosReducer from './productos/slices/productosSlice.jsx';
 
+// Categorias Slices
+import categoriasReducer from './categorias/slices/categoriasSlice.jsx';
+
+// facturas Slices
+import facturasReducer from './facturas/slices/facturasSlices.jsx';
+
 const appReducers = combineReducers({
 	// App Reducers
 	loading: loadingReducer,
@@ -20,8 +26,14 @@ const appReducers = combineReducers({
 	roles: rolesReducer,
 	usuarios: usuariosReducer,
 
+	// Categorias reducers
+	categorias: categoriasReducer,
+
 	// productos reducers
 	productos: productosReducer,
+
+	// facturas reducers
+	facturas: facturasReducer,
 });
 
 export default appReducers;

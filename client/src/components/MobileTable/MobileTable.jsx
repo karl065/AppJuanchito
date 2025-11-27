@@ -61,7 +61,7 @@ const MobileTable = ({ columns = [], data = [], onEdit, onDelete }) => {
 					</tr>
 				</thead>
 
-				<tbody className="divide-y divide-gray-700 ">
+				<tbody className="divide-y divide-white ">
 					{data.map((row, i) => (
 						<tr
 							key={row.id || i}
