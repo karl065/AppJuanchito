@@ -126,7 +126,7 @@ const Usuarios = () => {
 	];
 
 	return (
-		<div className="flex flex-col h-full min-h-screen gap-3 p-2 ">
+		<div className="flex flex-col h-full gap-3 p-2 ">
 			{/* Cabecera de Filtros Reutilizable */}
 			<Filtros
 				busqueda={busqueda}

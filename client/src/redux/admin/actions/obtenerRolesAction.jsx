@@ -1,4 +1,4 @@
-import obtenerRolesServices from '../../../services/productos/obtenerRolesServices.jsx';
+import obtenerRolesServices from '../../../services/usuarios/obtenerRolesServices.jsx';
 import { cargarRoles } from '../slices/rolesSlice.jsx';
 
 export const obtenerRolesAction = async (dispatch) => {

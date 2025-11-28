@@ -11,6 +11,7 @@ import { obtenerRolesAction } from '../../redux/admin/actions/obtenerRolesAction
 import { obtenerFacturasAction } from '../../redux/facturas/actions/obtenerFacturasAction.jsx';
 import { obtenerMovimientosAction } from '../../redux/movimientos/actions/obtenerMovimientosAction.jsx';
 import { obtenerCajasAction } from '../../redux/cajas/actions/obtenerCajasAction.jsx';
+import { obtenerTiposMovimientosAction } from '../../redux/movimientos/actions/obtenerTiposMovimientosAction.jsx';
 
 const AuthLoader = () => {
 	const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const AuthLoader = () => {
 		obtenerFacturasAction(dispatch);
 		obtenerMovimientosAction(dispatch);
 		obtenerCajasAction(dispatch);
-
+		obtenerTiposMovimientosAction(dispatch);
 		reloginAction(dispatch, navigate);
 	}, []);
 

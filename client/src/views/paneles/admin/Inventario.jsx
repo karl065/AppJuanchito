@@ -5,8 +5,6 @@ import { usePaginacionResponsiva } from '../../../Hooks/usePaginacionResponsiva.
 import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
-import DropdownFiltro from '../../../components/DropdownFiltro/DropdownFiltro.jsx';
-import DropdownControl from '../../../components/DropdownControl/DropdownControl.jsx';
 import { mapMultiOpciones } from '../../../helpers/mapMultiOpciones.jsx';
 import { filtersConfigs } from '../../../helpers/filtersConfig.jsx';
 
@@ -105,7 +103,7 @@ const Inventario = () => {
 	];
 
 	return (
-		<div className="flex flex-col h-full min-h-screen gap-3 p-2 ">
+		<div className="flex flex-col h-full  gap-3 p-2 ">
 			{/* Cabecera de Filtros Reutilizable */}
 			<Filtros
 				busqueda={busqueda}

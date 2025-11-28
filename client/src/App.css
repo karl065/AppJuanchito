@@ -22,10 +22,9 @@ body,
 	margin: 0;
 	padding: 0;
 	font-family: 'Arial', sans-serif;
-	overflow-x: hidden;
+	overflow: hidden;
 	background: linear-gradient(60deg, #2b0000 0%, #0a0000 50%, #000000 100%);
 	position: relative;
-	content: 'Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito • Juanchito';
 }
 
 #root > * {

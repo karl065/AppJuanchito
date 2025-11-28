@@ -14,12 +14,8 @@ const App = () => {
 		<Routes>
 			<Route path="/" element={<LoginFull />} />
 
-			{routesToRender.map(({ path, element, layout: Layout }, i) => (
-				<Route
-					key={i}
-					path={path}
-					element={Layout ? <Layout>{element}</Layout> : element}
-				/>
+			{routesToRender.map(({ path, element }, i) => (
+				<Route key={i} path={path} element={element} />
 			))}
 		</Routes>
 	);

@@ -43,8 +43,11 @@ const Paginado = ({ currentPage, totalPages, goToPrevPage, goToNextPage }) => {
 	}
 
 	return (
-		// Los controles están fijos en la parte inferior, idealmente dentro de un contenedor min-h-screen/h-full.
-		<div className="sticky bottom-0 z-10 flex justify-between items-center px-4 py-2 rounded-lg text-white text-xs shadow-lg border w-60 sm:w-auto border-white mt-auto">
+		// CAMBIOS REALIZADOS:
+		// 1. Quitamos 'sticky bottom-0': Ya no es necesario porque el flexbox padre lo empuja al final.
+		// 2. Agregamos 'bg-gray-900': Para que tenga fondo sólido y se vea elegante.
+		// 3. Mantenemos 'mt-auto': Para asegurar que siempre se pegue al fondo si la tabla es corta.
+		<div className="flex justify-between items-center px-4 py-2 rounded-lg text-white text-xs shadow-lg border border-white  w-60 sm:w-auto mt-auto z-20">
 			{/* Botón Anterior */}
 			<button
 				onClick={goToPrevPage}
@@ -60,7 +63,7 @@ const Paginado = ({ currentPage, totalPages, goToPrevPage, goToNextPage }) => {
 			</button>
 
 			{/* Indicador de Página */}
-			<span className="font-semibold text-gray-300">
+			<span className="font-semibold text-white">
 				Página {currentPage} de {totalPages}
 			</span>
 

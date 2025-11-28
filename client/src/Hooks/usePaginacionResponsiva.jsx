@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 // Helper local para definir breakpoints
 const getItemsPerPage = (width) => {
-	if (width >= 1024) return 6; // Desktop
-	else if (width >= 640) return 5; // Tablet
-	return 5; // Móvil
+	if (width >= 1024) return 5; // Desktop
+	else if (width >= 640) return 4; // Tablet
+	return 4; // Móvil
 };
 
 /**
@@ -13,10 +13,11 @@ const getItemsPerPage = (width) => {
  * @returns {Object} - Datos paginados y controles.
  */
 export const usePaginacionResponsiva = (data = []) => {
-	const [currentPage, setCurrentPage] = useState(1);
-	const [itemsPerPage, setItemsPerPage] = useState(
-		getItemsPerPage(window.innerWidth)
+	// Verificamos window para evitar errores en SSR (opcional pero recomendado)
+	const [itemsPerPage, setItemsPerPage] = useState(() =>
+		typeof window !== 'undefined' ? getItemsPerPage(window.innerWidth) : 5
 	);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	// 1. Manejo del Resize
 	useEffect(() => {
@@ -38,29 +39,35 @@ export const usePaginacionResponsiva = (data = []) => {
 	// 2. Cálculos derivados
 	const totalPages = Math.ceil(data.length / itemsPerPage);
 
-	// SOLUCIÓN FINAL:
 	// Calculamos la "página segura" para usar en el renderizado.
-	// Eliminamos el useEffect que causaba el error de "cascading renders".
-	// Si currentPage es mayor que totalPages, simplemente usamos totalPages visualmente
-	// sin forzar una actualización de estado innecesaria.
 	const safeCurrentPage = Math.min(currentPage, Math.max(1, totalPages));
 
 	const paginatedData = useMemo(() => {
-		// Usamos safeCurrentPage para el cálculo, asegurando que siempre mostramos datos válidos
+		// Si no hay datos, retornamos array vacío para evitar cálculos erróneos
+		if (data.length === 0) return [];
+
 		const startIndex = (safeCurrentPage - 1) * itemsPerPage;
 		return data.slice(startIndex, startIndex + itemsPerPage);
 	}, [data, safeCurrentPage, itemsPerPage]);
 
-	// 3. Controles
-	// Usamos safeCurrentPage como base para la navegación para asegurar continuidad
-	// si el estado interno estaba desfasado.
-	const goToPrevPage = () => setCurrentPage((p) => Math.max(1, p - 1));
-	// Corregimos goToNextPage para asegurar que no exceda el totalPages actual
-	const goToNextPage = () => setCurrentPage((p) => Math.min(totalPages, p + 1));
-	const resetPage = () => setCurrentPage(1);
+	// 3. Controles (CORREGIDO: Uso de useCallback)
+	// Usamos useCallback para que la referencia de la función no cambie en cada render.
+	// Esto evita que los useEffects dependientes de estas funciones se disparen innecesariamente.
+
+	const goToPrevPage = useCallback(() => {
+		setCurrentPage((p) => Math.max(1, p - 1));
+	}, []);
+
+	const goToNextPage = useCallback(() => {
+		setCurrentPage((p) => Math.min(totalPages, p + 1));
+	}, [totalPages]); // Dependencia necesaria: totalPages
+
+	const resetPage = useCallback(() => {
+		setCurrentPage(1);
+	}, []);
 
 	return {
-		currentPage: safeCurrentPage, // Devolvemos safeCurrentPage para que la UI muestre el número correcto
+		currentPage: safeCurrentPage, // Usamos safeCurrentPage para la UI
 		totalPages,
 		paginatedData,
 		goToPrevPage,
