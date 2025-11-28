@@ -12,7 +12,9 @@ const getControllerProductos = async (query) => {
 
 		const productos = await Productos.find(
 			Object.keys(filtro).length > 0 ? filtro : {}
-		).populate('categoria');
+		)
+			.populate('categoria')
+			.populate('movimientos');
 
 		return productos;
 	} catch (error) {

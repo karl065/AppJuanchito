@@ -15,19 +15,35 @@ import {
 } from '../../../components/Icons/Icons.jsx';
 import SubTabButton from '../../../components/SubTabButton/SubTabButton.jsx';
 import VentasDiaLaborado from './VentasDiaLaborado.jsx';
+import UserFilter from '../../../components/UserFilter/UserFilter.jsx';
 
 const Informes = () => {
 	const facturas = useSelector((state) => state.facturas.facturas);
 	const cajas = useSelector((state) => state.cajas.cajas);
 	const productos = useSelector((state) => state.productos.productos);
 	const movimientos = useSelector((state) => state.movimientos.movimientos);
+	const usuarios = useSelector((state) => state.usuarios.usuarios);
 
 	const [subTab, setSubTab] = useState(0);
 	const [period, setPeriod] = useState('Semana');
+	const [selectedUser, setSelectedUser] = useState('all');
+
+	// 🚨 DETERMINAR SI EL FILTRO DE USUARIO DEBE APLICARSE
+	// Solo se aplica si la pestaña activa es 'x Usuario' (1) o 'x Caja' (2).
+	const filterByUser = subTab === 1 || subTab === 2 ? selectedUser : 'all';
 
 	const datosProcesados = useMemo(
-		() => procesarReporteDatos(facturas, cajas, productos, movimientos),
-		[facturas, cajas, productos, movimientos]
+		() =>
+			procesarReporteDatos(
+				facturas,
+				cajas,
+				productos,
+				movimientos,
+				usuarios,
+				period,
+				filterByUser
+			),
+		[facturas, cajas, productos, movimientos, usuarios, period, filterByUser]
 	);
 
 	// 🚨 DATOS QUE SE PASAN A CADA SUBCOMPONENTE:
@@ -99,13 +115,24 @@ const Informes = () => {
 		}
 	};
 
+	const showUserFilter = subTab === 1 || subTab === 2;
+
 	return (
 		<div className="flex flex-col h-full bg-transparent overflow-hidden">
 			<h2 className="text-2xl font-extrabold text-white p-3 pb-0">Informes</h2>
 
 			{/* BARRA DE PESTAÑAS Y FILTRO DE TIEMPO (FIJO) */}
-			<div className="sticky top-0 z-10 bg-gray-900/95 pt-2 px-3 border-b border-gray-700">
+			<div className="sticky top-0 z-10  pt-2 px-3 border-b">
 				<TimeFilter selected={period} setSelected={setPeriod} />
+
+				{/* 🚨 Filtro de Usuario (Solo visible en pestañas relevantes) */}
+				{showUserFilter && (
+					<UserFilter
+						users={usuarios}
+						selected={selectedUser}
+						setSelected={setSelectedUser}
+					/>
+				)}
 
 				<div className="flex overflow-x-auto whitespace-nowrap -mb-px">
 					{subTabsConfig.map((tab) => (

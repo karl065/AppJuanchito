@@ -14,7 +14,7 @@ import Paginado from '../../../components/Paginado/Paginado.jsx';
 const Movimientos = () => {
 	const movimientos = useSelector((state) => state.movimientos.movimientos);
 	const tipoMovimientos = useSelector(
-		(state) => state.movimientos.tiposMovimientos
+		(state) => state.movimientos.tiposMovimiento
 	);
 
 	const [busqueda, setBusqueda] = useState('');
@@ -66,7 +66,7 @@ const Movimientos = () => {
 	const tableData = paginatedData.map((mov) => {
 		// Lógica de Dirección (Salida vs Entrada)
 
-		const isSalida = tipoMovimientos.includes(mov.tipo);
+		const isSalida = tipoMovimientos?.includes(mov.tipo);
 
 		// Cantidad a mostrar
 		const cantidad = isSalida ? mov.salida || 0 : mov.entrada || 0;
