@@ -16,6 +16,8 @@ import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
 const Cajas = () => {
 	const cajas = useSelector((state) => state.cajas.cajas);
 
+	console.log(cajas);
+
 	const [busqueda, setBusqueda] = useState('');
 	const tableContainerRef = useRef(null);
 

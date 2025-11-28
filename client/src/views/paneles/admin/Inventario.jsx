@@ -12,6 +12,8 @@ const Inventario = () => {
 	const productos = useSelector((state) => state.productos.productos);
 	const categorias = useSelector((state) => state.categorias.categorias);
 
+	console.log(productos);
+
 	const [busqueda, setBusqueda] = useState('');
 
 	// 1. Filtrado Específico de Productos

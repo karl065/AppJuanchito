@@ -1,13 +1,128 @@
+import { useMemo, useState } from 'react';
+import ResumenGeneral from './ResumenGeneral.jsx';
+import VentasPorUsuario from './VentasPosUsuario.jsx';
+import VentasPorCaja from './VentasPorCaja.jsx';
+import AnalisisDeStock from './AnalisisDeStock.jsx';
+import TimeFilter from '../../../components/TimeFilter/TimeFilter.jsx';
+import { useSelector } from 'react-redux';
+import { procesarReporteDatos } from '../../../helpers/procesarReporteDatos.jsx';
+import {
+	BoxIcon,
+	CalendarIcon,
+	CashIcon,
+	ChartPieIcon,
+	UsersIcon,
+} from '../../../components/Icons/Icons.jsx';
+import SubTabButton from '../../../components/SubTabButton/SubTabButton.jsx';
+import VentasDiaLaborado from './VentasDiaLaborado.jsx';
+
 const Informes = () => {
+	const facturas = useSelector((state) => state.facturas.facturas);
+	const cajas = useSelector((state) => state.cajas.cajas);
+	const productos = useSelector((state) => state.productos.productos);
+	const movimientos = useSelector((state) => state.movimientos.movimientos);
+
+	const [subTab, setSubTab] = useState(0);
+	const [period, setPeriod] = useState('Semana');
+
+	const datosProcesados = useMemo(
+		() => procesarReporteDatos(facturas, cajas, productos, movimientos),
+		[facturas, cajas, productos, movimientos]
+	);
+
+	// 🚨 DATOS QUE SE PASAN A CADA SUBCOMPONENTE:
+	const {
+		resumenKPIs,
+		resumenCharts,
+		ventasPorUsuario,
+		historialCajas,
+		ventasDiaLaborado,
+		analisisStock,
+	} = datosProcesados;
+
+	const subTabsConfig = [
+		{ index: 0, label: 'Resumen', icon: <ChartPieIcon className="w-4 h-4" /> },
+		{ index: 1, label: 'x Usuario', icon: <UsersIcon className="w-4 h-4" /> },
+		{ index: 2, label: 'x Caja', icon: <CashIcon className="w-4 h-4" /> },
+		{
+			index: 3,
+			label: 'x Día Laborado',
+			icon: <CalendarIcon className="w-4 h-4" />,
+		}, // 🚨 NUEVA PESTAÑA
+		{ index: 4, label: 'Stock', icon: <BoxIcon className="w-4 h-4" /> },
+	];
+
+	// 🚨 RENDERIZADO DE LAS VISTAS CON PROPS PROCESADAS
+	const renderSubView = () => {
+		switch (subTab) {
+			case 0:
+				// RESUMEN GENERAL: Necesita KPIs (resumenKPIs) y datos de gráficos (resumenCharts)
+				return (
+					<ResumenGeneral
+						period={period}
+						reportData={resumenKPIs}
+						chartData={resumenCharts}
+					/>
+				);
+			case 1:
+				// VENTAS POR USUARIO: Necesita el historial agrupado por usuario (ventasPorUsuario)
+				return (
+					<VentasPorUsuario
+						period={period}
+						historialVentas={ventasPorUsuario}
+					/>
+				);
+			case 2:
+				// VENTAS POR CAJA: Necesita el historial de cajas (historialCajas)
+				return (
+					<VentasPorCaja period={period} historialCajas={historialCajas} />
+				);
+			case 3:
+				// VENTAS POR DÍA LABORADO: Necesita el resumen de ventas consolidadas por día (ventasDiaLaborado)
+				return (
+					<VentasDiaLaborado
+						period={period}
+						ventasPorDiaLaborado={ventasDiaLaborado}
+					/>
+				);
+			case 4:
+				// ANÁLISIS DE STOCK: Necesita las métricas de inventario (analisisStock)
+				return <AnalisisDeStock analisisStock={analisisStock} />;
+			default:
+				return (
+					<ResumenGeneral
+						period={period}
+						reportData={resumenKPIs}
+						chartData={resumenCharts}
+					/>
+				);
+		}
+	};
+
 	return (
-		<div className="flex w-full h-full items-center justify-center">
-			<h1
-				className="text-base sm:text-3xl font-extrabold uppercase tracking-wide text-center
-							bg-linear-to-r from-red-700 via-red-300 to-red-700
-							text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(255,0,0,0.7)]
-							animate-[shine_3s_linear_infinite]">
-				informes
-			</h1>
+		<div className="flex flex-col h-full bg-transparent overflow-hidden">
+			<h2 className="text-2xl font-extrabold text-white p-3 pb-0">Informes</h2>
+
+			{/* BARRA DE PESTAÑAS Y FILTRO DE TIEMPO (FIJO) */}
+			<div className="sticky top-0 z-10 bg-gray-900/95 pt-2 px-3 border-b border-gray-700">
+				<TimeFilter selected={period} setSelected={setPeriod} />
+
+				<div className="flex overflow-x-auto whitespace-nowrap -mb-px">
+					{subTabsConfig.map((tab) => (
+						<SubTabButton
+							key={tab.index}
+							index={tab.index}
+							label={tab.label}
+							icon={tab.icon}
+							subTab={subTab}
+							setSubTab={setSubTab}
+						/>
+					))}
+				</div>
+			</div>
+
+			{/* CONTENIDO DE LA PESTAÑA */}
+			<div className="flex-1 min-h-0 overflow-y-auto">{renderSubView()}</div>
 		</div>
 	);
 };

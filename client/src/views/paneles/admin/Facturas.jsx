@@ -8,7 +8,9 @@ import Paginado from '../../../components/Paginado/Paginado.jsx';
 import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
 
 const Facturas = () => {
-	const facturas = useSelector((state) => state.facturas.facturas); // Producción
+	const facturas = useSelector((state) => state.facturas.facturas);
+
+	console.log(facturas);
 
 	const [busqueda, setBusqueda] = useState('');
 

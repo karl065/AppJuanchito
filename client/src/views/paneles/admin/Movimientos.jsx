@@ -80,8 +80,8 @@ const Movimientos = () => {
 
 		switch (mov.tipo) {
 			case 'venta':
-				typeColor = 'text-red-500';
-				badgeColor = 'bg-red-900/20 text-red-300 border-red-500/50';
+				typeColor = 'text-green-500';
+				badgeColor = 'bg-green-200/20 text-red-300 border-green-200/50';
 				break;
 			case 'entrada':
 				typeColor = 'text-green-500';
@@ -123,7 +123,7 @@ const Movimientos = () => {
 						{mov.descripcion}
 					</span>
 					<div className="flex items-center gap-2 mt-1">
-						<span className="text-[9px] text-gray-500 font-mono bg-gray-800 px-1.5 py-0.5 rounded">
+						<span className="text-[9px] text-white font-mono  px-1.5 py-0.5 rounded">
 							{formatearFechaHora(mov.createdAt)}
 						</span>
 						<span className="text-[9px] text-blue-300">

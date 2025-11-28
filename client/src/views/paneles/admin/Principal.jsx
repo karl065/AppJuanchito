@@ -94,7 +94,7 @@ import Informes from './Informes.jsx';
 import Movimientos from './Movimientos.jsx';
 
 const Principal = () => {
-	const [tab, setTab] = useState(2); // Iniciamos en 2 (Facturas)
+	const [tab, setTab] = useState(0);
 	const [showMenu, setShowMenu] = useState(true);
 
 	const renderView = () => {

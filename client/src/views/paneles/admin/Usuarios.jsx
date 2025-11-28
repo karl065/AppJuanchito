@@ -6,10 +6,13 @@ import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import { filtersConfigs } from '../../../helpers/filtersConfig.jsx';
 import { mapMultiOpciones } from '../../../helpers/mapMultiOpciones.jsx';
+import PerfilSuperior from '../../../components/PerfilSuperior/PerfilSuperior.jsx';
 
 const Usuarios = () => {
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 	const roles = useSelector((state) => state.roles.roles);
+
+	console.log(usuarios);
 
 	const [busqueda, setBusqueda] = useState('');
 
@@ -127,6 +130,9 @@ const Usuarios = () => {
 
 	return (
 		<div className="flex flex-col h-full gap-3 p-2 ">
+			{/* 🚨 NUEVO: Reemplazamos el espacio vacío con el Perfil Superior */}
+			<PerfilSuperior />
+
 			{/* Cabecera de Filtros Reutilizable */}
 			<Filtros
 				busqueda={busqueda}
