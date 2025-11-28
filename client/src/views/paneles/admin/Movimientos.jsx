@@ -14,10 +14,8 @@ import Paginado from '../../../components/Paginado/Paginado.jsx';
 const Movimientos = () => {
 	const movimientos = useSelector((state) => state.movimientos.movimientos);
 	const tipoMovimientos = useSelector(
-		(state) => state.movimientos.tiposMovimiento
+		(state) => state.movimientos.tiposMovimientos
 	);
-
-	console.log(movimientos);
 
 	const [busqueda, setBusqueda] = useState('');
 	const tableContainerRef = useRef(null);

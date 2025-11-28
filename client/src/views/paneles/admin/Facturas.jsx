@@ -10,8 +10,6 @@ import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
 const Facturas = () => {
 	const facturas = useSelector((state) => state.facturas.facturas);
 
-	console.log(facturas);
-
 	const [busqueda, setBusqueda] = useState('');
 
 	// --- 1. Lógica de Filtrado ---

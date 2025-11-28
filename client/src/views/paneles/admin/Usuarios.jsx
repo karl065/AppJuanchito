@@ -12,8 +12,6 @@ const Usuarios = () => {
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 	const roles = useSelector((state) => state.roles.roles);
 
-	console.log(usuarios);
-
 	const [busqueda, setBusqueda] = useState('');
 
 	// 1. Filtrado Específico de Usuarios
