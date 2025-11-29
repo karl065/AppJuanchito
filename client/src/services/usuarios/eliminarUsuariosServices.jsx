@@ -1,9 +1,9 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
 
-const obtenerUsuariosServices = async () => {
+const eliminarUsuariosServices = async (id) => {
 	try {
-		const { data } = await axios.get(`${server.api.baseURL}usuarios`, {
+		const { data } = await axios.delete(`${server.api.baseURL}usuarios/${id}`, {
 			withCredentials: true,
 		});
 
@@ -13,4 +13,4 @@ const obtenerUsuariosServices = async () => {
 	}
 };
 
-export default obtenerUsuariosServices;
+export default eliminarUsuariosServices;

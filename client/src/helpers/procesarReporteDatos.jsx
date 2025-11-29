@@ -1,6 +1,7 @@
 import { calcularAnalisisDeStock } from './calcularAnalisisDeStock.jsx';
 import { calcularHistorialCajas } from './calcularHistorialCajas.jsx';
 import { calcularResumenKPIs } from './calcularResumenKPIs.jsx';
+import { calcularResumenMovimientos } from './calcularResumenMovimientos.jsx';
 import { calcularVentasDiaLaborado } from './calcularVentasDiaLaborado.jsx';
 import { calcularVentasPorUsuario } from './calcularVentasPorUsuario.jsx';
 import { diaEnPeriodo } from './diaEnPeriodo.jsx';
@@ -48,6 +49,12 @@ export const procesarReporteDatos = (
 		return diaEnPeriodo(new Date(dateString), period);
 	});
 
+	// 3. Filtrar Movimientos: Basado en 'createdAt' (necesario si queremos informes temporales)
+	const filteredMovimientos = safeMovimientos.filter((m) => {
+		if (!m.createdAt) return false;
+		return diaEnPeriodo(new Date(m.createdAt), period);
+	});
+
 	// 1. Resumen General
 	const { resumenKPIs, resumenCharts } = calcularResumenKPIs(
 		filteredFacturas,
@@ -72,6 +79,9 @@ export const procesarReporteDatos = (
 	// 5. Análisis de Stock
 	const analisisStock = calcularAnalisisDeStock(safeProductos);
 
+	// 6. Resumen de Movimientos (Usamos movimientos FILTRADOS POR TIEMPO)
+	const resumenMovimientos = calcularResumenMovimientos(filteredMovimientos);
+
 	// --- CONSOLIDACIÓN FINAL ---
 	return {
 		resumenKPIs,
@@ -80,5 +90,6 @@ export const procesarReporteDatos = (
 		historialCajas,
 		ventasDiaLaborado,
 		analisisStock,
+		resumenMovimientos,
 	};
 };

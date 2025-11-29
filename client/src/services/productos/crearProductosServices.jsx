@@ -1,10 +1,11 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
 
-const obtenerRolesServices = async () => {
+const crearProductosServices = async (productoNuevo) => {
 	try {
-		const { data } = await axios.get(
-			`${server.api.baseURL}usuarios?obtenerRoles=true`,
+		const { data } = await axios.post(
+			`${server.api.baseURL}productos`,
+			productoNuevo,
 			{
 				withCredentials: true,
 			}
@@ -15,4 +16,4 @@ const obtenerRolesServices = async () => {
 	}
 };
 
-export default obtenerRolesServices;
+export default crearProductosServices;

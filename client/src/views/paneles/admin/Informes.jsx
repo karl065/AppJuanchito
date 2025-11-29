@@ -11,11 +11,13 @@ import {
 	CalendarIcon,
 	CashIcon,
 	ChartPieIcon,
+	TrendingUpIcon,
 	UsersIcon,
 } from '../../../components/Icons/Icons.jsx';
 import SubTabButton from '../../../components/SubTabButton/SubTabButton.jsx';
 import VentasDiaLaborado from './VentasDiaLaborado.jsx';
 import UserFilter from '../../../components/UserFilter/UserFilter.jsx';
+import ResumenMovimientos from './ResumenMovimientos.jsx';
 
 const Informes = () => {
 	const facturas = useSelector((state) => state.facturas.facturas);
@@ -25,7 +27,7 @@ const Informes = () => {
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 
 	const [subTab, setSubTab] = useState(0);
-	const [period, setPeriod] = useState('Semana');
+	const [period, setPeriod] = useState('Turno');
 	const [selectedUser, setSelectedUser] = useState('all');
 
 	// 🚨 DETERMINAR SI EL FILTRO DE USUARIO DEBE APLICARSE
@@ -54,6 +56,7 @@ const Informes = () => {
 		historialCajas,
 		ventasDiaLaborado,
 		analisisStock,
+		resumenMovimientos,
 	} = datosProcesados;
 
 	const subTabsConfig = [
@@ -66,6 +69,11 @@ const Informes = () => {
 			icon: <CalendarIcon className="w-4 h-4" />,
 		}, // 🚨 NUEVA PESTAÑA
 		{ index: 4, label: 'Stock', icon: <BoxIcon className="w-4 h-4" /> },
+		{
+			index: 5,
+			label: 'Movimientos',
+			icon: <TrendingUpIcon className="w-4 h-4" />,
+		},
 	];
 
 	// 🚨 RENDERIZADO DE LAS VISTAS CON PROPS PROCESADAS
@@ -104,6 +112,14 @@ const Informes = () => {
 			case 4:
 				// ANÁLISIS DE STOCK: Necesita las métricas de inventario (analisisStock)
 				return <AnalisisDeStock analisisStock={analisisStock} />;
+			case 5:
+				// NUEVA VISTA: RESUMEN DE MOVIMIENTOS
+				return (
+					<ResumenMovimientos
+						period={period}
+						resumenMovimientos={resumenMovimientos}
+					/>
+				);
 			default:
 				return (
 					<ResumenGeneral
@@ -119,8 +135,6 @@ const Informes = () => {
 
 	return (
 		<div className="flex flex-col h-full bg-transparent overflow-hidden">
-			<h2 className="text-2xl font-extrabold text-white p-3 pb-0">Informes</h2>
-
 			{/* BARRA DE PESTAÑAS Y FILTRO DE TIEMPO (FIJO) */}
 			<div className="sticky top-0 z-10  pt-2 px-3 border-b">
 				<TimeFilter selected={period} setSelected={setPeriod} />

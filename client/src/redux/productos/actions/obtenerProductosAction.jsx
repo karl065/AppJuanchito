@@ -1,5 +1,5 @@
-import obtenerProductosServices from '../../../services/productos/obtenerProductosServices';
-import { cargarProductos } from '../slices/productosSlice';
+import obtenerProductosServices from '../../../services/productos/obtenerProductosServices.jsx';
+import { cargarProductos } from '../slices/productosSlice.jsx';
 
 export const obtenerProductosAction = async (dispatch) => {
 	try {

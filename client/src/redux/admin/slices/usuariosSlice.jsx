@@ -24,9 +24,17 @@ const usuariosSlice = createSlice({
 				};
 			}
 		},
+		eliminarUsuario: (state, action) => {
+			const id = action.payload; // Aquí llega el ID
+			state.usuarios = state.usuarios.filter((usuario) => usuario._id !== id);
+		},
 	},
 });
 
-export const { cargarUsuarios, agregarUsuario, actualizarUsuario } =
-	usuariosSlice.actions;
+export const {
+	cargarUsuarios,
+	agregarUsuario,
+	actualizarUsuario,
+	eliminarUsuario,
+} = usuariosSlice.actions;
 export default usuariosSlice.reducer;

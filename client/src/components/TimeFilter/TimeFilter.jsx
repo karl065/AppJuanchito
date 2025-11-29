@@ -1,5 +1,5 @@
 const TimeFilter = ({ selected, setSelected }) => {
-	const options = ['Hoy', 'Semana', 'Mes'];
+	const options = ['Turno', 'Hoy', 'Semana', 'Mes'];
 	return (
 		<div className="flex justify-around bg-white rounded-xl p-1 shadow-inner shadow-black/30 w-full mb-3">
 			{options.map((option) => (

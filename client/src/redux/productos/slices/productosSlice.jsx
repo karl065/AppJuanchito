@@ -26,10 +26,20 @@ const productosSlice = createSlice({
 				};
 			}
 		},
+		eliminarProducto: (state, action) => {
+			const id = action.payload; // Aquí llega el ID
+			state.productos = state.productos.filter(
+				(producto) => producto._id !== id
+			);
+		},
 	},
 });
 
-export const { cargarProductos, agregarProducto, actualizarProducto } =
-	productosSlice.actions;
+export const {
+	cargarProductos,
+	agregarProducto,
+	actualizarProducto,
+	eliminarProducto,
+} = productosSlice.actions;
 
 export default productosSlice.reducer;

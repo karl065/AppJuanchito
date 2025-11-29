@@ -279,3 +279,35 @@ export const ChevronDownIcon = (props) => (
 		/>
 	</svg>
 );
+export const TrendingUpIcon = (
+	props // Icono para Movimientos (como tendencia/flujo)
+) => (
+	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth={2}
+			d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+		/>
+	</svg>
+);
+export const MinusIcon = (props) => (
+	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth={2}
+			d="M20 12H4"
+		/>
+	</svg>
+);
+export const CartIcon = (props) => (
+	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<path
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth={2}
+			d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+		/>
+	</svg>
+);

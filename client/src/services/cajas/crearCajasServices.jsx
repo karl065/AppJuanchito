@@ -1,9 +1,9 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
 
-const obtenerUsuariosServices = async () => {
+const crearCajasServices = async (nuevaCaja) => {
 	try {
-		const { data } = await axios.get(`${server.api.baseURL}usuarios`, {
+		const { data } = await axios.post(`${server.api.baseURL}cajas`, nuevaCaja, {
 			withCredentials: true,
 		});
 
@@ -13,4 +13,4 @@ const obtenerUsuariosServices = async () => {
 	}
 };
 
-export default obtenerUsuariosServices;
+export default crearCajasServices;

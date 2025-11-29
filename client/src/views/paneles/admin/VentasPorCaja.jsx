@@ -66,7 +66,7 @@ const VentasPorCaja = ({ period, historialCajas }) => {
 				<Tooltip text="Mostrar ayuda para entender las columnas.">
 					<button
 						onClick={() => setShowHelp(true)}
-						className="p-2 bg-gray-800 rounded-full hover:bg-red-700 transition-colors text-red-500 hover:text-white">
+						className="p-2 rounded-full hover:bg-red-700 transition-colors text-red-500 hover:text-white">
 						<InfoIcon className="w-5 h-5" />
 					</button>
 				</Tooltip>

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
 
-const obtenerRolesServices = async () => {
+const eliminarCategoriasServices = async (id) => {
 	try {
-		const { data } = await axios.get(
-			`${server.api.baseURL}usuarios?obtenerRoles=true`,
+		const { data } = await axios.delete(
+			`${server.api.baseURL}categorias/${id}`,
 			{
 				withCredentials: true,
 			}
@@ -15,4 +15,4 @@ const obtenerRolesServices = async () => {
 	}
 };
 
-export default obtenerRolesServices;
+export default eliminarCategoriasServices;

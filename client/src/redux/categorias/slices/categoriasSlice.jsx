@@ -26,10 +26,20 @@ const categoriasSlice = createSlice({
 				};
 			}
 		},
+		eliminarCategoria: (state, action) => {
+			const id = action.payload; // Aquí llega el ID
+			state.categorias = state.categorias.filter(
+				(categoria) => categoria._id !== id
+			);
+		},
 	},
 });
 
-export const { cargarCategorias, agregarCategoria, actualizarCategoria } =
-	categoriasSlice.actions;
+export const {
+	cargarCategorias,
+	agregarCategoria,
+	actualizarCategoria,
+	eliminarCategoria,
+} = categoriasSlice.actions;
 
 export default categoriasSlice.reducer;

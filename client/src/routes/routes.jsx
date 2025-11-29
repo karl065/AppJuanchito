@@ -1,11 +1,5 @@
-// import { clientesRoutes } from './RoutesClientes/RoutesClientes.jsx';
-// import { viewRoutes } from './RoutesView/RoutesView.jsx';
-
 import { adminRoutes } from './adminRoutes/adminRoutes.jsx';
 
 export const allRoutes = {
 	Administrador: adminRoutes,
-	// SuperAdmin: adminRoutes,
-	// Cliente: clientesRoutes,
-	// View: viewRoutes,
 };

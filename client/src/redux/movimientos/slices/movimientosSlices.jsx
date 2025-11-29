@@ -13,9 +13,13 @@ const movimientosSlice = createSlice({
 		cargarTipos: (state, action) => {
 			state.tiposMovimiento = action.payload;
 		},
+		agregarMovimiento: (state, action) => {
+			state.movimientos.push(action.payload[0]);
+		},
 	},
 });
 
-export const { cargarMovimientos, cargarTipos } = movimientosSlice.actions;
+export const { cargarMovimientos, cargarTipos, agregarMovimiento } =
+	movimientosSlice.actions;
 
 export default movimientosSlice.reducer;
