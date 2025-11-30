@@ -7,6 +7,8 @@ const postControllerImpresoras = async (impresoraNueva) => {
 
         const impresoraAgregada = await Impresoras.create(impresoraNueva);
 
+        console.log(impresoraAgregada)
+
         await putControllerUsuario(impresoraAgregada, impresoraNueva.usuario)
 
         return impresoraAgregada;
