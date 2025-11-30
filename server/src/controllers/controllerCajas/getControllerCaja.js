@@ -8,6 +8,15 @@ const getControllerCaja = async (query) => {
 			return estadoEnum;
 		}
 
+		if (query.obtenerEstadoCierre) { 
+    		const resultadoCierrePath = Caja.schema.path('resultadoCierre');
+    		const estadoCierrePath = resultadoCierrePath.schema.path('estado');
+
+    		const estadoCierreEnum = estadoCierrePath.enumValues;
+
+   			 return estadoCierreEnum ;
+		}
+
 		const filtro = filtroAvanzado(query, Caja.schema);
 
 		const cajas = await Caja.find(Object.keys(filtro).length > 0 ? filtro : {})

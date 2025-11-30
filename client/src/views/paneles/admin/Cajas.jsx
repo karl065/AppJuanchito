@@ -12,11 +12,15 @@ import {
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
 import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
+import DetalleCaja from './DetalleCaja.jsx';
 
 const Cajas = () => {
 	const cajas = useSelector((state) => state.cajas.cajas);
 	const [busqueda, setBusqueda] = useState('');
 	const tableContainerRef = useRef(null);
+
+	// 🚨 ESTADO PARA MOSTRAR EL DETALLE
+	const [cajaSeleccionada, setCajaSeleccionada] = useState(null);
 
 	// --- Lógica de Filtrado ---
 	const cajasFiltradas = useMemo(() => {
@@ -47,9 +51,13 @@ const Cajas = () => {
 	}, [busqueda, resetPage]);
 
 	// --- Handlers ---
-	const handleViewDetail = (row) =>
-		console.log('Ver detalle caja:', JSON.stringify(row.id));
-	const handleOpenCaja = () => console.log('Abrir nueva caja');
+	const handleViewDetail = (row) => {
+		setCajaSeleccionada(row.originalData);
+	};
+
+	const handleCloseDetail = () => {
+		setCajaSeleccionada(null);
+	};
 
 	// --- Configuración de Columnas ---
 	const columns = [
@@ -144,10 +152,7 @@ const Cajas = () => {
 			<Filtros
 				busqueda={busqueda}
 				setBusqueda={setBusqueda}
-				onAdd={handleOpenCaja}
 				placeholder="Buscar caja, usuario o estado..."
-				addButtonTitle="Abrir Caja"
-				// filters={[]} // Si tienes filtros extra, pásalos aquí
 			/>
 
 			{/* Tabla */}
@@ -172,6 +177,13 @@ const Cajas = () => {
 				goToPrevPage={goToPrevPage}
 				goToNextPage={goToNextPage}
 			/>
+
+			{/* 🚨 4. MODAL DETALLE DE CAJA */}
+			{cajaSeleccionada && (
+				<div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+					<DetalleCaja caja={cajaSeleccionada} onClose={handleCloseDetail} />
+				</div>
+			)}
 		</div>
 	);
 };

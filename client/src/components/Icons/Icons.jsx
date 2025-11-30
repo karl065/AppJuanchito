@@ -390,3 +390,9 @@ export const ChevronDoubleUpIcon = (props) => (
 		/>
 	</svg>
 );
+export const CheckIcon = ({ className }) => (
+	<span className={className}>☑️</span>
+);
+export const AlertIcon = ({ className }) => (
+	<span className={className}>⚠️</span>
+);

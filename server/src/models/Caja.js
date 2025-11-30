@@ -13,7 +13,7 @@ const CajaSchema = new mongoose.Schema(
 		// Estado: abierta o cerrada por el cajero
 		estado: {
 			type: String,
-			enum: ['abierta', 'cerrada'],
+			enum: ['abierta', 'cerrada', "verificada"],
 			default: 'abierta',
 		},
 

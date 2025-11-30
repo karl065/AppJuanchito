@@ -1,14 +1,12 @@
 import { formatearPesos } from './formatearPesos.jsx';
-import { generarLogoBinario } from './generarLogoBinario.jsx';
 
 export const generarTextoFactura = (factura) => {
-	const LOGO_COMMAND = generarLogoBinario();
 	const separador = '--------------------------------\n';
 	let ticket = '\n';
 
 	// 1. Cabecera (Incluye Logo)
-	ticket += LOGO_COMMAND; // <-- INSERTAMOS EL LOGO BINARIO AQUÍ
-	ticket += '        JUANCHITO       \n';
+
+	ticket += '           JUANCHITO       \n';
 	ticket += '         CANTINA DISCO       \n';
 	ticket += separador;
 	ticket += `Cajero: ${factura.usuario?.nombre}\n`;

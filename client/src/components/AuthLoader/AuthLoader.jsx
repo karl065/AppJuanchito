@@ -13,6 +13,7 @@ import { obtenerMovimientosAction } from '../../redux/movimientos/actions/obtene
 import { obtenerCajasAction } from '../../redux/cajas/actions/obtenerCajasAction.jsx';
 import { obtenerTiposMovimientosAction } from '../../redux/movimientos/actions/obtenerTiposMovimientosAction.jsx';
 import { obtenerImpresorasAction } from '../../redux/impresoras/actions/obtenerImpresorasAction.jsx';
+import { obtenerEstadosCierreAction } from '../../redux/cajas/actions/obtenerEstadosCierre.jsx';
 
 const AuthLoader = () => {
 	const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const AuthLoader = () => {
 		obtenerCajasAction(dispatch);
 		obtenerTiposMovimientosAction(dispatch);
 		obtenerImpresorasAction(dispatch);
+		obtenerEstadosCierreAction(dispatch);
 		reloginAction(dispatch, navigate);
 	}, []);
 
