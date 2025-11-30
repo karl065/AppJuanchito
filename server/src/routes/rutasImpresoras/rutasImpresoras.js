@@ -1,8 +1,8 @@
-import deleteHandlerImpresoras from '../../handlers/handlerImpresoras/deleteHandlerImpresoras';
-import getHandlerImpresoras from '../../handlers/handlerImpresoras/getHandlerImpresoras';
-import postHandlerImpresoras from '../../handlers/handlerImpresoras/postHandlerImpresoras';
-import putHandlerImpresoras from '../../handlers/handlerImpresoras/putHandlerImpresoras';
-import authMiddle from '../../middlewares/auth/authMiddle';
+import deleteHandlerImpresoras from '../../handlers/handlerImpresoras/deleteHandlerImpresoras.js';
+import getHandlerImpresoras from '../../handlers/handlerImpresoras/getHandlerImpresoras.js';
+import postHandlerImpresoras from '../../handlers/handlerImpresoras/postHandlerImpresoras.js';
+import putHandlerImpresoras from '../../handlers/handlerImpresoras/putHandlerImpresoras.js';
+import authMiddle from '../../middlewares/auth/authMiddle.js';
 
 const router = require('express').Router();
 
