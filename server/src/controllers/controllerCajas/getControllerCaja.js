@@ -8,7 +8,7 @@ const getControllerCaja = async (query) => {
 			return estadoEnum;
 		}
 
-		console.log(query)
+		console.log("Controller: ", query)
 
 		if (query.obtenerEstadoCierre) { 
     		const resultadoCierrePath = Caja.schema.path('resultadoCierre');
