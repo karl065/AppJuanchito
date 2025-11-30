@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import connection from "../config/DB";
+import connection from "../config/DB.js";
 
 
 const impresorasSchema = new mongoose.Schema({
