@@ -17,6 +17,8 @@ const rolesMiddle = (req, res, next) => {
 				.json({ error: 'No tienes permisos para ver las cajas.' });
 		}
 
+		delete req.usuario
+
 		return next();
 	} catch (error) {
 		return res.status(400).json({ error: 'Error de autorización.' });
