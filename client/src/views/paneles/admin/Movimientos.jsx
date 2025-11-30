@@ -149,11 +149,14 @@ const Movimientos = () => {
 		};
 	});
 
+	const handleAddUser = () => console.log('Modal agregar movimiento');
+
 	return (
 		<div className="flex flex-col h-full gap-3 p-2">
 			<Filtros
 				busqueda={busqueda}
 				setBusqueda={setBusqueda}
+				onAdd={handleAddUser}
 				placeholder="Buscar producto, tipo o usuario..."
 				addButtonTitle="Nuevo Movimiento"
 			/>
