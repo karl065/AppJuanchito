@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import { usePaginacionResponsiva } from '../../../Hooks/usePaginacionResponsiva.jsx';
@@ -7,12 +7,26 @@ import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
 import { mapMultiOpciones } from '../../../helpers/mapMultiOpciones.jsx';
 import { filtersConfigs } from '../../../helpers/filtersConfig.jsx';
+import { alertSuccess, alertWarning } from '../../../helpers/alertas.jsx';
+import { XIcon } from '../../../components/Icons/Icons.jsx';
+import FormularioCrearProducto from '../../formularios/generales/productos/CrearProducto.jsx';
+import FormularioActualizarProducto from '../../formularios/generales/productos/ActualizarProductos.jsx';
+import { eliminarProductosAction } from '../../../redux/productos/actions/eliminarProductosAction.jsx';
 
 const Inventario = () => {
+	const dispatch = useDispatch();
 	const productos = useSelector((state) => state.productos.productos);
 	const categorias = useSelector((state) => state.categorias.categorias);
 
 	const [busqueda, setBusqueda] = useState('');
+
+	const [isModalCrearProductoOpen, setIsModalCrearProductoOpen] =
+		useState(false);
+	const [isModalActualizarProductoOpen, setIsModalActualizarProductoOpen] =
+		useState(false);
+
+	// Estado para guardar el producto que se va a editar
+	const [productoEditar, setProductoEditar] = useState(null);
 
 	// 1. Filtrado Específico de Productos
 	const productosFiltrados = useMemo(() => {
@@ -55,9 +69,39 @@ const Inventario = () => {
 	const filtersConfig = filtersConfigs(filtrosOpciones, busqueda, setBusqueda);
 
 	// Handlers
-	const handleEdit = (row) => console.log('Editar Producto', row.id);
-	const handleDelete = (row) => console.log('Borrar Producto', row.id);
-	const handleAddProduct = () => console.log('Crear producto');
+	const handleEdit = (producto) => {
+		setProductoEditar(producto);
+		setIsModalActualizarProductoOpen(true);
+	};
+	const handleDelete = async (row) => {
+		const resp = await alertWarning('Esta seguro de eliminar este producto?');
+
+		if (resp) eliminarProductosAction(dispatch, row.id);
+	};
+
+	// 🚨 2. HANDLER PARA ABRIR MODAL
+	const handleAddProduct = () => {
+		setIsModalCrearProductoOpen(true);
+	};
+
+	// 🚨 3. HANDLERS PARA CERRAR Y ÉXITO
+	const handleCloseCrearProductoModal = () =>
+		setIsModalCrearProductoOpen(false);
+
+	const handleCloseActualizar = () => {
+		setIsModalActualizarProductoOpen(false);
+		setProductoEditar(null);
+	};
+
+	const handleSuccessCreate = (nuevoProducto) => {
+		alertSuccess(`Producto "${nuevoProducto.nombre}" creado con éxito.`);
+		setIsModalCrearProductoOpen(false);
+	};
+
+	const handleSuccessUpdate = (productoActualizado) => {
+		alertSuccess(`Producto "${productoActualizado.nombre}" actualizado.`);
+		handleCloseActualizar();
+	};
 
 	// 3. Configuración de la Tabla (Mapeo de Datos)
 	const tableData = paginatedData.map((prod) => ({
@@ -120,7 +164,11 @@ const Inventario = () => {
 					<MobileTable
 						columns={columns}
 						data={tableData}
-						onEdit={handleEdit}
+						onEdit={(row) => {
+							// Encontramos el usuario original basado en el ID
+							const producto = productos.find((u) => u._id === row.id);
+							handleEdit(producto);
+						}}
 						onDelete={handleDelete}
 					/>
 				) : (
@@ -137,6 +185,54 @@ const Inventario = () => {
 				goToPrevPage={goToPrevPage}
 				goToNextPage={goToNextPage}
 			/>
+
+			{/* 🚨 4. MODAL INTEGRADO */}
+			{isModalCrearProductoOpen && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in">
+					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
+						<div className="flex justify-between items-center p-4 border-b border-gray-700">
+							<h3 className="text-lg font-bold text-white">Nuevo Producto</h3>
+							<button
+								onClick={handleCloseCrearProductoModal}
+								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
+								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+							</button>
+						</div>
+
+						<div className="p-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+							<FormularioCrearProducto
+								onSuccess={handleSuccessCreate}
+								onClose={handleCloseCrearProductoModal}
+							/>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* MODAL ACTUALIZAR */}
+			{isModalActualizarProductoOpen && productoEditar && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in">
+					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
+						<div className="flex justify-between items-center p-4 border-b border-gray-700">
+							<h3 className="text-lg font-bold text-white">
+								Actualizar Producto
+							</h3>
+							<button
+								onClick={handleCloseActualizar}
+								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
+								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+							</button>
+						</div>
+						<div className="p-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+							<FormularioActualizarProducto
+								productoAEditar={productoEditar}
+								onSuccess={handleSuccessUpdate}
+								onClose={handleCloseActualizar}
+							/>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

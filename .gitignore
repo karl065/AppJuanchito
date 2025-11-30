@@ -77,3 +77,8 @@ _pginfo
 ### --- SISTEMA / DEMÁS --- ###
 Thumbs.db
 desktop.ini
+
+client/resources/
+client/assets/
+
+ConfiguracionImpresora.jsx

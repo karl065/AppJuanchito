@@ -10,19 +10,19 @@ const productosSlice = createSlice({
 			state.productos = action.payload;
 		},
 		agregarProducto: (state, action) => {
-			state.productos.push(action.payload[0]);
+			state.productos.push(action.payload);
 		},
 		actualizarProducto: (state, action) => {
-			const { _id, data } = action.payload;
+			const productoActualizado = action.payload;
 
 			const index = state.productos.findIndex(
-				(producto) => producto._id === _id
+				(producto) => producto._id === productoActualizado._id
 			);
 
 			if (index !== -1) {
 				state.productos[index] = {
 					...state.productos[index],
-					...data,
+					...productoActualizado,
 				};
 			}
 		},

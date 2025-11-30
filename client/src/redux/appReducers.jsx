@@ -23,6 +23,9 @@ import movimientosReducer from './movimientos/slices/movimientosSlices.jsx';
 // cajas Slices
 import cajasReducer from './cajas/slices/cajasSlices.jsx';
 
+// impresoras Slices
+import impresorasReducer from './impresoras/slices/impresorasSlices.jsx';
+
 const appReducers = combineReducers({
 	// App Reducers
 	loading: loadingReducer,
@@ -46,6 +49,9 @@ const appReducers = combineReducers({
 
 	// cajas reducers
 	cajas: cajasReducer,
+
+	// impresoras reducers
+	impresoras: impresorasReducer,
 });
 
 export default appReducers;

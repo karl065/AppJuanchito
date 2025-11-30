@@ -1,18 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
 import { usePaginacionResponsiva } from '../../../Hooks/usePaginacionResponsiva.jsx';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import { filtersConfigs } from '../../../helpers/filtersConfig.jsx';
 import { mapMultiOpciones } from '../../../helpers/mapMultiOpciones.jsx';
 import PerfilSuperior from '../../../components/PerfilSuperior/PerfilSuperior.jsx';
+import { alertSuccess, alertWarning } from '../../../helpers/alertas.jsx';
+import { XIcon } from '../../../components/Icons/Icons.jsx';
+import FormularioCrearUsuario from '../../formularios/generales/usuarios/CrearUsuarios.jsx';
+import FormularioActualizarUsuario from '../../formularios/generales/usuarios/actualizarUsuarios.jsx';
+import { actualizarUsuariosAction } from '../../../redux/admin/actions/actualizarUsuariosAction.jsx';
+import { eliminarUsuarioAction } from '../../../redux/admin/actions/eliminarUsuarioAction.jsx';
 
 const Usuarios = () => {
+	const dispatch = useDispatch();
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 	const roles = useSelector((state) => state.roles.roles);
 
 	const [busqueda, setBusqueda] = useState('');
+	const [isModalCrearUsuarioOpen, setIsModalCrearUsuarioOpen] = useState(false);
+
+	const [isModalActualizarUsuarioOpen, setIsModalActualizarUsuarioOpen] =
+		useState(false);
+	const [usuarioEditar, setUsuarioEditar] = useState(null);
 
 	// 1. Filtrado Específico de Usuarios
 	const usuariosFiltrados = useMemo(() => {
@@ -61,14 +73,38 @@ const Usuarios = () => {
 	const filtersConfig = filtersConfigs(filtrosOpciones, busqueda, setBusqueda);
 
 	// Handlers
-	const handleToggleStatus = (id) => {
+	const handleToggleStatus = (id, userStatus) => {
 		// En producción: dispatch(updateUserStatus({ id, status: !currentStatus }))
+		actualizarUsuariosAction(dispatch, id, { userStatus: !userStatus });
 		console.log('Cambia Status: ', id);
+		console.log('Cambia Status: ', userStatus);
 	};
 
-	const handleEdit = (row) => console.log('Editar Usuario', row.id);
-	const handleDelete = (row) => console.log('Borrar Usuario', row.id);
-	const handleAddUser = () => console.log('Crear Usuario');
+	const handleEdit = (user) => {
+		setUsuarioEditar(user); // Guardamos usuario a editar
+		setIsModalActualizarUsuarioOpen(true); // Abrimos modal
+	};
+	const handleDelete = async (row) => {
+		const resp = await alertWarning('Esta seguro de eliminar este usuario?');
+		if (resp) eliminarUsuarioAction(dispatch, row.id);
+	};
+	const handleAddUser = () => setIsModalCrearUsuarioOpen(true);
+
+	const handleCloseCrearUsuarioModal = () => setIsModalCrearUsuarioOpen(false);
+	const handleCloseActualizarUsuarioModal = () => {
+		setIsModalActualizarUsuarioOpen(false);
+		setUsuarioEditar(null);
+	};
+
+	const handleSuccessCreate = (nuevoUsuario) => {
+		alertSuccess(`Usuario ${nuevoUsuario.nombre} creado con éxito.`);
+		setIsModalCrearUsuarioOpen(false);
+	};
+
+	const handleSuccessUpdate = (usuarioActualizado) => {
+		alertSuccess(`Usuario ${usuarioActualizado.nombre} actualizado con éxito.`);
+		handleCloseActualizarUsuarioModal();
+	};
 
 	// 3. Definición de columnas y datos
 	const tableData = paginatedData.map((user) => ({
@@ -96,7 +132,7 @@ const Usuarios = () => {
 		estado: (
 			<div className="flex flex-col items-end gap-1">
 				<button
-					onClick={() => handleToggleStatus(user._id)}
+					onClick={() => handleToggleStatus(user._id, user.userStatus)}
 					className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 transition-all active:scale-95 border cursor-pointer hover:opacity-80 ${
 						user.userStatus
 							? 'bg-green-900/30 text-green-400 border-green-800 hover:bg-green-900/50'
@@ -147,7 +183,11 @@ const Usuarios = () => {
 					<MobileTable
 						columns={columns}
 						data={tableData}
-						onEdit={handleEdit}
+						onEdit={(row) => {
+							// Encontramos el usuario original basado en el ID
+							const user = usuarios.find((u) => u._id === row.id);
+							handleEdit(user);
+						}}
 						onDelete={handleDelete}
 					/>
 				) : (
@@ -164,6 +204,53 @@ const Usuarios = () => {
 				goToPrevPage={goToPrevPage}
 				goToNextPage={goToNextPage}
 			/>
+
+			{/* MODAL DE CREACIÓN DE USUARIO */}
+			{isModalCrearUsuarioOpen && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm p-4 animate-fade-in">
+					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
+						<div className="flex justify-between items-center p-4 border-b border-gray-700">
+							<h3 className="text-lg font-bold text-white">Nuevo Usuario</h3>
+							<button
+								onClick={handleCloseCrearUsuarioModal}
+								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
+								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+							</button>
+						</div>
+
+						<div className="p-4">
+							<FormularioCrearUsuario
+								onSuccess={handleSuccessCreate}
+								onClose={handleCloseCrearUsuarioModal}
+							/>
+						</div>
+					</div>
+				</div>
+			)}
+			{/* MODAL DE ACTUALIZACIÓN */}
+			{isModalActualizarUsuarioOpen && usuarioEditar && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in">
+					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
+						<div className="flex justify-between items-center p-4 border-b border-gray-700">
+							<h3 className="text-lg font-bold text-white">
+								Actualizar Usuario
+							</h3>
+							<button
+								onClick={handleCloseActualizarUsuarioModal}
+								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
+								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+							</button>
+						</div>
+						<div className="p-4">
+							<FormularioActualizarUsuario
+								userToEdit={usuarioEditar}
+								onSuccess={handleSuccessUpdate}
+								onClose={handleCloseActualizarUsuarioModal}
+							/>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

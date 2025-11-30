@@ -6,11 +6,16 @@ import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
 import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
+import DetalleFactura from './DetalleFactura.jsx';
 
 const Facturas = () => {
 	const facturas = useSelector((state) => state.facturas.facturas);
 
 	const [busqueda, setBusqueda] = useState('');
+
+	// Estados para el Modal
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
 
 	// --- 1. Lógica de Filtrado ---
 	const facturasFiltradas = useMemo(() => {
@@ -46,9 +51,19 @@ const Facturas = () => {
 	}, [busqueda, resetPage]);
 
 	// --- 3. Handlers y Configuración ---
-	const handleViewDetail = (row) =>
-		console.log('Ver detalle de factura ID:', row.id);
-	const handleAdd = () => console.log('Crear nueva venta');
+	const handleViewDetail = (row) => {
+		const factura = facturas.find((f) => f._id === row.id);
+		if (factura) {
+			setFacturaSeleccionada(factura);
+			setIsModalOpen(true);
+		}
+	};
+
+	// Handler para cerrar modal
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		setFacturaSeleccionada(null);
+	};
 
 	const filtersConfig = useMemo(() => [], []);
 
@@ -141,9 +156,7 @@ const Facturas = () => {
 			<Filtros
 				busqueda={busqueda}
 				setBusqueda={setBusqueda}
-				onAdd={handleAdd}
 				placeholder="Buscar por ID, cajero u observación..."
-				addButtonTitle="Crear Nueva Venta"
 				filters={filtersConfig}
 			/>
 
@@ -169,6 +182,18 @@ const Facturas = () => {
 				goToPrevPage={goToPrevPage}
 				goToNextPage={goToNextPage}
 			/>
+
+			{/* MODAL INTEGRADO */}
+			{isModalOpen && facturaSeleccionada && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in bg-black/50">
+					<div className="w-full max-w-md h-[85vh] animate-fade-in-up">
+						<DetalleFactura
+							factura={facturaSeleccionada}
+							onClose={handleCloseModal}
+						/>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

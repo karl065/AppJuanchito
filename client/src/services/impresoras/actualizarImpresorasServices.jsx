@@ -1,0 +1,19 @@
+import axios from 'axios';
+import server from '../../conexiones/conexiones.jsx';
+
+const actualizarImpresorasServices = async (id, dataUpdate) => {
+	try {
+		const { data } = await axios.put(
+			`${server.api.baseURL}productos/${id}`,
+			dataUpdate,
+			{
+				withCredentials: true,
+			}
+		);
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export default actualizarImpresorasServices;

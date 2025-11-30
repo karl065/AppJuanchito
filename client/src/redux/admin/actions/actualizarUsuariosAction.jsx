@@ -4,7 +4,8 @@ import { actualizarUsuario } from '../slices/usuariosSlice';
 export const actualizarUsuariosAction = async (dispatch, id, dataUsuario) => {
 	try {
 		const data = await actualizarUsuariosServices(id, dataUsuario);
-		dispatch(actualizarUsuario(data));
+
+		dispatch(actualizarUsuario(data[0]));
 	} catch (error) {
 		console.log(error);
 	}

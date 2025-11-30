@@ -25,12 +25,14 @@ const Filtros = ({
 						className="w-full pl-10 pr-4 py-2 text-xs h-9 border border-white text-white rounded-lg focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 placeholder-gray-500 transition-colors bg-transparent"
 					/>
 				</div>
-				<button
-					className="flex items-center justify-center h-9 w-9 rounded-lg bg-red-700 hover:bg-red-600 transition-colors active:scale-95 shadow-md shadow-red-900/50 shrink-0"
-					onClick={onAdd}
-					title={addButtonTitle}>
-					<PlusIcon className="h-5 w-5 text-white" />
-				</button>
+				{/* Renderizado condicional del botón agregar */}
+				{onAdd && (
+					<button
+						onClick={onAdd}
+						className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition-all active:scale-95">
+						{addButtonTitle}
+					</button>
+				)}
 			</div>
 
 			{/* Renderizamos DropdownControl pasándole la configuración directamente */}

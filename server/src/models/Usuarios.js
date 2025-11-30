@@ -46,6 +46,12 @@ const usuarioSchema = new mongoose.Schema(
 				ref: 'Caja',
 			},
 		],
+		impresoras: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref:"Impresoras"
+			}
+		]
 	},
 	{
 		timestamps: false,

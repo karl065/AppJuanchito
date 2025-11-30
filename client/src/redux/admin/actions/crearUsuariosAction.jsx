@@ -3,7 +3,7 @@ import { agregarUsuario } from '../slices/usuariosSlice';
 
 export const crearUsuariosAction = async (dispatch, nuevoUsuario) => {
 	try {
-		const data = crearUsuariosServices(nuevoUsuario);
+		const data = await crearUsuariosServices(nuevoUsuario);
 
 		dispatch(agregarUsuario(data));
 	} catch (error) {

@@ -3,6 +3,13 @@ import Usuarios from '../../models/Usuarios.js';
 
 const putControllerUsuario = async (dataUpdate, id) => {
 	try {
+
+		if (dataUpdate.usuario) {
+			await Usuarios.findByIdAndUpdate(id, {
+				$push:{ impresoras: dataUpdate._id }
+			})
+		}
+
 		await Usuarios.findByIdAndUpdate(id, dataUpdate);
 		const usuarioActualizado = await Usuarios.findById(id).populate(
 			'dispositivos'
