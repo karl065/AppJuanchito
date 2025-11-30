@@ -5,9 +5,10 @@ import Impresoras from './../../models/Impresoras.js';
 const postControllerImpresoras = async (impresoraNueva) => {
     try {
 
+        console.log("llegada: ", impresoraNueva)
         const impresoraAgregada = await Impresoras.create(impresoraNueva);
-
-        console.log(impresoraAgregada)
+        
+        console.log("almacenada: ", impresoraAgregada)
 
         await putControllerUsuario(impresoraAgregada, impresoraNueva.usuario)
 

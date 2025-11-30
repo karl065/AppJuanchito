@@ -64,7 +64,7 @@ const ConfiguracionImpresora = () => {
 			macAddress: '',
 			ipAddress: '',
 			port: 0,
-			usuario: login._id,
+			usuarios: login._id,
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
