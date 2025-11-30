@@ -14,6 +14,8 @@ const SelectorImpresoraModal = ({ factura, onClose }) => {
 	const handleSelectAndPrint = async (printer) => {
 		if (isPrinting) return;
 
+		console.log(printer);
+
 		setIsPrinting(true);
 		console.log(
 			`Seleccionada impresora: ${printer.nombre} (${printer.modoImpresion})`

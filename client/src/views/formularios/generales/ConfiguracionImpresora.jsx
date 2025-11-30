@@ -19,12 +19,12 @@ const ConfiguracionImpresora = () => {
 	const login = useSelector((state) => state.login.login);
 
 	// Estado para la configuración global de la impresión
-	const [modoImpresion, setModoImpresion] = useState('bluetooth');
+	const [modoImpresion, setModoImpresion] = useState('Bluetooth');
 
 	// --- FORMIK Y VALIDACIÓN ---
 	const validationSchema = Yup.object().shape({
 		macAddress: Yup.string().when('modoImpresion', {
-			is: 'bluetooth',
+			is: 'Bluetooth',
 			then: (schema) =>
 				schema
 					.required('Debe seleccionar un Dispositivo.')
@@ -35,7 +35,7 @@ const ConfiguracionImpresora = () => {
 			otherwise: (schema) => schema.notRequired(),
 		}),
 		ipAddress: Yup.string().when('modoImpresion', {
-			is: 'wifi',
+			is: 'Wifi',
 			then: (schema) =>
 				schema
 					.required('La IP es requerida.')
@@ -46,7 +46,7 @@ const ConfiguracionImpresora = () => {
 			otherwise: (schema) => schema.notRequired(),
 		}),
 		port: Yup.number().when('modoImpresion', {
-			is: 'wifi',
+			is: 'Wifi',
 			then: (schema) =>
 				schema
 					.required('El puerto es requerido.')
@@ -60,7 +60,7 @@ const ConfiguracionImpresora = () => {
 	const formik = useFormik({
 		initialValues: {
 			nombre: '',
-			modoImpresion: 'bluetooth',
+			modoImpresion: 'Bluetooth',
 			macAddress: '',
 			ipAddress: '',
 			port: 0,
@@ -68,6 +68,7 @@ const ConfiguracionImpresora = () => {
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
+			console.log(JSON.stringify(values, null, 2));
 			crearImpresorasAction(dispatch, values);
 			alertSuccess(
 				`Configuración de ${values.modoImpresion.toUpperCase()} guardada con éxito.`
@@ -114,9 +115,9 @@ const ConfiguracionImpresora = () => {
 					<div className="flex gap-4 mt-2 bg-black/80 p-2 rounded-xl border border-red-900/50">
 						<button
 							type="button"
-							onClick={() => setModoImpresion('bluetooth')}
+							onClick={() => setModoImpresion('Bluetooth')}
 							className={`flex-1 py-2 rounded-lg font-bold transition-all ${
-								modoImpresion === 'bluetooth'
+								modoImpresion === 'Bluetooth'
 									? 'bg-red-600 shadow-lg shadow-red-900/50'
 									: 'bg-gray-700/50 text-gray-400 hover:bg-gray-700'
 							}`}>
@@ -124,9 +125,9 @@ const ConfiguracionImpresora = () => {
 						</button>
 						<button
 							type="button"
-							onClick={() => setModoImpresion('wifi')}
+							onClick={() => setModoImpresion('Wifi')}
 							className={`flex-1 py-2 rounded-lg font-bold transition-all ${
-								modoImpresion === 'wifi'
+								modoImpresion === 'Wifi'
 									? 'bg-red-600 shadow-lg shadow-red-900/50'
 									: 'bg-gray-700/50 text-gray-400 hover:bg-gray-700'
 							}`}>
@@ -136,7 +137,7 @@ const ConfiguracionImpresora = () => {
 				</div>
 
 				{/* 2. CONFIGURACIÓN BLUETOOTH */}
-				{modoImpresion === 'bluetooth' && (
+				{modoImpresion === 'Bluetooth' && (
 					<div className="space-y-3 p-3 border border-gray-700 rounded-xl bg-gray-800/50 shadow-inner">
 						<label className={getLabelClasses('text-red-400')}>
 							Seleccionar Impresora
@@ -189,7 +190,7 @@ const ConfiguracionImpresora = () => {
 				)}
 
 				{/* 3. CONFIGURACIÓN WI-FI / LAN */}
-				{modoImpresion === 'wifi' && (
+				{modoImpresion === 'Wifi' && (
 					<div className="space-y-3 p-3 border border-gray-700 rounded-xl bg-gray-800/50 shadow-inner">
 						<label className={getLabelClasses('text-red-400')}>
 							Wi-Fi / LAN (IP y Puerto)
@@ -241,12 +242,7 @@ const ConfiguracionImpresora = () => {
 			<div className="flex gap-3 pt-3 border-t border-gray-700 px-4 pb-2 shrink-0">
 				<button
 					type="submit"
-					disabled={formik.isSubmitting || !formik.isValid}
-					className={`flex-1 py-3 rounded-xl font-bold text-white shadow-lg transition-all ${
-						formik.isValid
-							? 'bg-red-600 hover:bg-red-500'
-							: 'bg-gray-700 text-gray-500 cursor-not-allowed'
-					}`}>
+					className={`flex-1 py-3 rounded-xl font-bold text-white shadow-lg transition-all bg-red-600 `}>
 					Guardar Configuración
 				</button>
 			</div>

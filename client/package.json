@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@awesome-cordova-plugins/bluetooth-serial": "^8.1.0",
     "@capacitor-community/http": "^1.4.1",
     "@capacitor/android": "^7.4.4",
     "@capacitor/core": "^7.4.4",
@@ -20,7 +19,6 @@
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.2",
-    "cordova-plugin-bluetooth-serial": "^0.4.7",
     "flowbite": "^4.0.1",
     "flowbite-react": "^0.12.10",
     "formik": "^2.4.9",
@@ -46,6 +44,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.22",
+    "cordova-plugin-bluetooth-serial": "^0.4.7",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

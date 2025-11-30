@@ -8,9 +8,8 @@ export const generarTextoFactura = (factura) => {
 
 	// 1. Cabecera (Incluye Logo)
 	ticket += LOGO_COMMAND; // <-- INSERTAMOS EL LOGO BINARIO AQUÍ
-	ticket += '        SU NEGOCIO S.A.S        \n';
-	ticket += '         NIT: 900.XXX.XXX       \n';
-	ticket += '          TEL: 300-XXX-XXXX     \n';
+	ticket += '        JUANCHITO       \n';
+	ticket += '         CANTINA DISCO       \n';
 	ticket += separador;
 	ticket += `Cajero: ${factura.usuario?.nombre}\n`;
 	ticket += `Fecha:  ${new Date(factura.createdAt).toLocaleString('es-CO')}\n`;

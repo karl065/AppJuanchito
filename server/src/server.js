@@ -14,8 +14,8 @@ server.use(cookieParser());
 // ⚠️ Configura aquí los dominios permitidos
 const allowedOrigins = [
 	'http://localhost:5173',
-	'http://192.168.101.3:5173',
-	'http://192.168.101.7:5173',
+	'http://192.168.101.10:5173',
+	'http://192.168.101.5:5173',
 	'capacitor://localhost',
 	'http://localhost',
 	'https://appjuanchitoserver.onrender.com',
