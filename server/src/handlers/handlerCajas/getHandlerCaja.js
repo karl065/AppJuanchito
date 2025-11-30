@@ -4,6 +4,8 @@ const getHandlerCaja = async (req, res) => {
 	try {
 		const query = req.query;
 
+		console.log(query)
+
 		const cajas = await getControllerCaja(query);
 
 		return res.status(200).json(cajas);

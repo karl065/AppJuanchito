@@ -14,9 +14,7 @@ const getControllerMovimientos = async (query) => {
 			Object.keys(filtro).length > 0 ? filtro : {}
 		)
 			.populate('producto')
-			.populate('usuario');
-
-		console.log(movimientos);
+			.populate('usuario','-password -__v');
 
 		return movimientos;
 	} catch (error) {
