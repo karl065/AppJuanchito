@@ -3,6 +3,7 @@ import server from '../../conexiones/conexiones.jsx';
 
 const crearImpresorasServices = async (impresoraNueva) => {
 	try {
+		console.log(impresoraNueva);
 		const { data } = await axios.post(
 			`${server.api.baseURL}impresoras`,
 			impresoraNueva,

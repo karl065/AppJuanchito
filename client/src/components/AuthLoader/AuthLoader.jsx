@@ -12,6 +12,7 @@ import { obtenerFacturasAction } from '../../redux/facturas/actions/obtenerFactu
 import { obtenerMovimientosAction } from '../../redux/movimientos/actions/obtenerMovimientosAction.jsx';
 import { obtenerCajasAction } from '../../redux/cajas/actions/obtenerCajasAction.jsx';
 import { obtenerTiposMovimientosAction } from '../../redux/movimientos/actions/obtenerTiposMovimientosAction.jsx';
+import { obtenerImpresorasAction } from '../../redux/impresoras/actions/obtenerImpresorasAction.jsx';
 
 const AuthLoader = () => {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const AuthLoader = () => {
 		obtenerMovimientosAction(dispatch);
 		obtenerCajasAction(dispatch);
 		obtenerTiposMovimientosAction(dispatch);
+		obtenerImpresorasAction(dispatch);
 		reloginAction(dispatch, navigate);
 	}, []);
 

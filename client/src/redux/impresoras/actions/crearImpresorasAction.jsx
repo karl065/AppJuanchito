@@ -1,5 +1,5 @@
 import crearImpresorasServices from '../../../services/impresoras/crearImpresorasServices.jsx';
-import { agregarImpresora } from '../slices/impresorasSlice.jsx';
+import { agregarImpresora } from '../slices/impresorasSlices.jsx';
 
 export const crearImpresorasAction = async (dispatch, impresora) => {
 	try {

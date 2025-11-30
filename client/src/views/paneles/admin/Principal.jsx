@@ -1,97 +1,22 @@
 import { useState } from 'react';
-const UserGroupIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-		/>
-	</svg>
-);
-const CollectionIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-		/>
-	</svg>
-);
-const ReceiptTaxIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"
-		/>
-	</svg>
-);
-const CashIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-		/>
-	</svg>
-);
-const ChartPieIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-		/>
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-		/>
-	</svg>
-);
-const SwitchHorizontalIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-		/>
-	</svg>
-);
-const ChevronDoubleDownIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M19 13l-7 7-7-7m14-8l-7 7-7-7"
-		/>
-	</svg>
-);
-const ChevronDoubleUpIcon = (props) => (
-	<svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-		<path
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth={2}
-			d="M5 11l7-7 7 7M5 19l7-7 7 7"
-		/>
-	</svg>
-);
-
 import Usuarios from './Usuarios.jsx';
 import Inventario from './Inventario.jsx'; // Asegúrate de tener este componente o comenta si no
 import Facturas from './Facturas.jsx'; // Asegúrate de tener este componente o comenta si no
 import Cajas from './Cajas.jsx'; // Asegúrate de tener este componente o comenta si no
 import Informes from './Informes.jsx';
 import Movimientos from './Movimientos.jsx';
+import {
+	CashIcon,
+	ChartPieIcon,
+	ChevronDoubleDownIcon,
+	ChevronDoubleUpIcon,
+	CogIcon,
+	CollectionIcon,
+	ReceiptTaxIcon,
+	SwitchHorizontalIcon,
+	UserGroupIcon,
+} from '../../../components/Icons/Icons.jsx';
+import ConfiguracionImpresora from '../../formularios/generales/ConfiguracionImpresora.jsx';
 
 const Principal = () => {
 	const [tab, setTab] = useState(0);
@@ -111,6 +36,8 @@ const Principal = () => {
 				return <Movimientos />;
 			case 5:
 				return <Informes />;
+			case 6:
+				return <ConfiguracionImpresora />;
 			default:
 				return <Usuarios />;
 		}
@@ -193,6 +120,13 @@ const Principal = () => {
 					tab={tab}
 					setTab={setTab}
 					label="Informes"
+				/>
+				<NavButton
+					icon={<CogIcon className="h-6 w-6" />}
+					index={6}
+					tab={tab}
+					setTab={setTab}
+					label="Impr."
 				/>
 			</div>
 		</div>

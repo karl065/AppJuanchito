@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutAction } from '../../redux/admin/actions/logoutAction.jsx';
 import { Avatar, Button, DropdownDivider } from 'flowbite-react';
-import { LogoutIcon } from '../Icons/Icons.jsx';
+import { CogIcon, LogoutIcon, XIcon } from '../Icons/Icons.jsx';
 
 const PerfilSuperior = () => {
 	const login = useSelector((state) => state.login.login);
@@ -42,12 +42,14 @@ const PerfilSuperior = () => {
 					</div>
 				</div>
 
-				{/* 2. BOTÓN DE CERRAR SESIÓN (Redondo con Icono) */}
+				{/* 2. BOTONES DE ACCIÓN */}
+
+				{/* Botón de Cerrar Sesión */}
 				<Button
 					onClick={handlerLogout}
 					title="Cerrar Sesión"
 					className="w-10 h-10 p-0 flex items-center justify-center rounded-full bg-red-700 hover:bg-red-600 shadow-md shadow-red-900/50 active:scale-90 transition-all shrink-0">
-					<LogoutIcon className="w-5 h-5 text-white" />
+					<LogoutIcon className="w-5 h-5 text-white " />
 				</Button>
 			</div>
 		</div>

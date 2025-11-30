@@ -1,35 +1,36 @@
+import { useState } from 'react';
 import { PrinterIcon, XIcon } from '../../../components/Icons/Icons.jsx';
 import { getInputClasses } from '../../../helpers/estilosGlobales.jsx';
 import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
+import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
+import SelectorImpresoraModal from './SelectorImpresora.jsx';
 
 const DetalleFactura = ({ factura, onClose }) => {
+	// 🚨 ESTADO PARA EL MODAL DE SELECCIÓN DE IMPRESORA
+	const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+
 	if (!factura) return null;
 
 	// Formatear Fecha de forma segura
 	const fecha = factura.createdAt
-		? new Date(factura.createdAt).toLocaleString('es-CO', {
-				dateStyle: 'medium',
-				timeStyle: 'short',
-		  })
+		? formatearFechaHora(factura.createdAt)
 		: 'Fecha desconocida';
 
-	// 🚨 Función para manejar la impresión
+	// 🚨 Función que abre el modal de selección
 	const handlePrint = () => {
-		console.log('Iniciando proceso de impresión para factura:', factura._id);
+		setIsPrintModalOpen(true);
+	};
 
-		// --- LÓGICA PARA CAPACITOR / ANDROID ---
-		// 1. Aquí deberías llamar a tu plugin de Capacitor.
-		// Ejemplo pseudo-código:
-		// const dataToPrint = generarEscPos(factura); // Una función que convierta tu objeto factura a comandos ESC/POS
-		// BluetoothPrinter.print({ content: dataToPrint });
-
-		alert('Enviando a imprimir... (Configurar plugin nativo en Capacitor)');
+	// Función para cerrar el modal de selección
+	const handleClosePrintModal = () => {
+		setIsPrintModalOpen(false);
 	};
 
 	return (
+		// Usamos el diseño del modal que ya tienes
 		<div className="flex flex-col h-full bg-[linear-gradient(180deg,#1a0000_0%,#000000_100%)] w-full max-w-md mx-auto rounded-xl shadow-2xl border border-gray-800 overflow-hidden">
 			{/* HEADER */}
-			<div className="flex justify-between items-center p-4 border-b border-red-900/30 bg-black/40 backdrop-blur-sm">
+			<div className="flex justify-between items-center p-4 border-b border-red-900/30 bg-black/40 backdrop-blur-sm shrink-0">
 				<div>
 					<h3 className="text-lg font-bold text-white">Detalle de Factura</h3>
 					<p className="text-[10px] text-gray-500 font-mono">
@@ -37,7 +38,7 @@ const DetalleFactura = ({ factura, onClose }) => {
 					</p>
 				</div>
 				<div className="flex gap-2">
-					{/* Botón Imprimir en Header (opcional, o en footer) */}
+					{/* Botón Imprimir en Header: Ahora abre el modal */}
 					<button
 						onClick={handlePrint}
 						className="p-2 rounded-full hover:bg-blue-900/20 text-gray-400 hover:text-blue-400 transition-colors"
@@ -52,9 +53,9 @@ const DetalleFactura = ({ factura, onClose }) => {
 				</div>
 			</div>
 
-			{/* CONTENIDO */}
+			{/* CONTENIDO SCROLLABLE */}
 			<div className="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-5">
-				{/* INFO GENERAL */}
+				{/* INFO GENERAL... (cuerpo de la factura) */}
 				<div className="grid grid-cols-2 gap-3">
 					<div>
 						<label className="text-[10px] font-bold text-white mb-1 ml-1 uppercase tracking-wider">
@@ -93,9 +94,9 @@ const DetalleFactura = ({ factura, onClose }) => {
 					</label>
 					<div className="space-y-2 mt-1">
 						{factura.productos &&
-							factura.productos.map((item) => (
+							factura.productos.map((item, index) => (
 								<div
-									key={item._id}
+									key={item._id || index}
 									className="bg-gray-900/80 p-3 rounded-lg border border-gray-800 flex justify-between items-center shadow-lg hover:border-red-900/40 transition-colors">
 									<div className="flex flex-col">
 										<span className="text-sm font-bold text-white text-pretty max-w-[180px]">
@@ -133,29 +134,6 @@ const DetalleFactura = ({ factura, onClose }) => {
 								</span>
 							</div>
 						)}
-						{factura.detallePago?.daviplata > 0 && (
-							<div className="flex justify-between items-center text-xs">
-								<span className="text-gray-400">Daviplata:</span>
-								<span className="text-gray-300">
-									{formatearPesos(factura.detallePago.daviplata)}
-								</span>
-							</div>
-						)}
-						{factura.detallePago?.nequi > 0 && (
-							<div className="flex justify-between items-center text-xs">
-								<span className="text-gray-400">Nequi:</span>
-								<span className="text-gray-300">
-									{formatearPesos(factura.detallePago.nequi)}
-								</span>
-							</div>
-						)}
-						<div className="h-px bg-gray-700 my-2"></div>
-						<div className="flex justify-between items-center">
-							<span className="text-sm font-bold text-white">TOTAL PAGADO</span>
-							<span className="text-xl font-black text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.3)]">
-								{formatearPesos(factura.precioVenta)}
-							</span>
-						</div>
 						{factura.detallePago?.cambio > 0 && (
 							<div className="flex justify-between items-center bg-gray-800/50 p-2 rounded-lg mt-2 border border-green-900/30">
 								<span className="text-xs font-bold text-green-400">
@@ -171,12 +149,12 @@ const DetalleFactura = ({ factura, onClose }) => {
 			</div>
 
 			{/* FOOTER */}
-			<div className="p-4 border-t border-gray-800 bg-black/40 backdrop-blur-md flex gap-3">
-				{/* Botón Imprimir grande en footer también si se desea */}
+			<div className="p-4 border-t border-gray-800 bg-black/40 backdrop-blur-md flex gap-3 shrink-0">
+				{/* Botón Imprimir grande: Ahora abre el modal */}
 				<button
 					onClick={handlePrint}
 					className="flex-1 py-3 rounded-xl bg-blue-900/40 hover:bg-blue-800/40 border border-blue-800 text-blue-200 font-bold transition-all active:scale-95 shadow-lg flex justify-center items-center gap-2">
-					<PrinterIcon className="w-5 h-5" /> Imprimir
+					<PrinterIcon className="w-5 h-5" /> Re-Imprimir
 				</button>
 				<button
 					onClick={onClose}
@@ -184,6 +162,14 @@ const DetalleFactura = ({ factura, onClose }) => {
 					Cerrar
 				</button>
 			</div>
+
+			{/* 🚨 MODAL DE SELECCIÓN DE IMPRESORA (Renderizado e Integrado) */}
+			{isPrintModalOpen && (
+				<SelectorImpresoraModal
+					factura={factura}
+					onClose={handleClosePrintModal}
+				/>
+			)}
 		</div>
 	);
 };

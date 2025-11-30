@@ -9,7 +9,6 @@ const Filtros = ({
 	setBusqueda,
 	onAdd,
 	placeholder = 'Buscar...',
-	addButtonTitle = 'Crear nuevo',
 	extraControls = [],
 }) => {
 	return (
@@ -29,8 +28,9 @@ const Filtros = ({
 				{onAdd && (
 					<button
 						onClick={onAdd}
-						className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition-all active:scale-95">
-						{addButtonTitle}
+						className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg transition-all active:scale-95 flex items-center gap-1.5 h-9 shrink-0">
+						{/* 🚨 Ícono PlusIcon restaurado */}
+						<PlusIcon className="w-4 h-4" />
 					</button>
 				)}
 			</div>

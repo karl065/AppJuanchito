@@ -6,6 +6,8 @@ const postHandlerImpresoras = async (req, res) => {
 
         const impresora = req.body;
 
+        console.log(impresora)
+
         const nuevaImpresora = await postControllerImpresoras(impresora)
 
         return res.status(200).json(nuevaImpresora);

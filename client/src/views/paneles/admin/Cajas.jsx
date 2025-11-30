@@ -48,7 +48,7 @@ const Cajas = () => {
 
 	// --- Handlers ---
 	const handleViewDetail = (row) =>
-		console.log('Ver detalle caja:', row.originalData);
+		console.log('Ver detalle caja:', JSON.stringify(row.id));
 	const handleOpenCaja = () => console.log('Abrir nueva caja');
 
 	// --- Configuración de Columnas ---
