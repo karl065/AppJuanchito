@@ -3,8 +3,7 @@ import getHandlerImpresoras from '../../handlers/handlerImpresoras/getHandlerImp
 import postHandlerImpresoras from '../../handlers/handlerImpresoras/postHandlerImpresoras.js';
 import putHandlerImpresoras from '../../handlers/handlerImpresoras/putHandlerImpresoras.js';
 import authMiddle from '../../middlewares/auth/authMiddle.js';
-
-const router = require('express').Router();
+const router = express.Router();
 
 router.post('/', authMiddle,postHandlerImpresoras);
 router.delete('/:id', authMiddle, deleteHandlerImpresoras);
