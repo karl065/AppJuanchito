@@ -1,3 +1,4 @@
+import express from 'express';
 import deleteHandlerImpresoras from '../../handlers/handlerImpresoras/deleteHandlerImpresoras.js';
 import getHandlerImpresoras from '../../handlers/handlerImpresoras/getHandlerImpresoras.js';
 import postHandlerImpresoras from '../../handlers/handlerImpresoras/postHandlerImpresoras.js';
