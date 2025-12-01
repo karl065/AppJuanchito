@@ -4,11 +4,13 @@ import getControllerMovimientos from './getControllerMovimientos.js';
 
 const postControllerMovimientos = async (movimiento) => {
 	try {
-		const movimientoNuevo = await Movimiento.create(movimiento).populate("producto").populate("usuario", "-password");
+		const movimientoNuevo = await Movimiento.create(movimiento)
 
 		await actualizarStockProducto(movimientoNuevo);
 
-		const movimientoAcoplado = await getControllerMovimientos({_id: movimientoNuevo._id})
+		const movimientoAcoplado = await getControllerMovimientos({ _id: movimientoNuevo._id })
+		
+		console.log(movimientoAcoplado)
 
 		return movimientoAcoplado;
 	} catch (error) {
