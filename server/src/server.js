@@ -20,8 +20,8 @@ const allowedOrigins = [
 	'http://localhost',
 	'https://appjuanchitoserver.onrender.com',
 	'https://f3a9d8a1.ngrok-free.app',
-	"https://8824b071bf3e.ngrok-free.app/",
-	"http://192.168.137.1:5173/"
+	"https://8824b071bf3e.ngrok-free.app",
+	"http://192.168.137.1:5173"
 ];
 
 const io = new socketIO(httpServer, {
@@ -35,14 +35,7 @@ const io = new socketIO(httpServer, {
 server.use(morgan('dev'));
 server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: true, limit: '10mb' }));
-server.use(helmet());
 
-// Cross-Origin-Opener-Policy configuration
-server.use(
-	helmet.crossOriginOpenerPolicy({
-		policy: 'same-origin-allow-popups',
-	})
-);
 
 // CORS seguro: permite cookies entre front y back
 server.use(
@@ -55,7 +48,14 @@ server.use(
 		credentials: true,
 	})
 );
+server.use(helmet().hidePoweredBy());
 
+// Cross-Origin-Opener-Policy configuration
+server.use(
+	helmet.crossOriginOpenerPolicy({
+		policy: 'same-origin-allow-popups',
+	})
+);
 server.use(router);
 
 export { server, httpServer, io };
