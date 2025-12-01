@@ -19,6 +19,8 @@ const allowedOrigins = [
 	'capacitor://localhost',
 	'http://localhost',
 	'https://appjuanchitoserver.onrender.com',
+	'https://f3a9d8a1.ngrok-free.app',
+	"https://8824b071bf3e.ngrok-free.app/"
 ];
 
 const io = new socketIO(httpServer, {

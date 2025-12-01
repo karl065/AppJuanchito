@@ -2,11 +2,8 @@ import getControllerCaja from '../../controllers/controllerCajas/getControllerCa
 
 const getHandlerCaja = async (req, res) => {
 	try {
-		const query = req.query;
-
-		console.log(query)
-
-		const cajas = await getControllerCaja(query);
+		const {obtenerEstadoCierre} = req.query;
+		const cajas = await getControllerCaja({obtenerEstadoCierre: obtenerEstadoCierre});
 
 		return res.status(200).json(cajas);
 	} catch (error) {
