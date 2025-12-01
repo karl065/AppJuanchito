@@ -5,6 +5,13 @@ import registerClientModules from '../../sockets/index.jsx';
 const SOCKET_URL = server.api.baseURL;
 
 let socket = null;
+let appDispatch = null;
+
+export const setAppDispatch = (dispatch) => {
+	appDispatch = dispatch;
+};
+
+export const getAppDispatch = () => appDispatch;
 
 export const connectSocket = () => {
 	// Inicializa la conexión

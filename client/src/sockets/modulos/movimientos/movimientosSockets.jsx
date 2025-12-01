@@ -1,21 +1,15 @@
-// src/sockets/movimientosSockets.js
+import { agregarMovimiento } from '../../../redux/movimientos/slices/movimientosSlices.jsx';
+import { getAppDispatch } from '../../../services/sockets/socketServices.jsx';
 
 const movimientosListeners = (socket) => {
-	// Escucha cuando se notifica que hay un nuevo movimiento (emitido por otros usuarios)
-	socket.on('movimiento:actualizado', (data) => {
-		console.log('[Socket] Evento recibido: movimiento:actualizado', data);
+	// Escucha el evento 'movimiento:nuevo' que el backend emite (de otros usuarios remotos)
+	socket.on('movimiento:nuevo', (data) => {
+		console.log('[Socket Listener] Recibido nuevo movimiento remoto:', data);
 
-		// ✨ AQUI VA TU LOGICA PARA ACTUALIZAR REDUX/CONTEXT/ESTADO LOCAL ✨
-		// Por ejemplo, podrías disparar una acción de Redux para añadir el nuevo movimiento a la lista
-		// dispatch(actualizarListaDeMovimientos(data));
-	});
-
-	// Escucha cuando se notifica que un movimiento ha sido anulado
-	socket.on('movimiento:anulado', (data) => {
-		console.log('[Socket] Evento recibido: movimiento:anulado', data);
-
-		// ✨ AQUI VA TU LOGICA PARA ACTUALIZAR REDUX/CONTEXT/ESTADO LOCAL ✨
-		// dispatch(marcarMovimientoComoAnulado(data._id));
+		const dispatch = getAppDispatch();
+		if (dispatch) {
+			dispatch(agregarMovimiento(data)); // Actualiza el Redux remoto
+		}
 	});
 };
 

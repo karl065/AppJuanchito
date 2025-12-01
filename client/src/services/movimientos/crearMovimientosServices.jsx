@@ -1,5 +1,6 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
+import { emitEvent } from '../sockets/socketServices.jsx';
 
 const crearMovimientosServices = async (nuevoMovimiento) => {
 	try {
@@ -10,6 +11,7 @@ const crearMovimientosServices = async (nuevoMovimiento) => {
 				withCredentials: true,
 			}
 		);
+		emitEvent('movimiento:nuevo', data[0]);
 		return data;
 	} catch (error) {
 		console.log(error);

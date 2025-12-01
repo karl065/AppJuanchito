@@ -9,8 +9,6 @@ const postControllerMovimientos = async (movimiento) => {
 		await actualizarStockProducto(movimientoNuevo);
 
 		const movimientoAcoplado = await getControllerMovimientos({ _id: movimientoNuevo._id })
-		
-		console.log(movimientoAcoplado)
 
 		return movimientoAcoplado;
 	} catch (error) {
