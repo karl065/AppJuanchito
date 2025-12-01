@@ -14,7 +14,7 @@ const movimientosSlice = createSlice({
 			state.tiposMovimiento = action.payload;
 		},
 		agregarMovimiento: (state, action) => {
-			state.movimientos.push(action.payload[0]);
+			state.movimientos.push(action.payload);
 		},
 	},
 });

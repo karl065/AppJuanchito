@@ -3,7 +3,7 @@ import Movimiento from './../../models/Movimientos.js';
 
 const postControllerMovimientos = async (movimiento) => {
 	try {
-		const movimientoNuevo = await Movimiento.create(movimiento);
+		const movimientoNuevo = await Movimiento.create(movimiento).populate("producto").populate("usuario", "-password");
 
 		await actualizarStockProducto(movimientoNuevo);
 

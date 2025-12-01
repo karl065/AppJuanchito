@@ -10,6 +10,8 @@ import { formatearLabel } from '../../../helpers/formatearLabel.jsx';
 import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
+import DetalleMovimiento from './DetalleMovimientos.jsx';
+import FormularioCrearMovimientos from '../../formularios/generales/productos/CrearMovimientos.jsx';
 
 const Movimientos = () => {
 	const movimientos = useSelector((state) => state.movimientos.movimientos);
@@ -17,8 +19,15 @@ const Movimientos = () => {
 		(state) => state.movimientos.tiposMovimiento
 	);
 
+	console.log('Movimientos ', movimientos);
+
 	const [busqueda, setBusqueda] = useState('');
 	const tableContainerRef = useRef(null);
+
+	// 🚨 NUEVO ESTADO: Para controlar el modal de detalle
+	const [movimientoSeleccionado, setMovimientoSeleccionado] = useState(null);
+
+	const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
 	// --- Filtrado ---
 	const movimientosFiltrados = useMemo(() => {
@@ -49,8 +58,19 @@ const Movimientos = () => {
 		resetPage();
 	}, [busqueda, resetPage]);
 
-	const handleViewDetail = (row) =>
-		console.log('Ver detalle movimiento:', row.originalData);
+	// 🚨 MODIFICADO: Abre el modal y pasa el objeto completo
+	const handleViewDetail = (row) => {
+		setMovimientoSeleccionado(row.originalData);
+	};
+
+	const handleCloseDetail = () => {
+		setMovimientoSeleccionado(null);
+	};
+
+	// 🚨 MODIFICADO: Abre el modal del formulario
+	const handleAddMovement = () => {
+		setIsFormModalOpen(true);
+	};
 
 	// --- Columnas ---
 	const columns = [
@@ -149,7 +169,7 @@ const Movimientos = () => {
 		};
 	});
 
-	const handleAddUser = () => console.log('Modal agregar movimiento');
+	const handleAddUser = handleAddMovement;
 
 	return (
 		<div className="flex flex-col h-full gap-3 p-2">
@@ -181,6 +201,17 @@ const Movimientos = () => {
 				goToPrevPage={goToPrevPage}
 				goToNextPage={goToNextPage}
 			/>
+			{/* 🚨 MODAL DE DETALLE DE MOVIMIENTO */}
+			{movimientoSeleccionado && (
+				<DetalleMovimiento
+					movimiento={movimientoSeleccionado}
+					onClose={handleCloseDetail}
+				/>
+			)}
+			{/* 🚨 MODAL DE NUEVO MOVIMIENTO */}
+			{isFormModalOpen && (
+				<FormularioCrearMovimientos onClose={() => setIsFormModalOpen(false)} />
+			)}
 		</div>
 	);
 };
