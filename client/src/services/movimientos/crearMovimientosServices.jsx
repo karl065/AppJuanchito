@@ -11,7 +11,7 @@ const crearMovimientosServices = async (nuevoMovimiento) => {
 				withCredentials: true,
 			}
 		);
-		emitEvent('movimiento:nuevo', data[0]);
+		emitEvent('movimiento:crear', data[0]);
 		return data;
 	} catch (error) {
 		console.log(error);

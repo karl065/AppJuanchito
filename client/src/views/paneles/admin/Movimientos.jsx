@@ -19,8 +19,6 @@ const Movimientos = () => {
 		(state) => state.movimientos.tiposMovimiento
 	);
 
-	console.log('Movimientos ', movimientos);
-
 	const [busqueda, setBusqueda] = useState('');
 	const tableContainerRef = useRef(null);
 
