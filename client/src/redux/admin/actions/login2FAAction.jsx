@@ -1,5 +1,5 @@
 import { setLogin } from '../slices/loginSlice.jsx';
-import { alertSuccess, alertWarning } from '../../../helpers/alertas.jsx';
+import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import { obtenerNombreDispositivo } from '../../../helpers/obtenerNombreDispositivo.jsx';
 import login2FAServices from '../../../services/auth/login2FAServices.jsx';
 
@@ -14,7 +14,6 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 			nombreDispositivo,
 			recordar: datos.recordar,
 		});
-		console.log('Action: ', data);
 
 		dispatch(setLogin(data));
 		alertSuccess(`Bienvenido ${data.nombre}`);
@@ -23,6 +22,6 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 			data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
 		}
 	} catch (err) {
-		alertWarning(err.response?.data || err.message);
+		alertInfo(err.response?.data || err.message);
 	}
 };

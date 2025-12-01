@@ -10,7 +10,7 @@ export const verificar2FAAction = async (verificar, dispatch) => {
 
 		const data = await verificar2FAServices(verificar);
 
-		dispatch(setLogin);
+		dispatch(setLogin(data.ok));
 		return data;
 	} catch (error) {
 		throw new Error(error.message);

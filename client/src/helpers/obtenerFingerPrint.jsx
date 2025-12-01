@@ -6,7 +6,7 @@ export const obtenerFingerprint = async () => {
 	if (window.Capacitor?.isNative) {
 		// Android / iOS
 		const info = await Device.getId();
-		return info.uuid;
+		return info.identifier;
 	} else {
 		// Web
 		const fp = await FingerprintJS.load();

@@ -8,6 +8,8 @@ const usuarioAutenticado = async (id) => {
 
 	if (!usuario) throw new Error('Usuario no encontrado');
 
+	if (!usuario.userStatus) throw new Error("Vuelva a iniciar sesion")
+
 	const usuarioPlano = usuario.toObject();
 
 	const usuarioSeguro = sanitizarUsuario(usuarioPlano);

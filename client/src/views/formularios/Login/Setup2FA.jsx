@@ -11,23 +11,21 @@ const Setup2FA = ({ data, setStep }) => {
 	const [secret, setSecret] = useState('');
 	const dispatch = useDispatch();
 
-	{
-		/* --- FORMULARIO FORMik --- */
-	}
+	/* --- FORMULARIO FORMik --- */
 	const formik = useFormik({
 		initialValues: {
 			code: '',
-			recordar: false,
+			// recordar: false,
 		},
 		onSubmit: async (values) => {
 			try {
-				console.log(values);
+				console.log(JSON.stringify(values, null, 2));
 				const verificado = await verificar2FAAction(
 					{
 						userId: data.data.userId,
 						fingerprint: data.data.fingerprint,
 						code: values.code,
-						recordar: values.recordar,
+						// recordar: values.recordar,
 					},
 					dispatch
 				);
@@ -42,10 +40,23 @@ const Setup2FA = ({ data, setStep }) => {
 		},
 	});
 
-	useEffect(async () => {
-		// Generar QR + secret desde backend
-		await generar2FAAction({ userId: data.data.userId }, setQrCode, setSecret);
-	}, []);
+	// ✔️ SOLUCIÓN AL ERROR DE useEffect: Envuelve la lógica async dentro de una función interna
+	useEffect(() => {
+		const setup2FA = async () => {
+			// Generar QR + secret desde backend
+			await generar2FAAction(
+				{ userId: data.data.userId },
+				setQrCode,
+				setSecret
+			);
+		};
+
+		// Llama a la función asíncrona inmediatamente
+		setup2FA();
+
+		// Opcional: Puedes devolver una función de limpieza aquí si es necesario
+		// return () => { ... };
+	}, []); // Dependencias vacías para que se ejecute solo una vez
 
 	// ✔️ Abrir Google Authenticator o PlayStore en Android/Web
 	const handleOpenAuthenticator = () => {
@@ -144,25 +155,6 @@ const Setup2FA = ({ data, setStep }) => {
                                 focus:ring-red-500 border border-red-900/50 outline-none transition
                             "
 						/>
-
-						{/* Checkbox */}
-						<label
-							className="
-                                flex items-center justify-center space-x-3 cursor-pointer 
-                                text-sm sm:text-base font-bold uppercase tracking-wide text-center
-                                p-2 hover:opacity-80 transition select-none
-                            ">
-							<input
-								type="checkbox"
-								name="recordar"
-								checked={formik.values.recordar}
-								onChange={formik.handleChange}
-								className="w-5 h-5 rounded accent-red-600 bg-gray-900 border-red-500"
-							/>
-							<span className="text-red-200 bg-clip-text bg-linear-to-r from-red-400 to-red-200 drop-shadow-[0_0_5px_rgba(255,0,0,0.5)]">
-								Recordar dispositivo
-							</span>
-						</label>
 
 						{/* BOTÓN VERIFICAR */}
 						<button

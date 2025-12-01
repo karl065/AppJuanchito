@@ -31,7 +31,8 @@ const AuthLoader = () => {
 			obtenerImpresorasAction(dispatch);
 			obtenerProductosAction(dispatch);
 			obtenerCategoriasAction(dispatch);
-		} else {
+		} else if (login.role === 'Administrador' || login.role === 'Supervisor') {
+			console.log(login);
 			obtenerImpresorasAction(dispatch);
 			obtenerProductosAction(dispatch);
 			obtenerCategoriasAction(dispatch);
