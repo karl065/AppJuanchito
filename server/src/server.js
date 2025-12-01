@@ -48,7 +48,7 @@ server.use(
 		credentials: true,
 	})
 );
-server.use(helmet().hidePoweredBy());
+server.use(helmet());
 
 // Cross-Origin-Opener-Policy configuration
 server.use(
