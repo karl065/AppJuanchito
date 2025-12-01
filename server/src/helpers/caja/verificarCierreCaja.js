@@ -1,20 +1,20 @@
 import Caja from '../../models/Caja.js';
 
-const verificarCierreCaja = async (verificarCierre) => {
-	const caja = await Caja.findById(verificarCierre.id);
+const verificarCierreCaja = async (id, verificarCierre) => {
+	const caja = await Caja.findById(id).populate("usuario", "-password").populate("facturas");
 	if (!caja) throw new Error('Caja no encontrada');
 
 	if (!caja.cierre) throw new Error('La caja no tiene cierre registrado');
 
-	const estado = caja.cierre.diferencia === 0 ? 'ok' : 'descuadre';
-
 	caja.resultadoCierre = {
-		estado: verificarCierre.estado,
-		verificadoPor: verificarCierre.verificadoPor,
-		notas: verificarCierre.notas,
+		estado: verificarCierre.resultadoCierre.estado,
+		verificadoPor: verificarCierre.resultadoCierre.verificadoPor,
+		notas: verificarCierre.resultadoCierre.notas,
 	};
 
 	caja.cierre.verificado = true;
+
+	caja.estado = verificarCierre.estado
 
 	await caja.save();
 	return caja;

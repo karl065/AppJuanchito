@@ -9,7 +9,6 @@ const obtenerEstadosCierreServices = async () => {
 				withCredentials: true,
 			}
 		);
-		console.log(data);
 		return data;
 	} catch (error) {
 		console.log(error);

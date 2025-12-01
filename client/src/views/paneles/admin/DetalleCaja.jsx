@@ -43,7 +43,6 @@ const DetalleCaja = ({ caja, onClose }) => {
 	// 🚨 Función para manejar la verificación (Llamada desde el Submodal)
 	const handleVerificarCierre = async (verificationData) => {
 		try {
-			console.log(caja);
 			// 1. Lógica de Negocio (Aquí llamarías a tu API/Firestore)
 			await actualizarCajasAction(dispatch, caja._id, {
 				cierre: {
@@ -52,10 +51,6 @@ const DetalleCaja = ({ caja, onClose }) => {
 				resultadoCierre: verificationData,
 				estado: 'verificada',
 			});
-
-			console.log(
-				`Caja ${caja._id} marcada como verificada con nota: ${verificationData.notas}`
-			);
 		} catch (error) {
 			console.error('Error al verificar la caja:', error);
 			alert('Fallo al guardar la verificación. Intente de nuevo.');
@@ -240,7 +235,7 @@ const DetalleCaja = ({ caja, onClose }) => {
 										key={f._id}
 										className="bg-gray-900/50 p-3 rounded-lg border border-gray-800 flex justify-between items-center text-xs hover:bg-red-900/20 transition-colors">
 										<p className="font-mono text-gray-500">
-											ID: {f._id.slice(-6).toUpperCase()}
+											ID: {f._id?.slice(-6).toUpperCase()}
 										</p>
 										<p
 											className={`font-bold ${
