@@ -16,8 +16,6 @@ const VerificacionCaja = ({ cajaId, onVerificar, onClose, userId }) => {
 		'Seleccione un estado de cuadre'
 	);
 
-	console.log(estadosCierre);
-
 	const validationSchema = Yup.object().shape({
 		notas: Yup.string()
 			.required('Se requiere una nota o comentario de verificación.')
@@ -85,7 +83,7 @@ const VerificacionCaja = ({ cajaId, onVerificar, onClose, userId }) => {
 							<Dropdown
 								label={estadoSelect}
 								dismissOnClick={true}
-								className={`bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] border-none 
+								className={`bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] border-none uppercase
 												${
 													formik.touched.role && formik.errors.role
 														? 'border-red-600 focus:ring-red-600'
@@ -97,7 +95,7 @@ const VerificacionCaja = ({ cajaId, onVerificar, onClose, userId }) => {
 										key={estado}
 										onClick={() => handleDropdownSelect(estado)}
 										// Clases para las opciones individuales
-										className="bg-transparent text-white rounded border-none hover:bg-black! focus:bg-black! active:bg-black!">
+										className="bg-transparent text-white rounded border-none uppercase hover:bg-black! focus:bg-black! active:bg-black!">
 										{estado}
 									</DropdownItem>
 								))}

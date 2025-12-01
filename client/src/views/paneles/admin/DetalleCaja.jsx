@@ -43,6 +43,7 @@ const DetalleCaja = ({ caja, onClose }) => {
 	// 🚨 Función para manejar la verificación (Llamada desde el Submodal)
 	const handleVerificarCierre = async (verificationData) => {
 		try {
+			console.log(caja);
 			// 1. Lógica de Negocio (Aquí llamarías a tu API/Firestore)
 			await actualizarCajasAction(dispatch, caja._id, {
 				cierre: {
