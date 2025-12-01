@@ -11,7 +11,7 @@ import validateSupervisorCierre from '../../middlewares/caja/validarSupervisorCi
 const router = express.Router();
 
 router.post('/', cajaMiddle, postHandlerCaja);
-router.get('/', authMiddle, rolesMiddle, getHandlerCaja);
+router.get('/', authMiddle, getHandlerCaja);
 router.put('/cerrar/:id', cerrarCajaMiddle, putHandlerCerrarCaja);
 router.put(
 	'/verificarCierre/:id',
