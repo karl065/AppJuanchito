@@ -5,6 +5,7 @@ const cajasSlice = createSlice({
 	initialState: {
 		cajas: [],
 		estadosCierre: [],
+		cajaActual: {},
 	},
 	reducers: {
 		cargarCajas: (state, action) => {
@@ -12,6 +13,9 @@ const cajasSlice = createSlice({
 		},
 		agregarCaja: (state, action) => {
 			state.cajas.push(action.payload[0]);
+		},
+		cargarCajaActual: (state, action) => {
+			state.cajaActual = action.payload;
 		},
 		actualizarCaja: (state, action) => {
 			const cajaActualizada = action.payload;
@@ -33,7 +37,12 @@ const cajasSlice = createSlice({
 	},
 });
 
-export const { cargarCajas, agregarCaja, actualizarCaja, cargarEstadosCierre } =
-	cajasSlice.actions;
+export const {
+	cargarCajas,
+	agregarCaja,
+	actualizarCaja,
+	cargarEstadosCierre,
+	cargarCajaActual,
+} = cajasSlice.actions;
 
 export default cajasSlice.reducer;

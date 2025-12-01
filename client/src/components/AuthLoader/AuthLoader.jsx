@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // components/auth/AuthLoader.jsx
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { reloginAction } from '../../redux/admin/actions/reloginAction.jsx';
 import { obtenerUsuariosAction } from '../../redux/admin/actions/obtenerUsuariosAction.jsx';
@@ -19,21 +19,31 @@ import { connectSocket } from '../../services/sockets/socketServices.jsx';
 const AuthLoader = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const login = useSelector((state) => state.login.login);
 
 	useEffect(() => {
 		connectSocket();
-		obtenerProductosAction(dispatch);
-		obtenerCategoriasAction(dispatch);
-		obtenerUsuariosAction(dispatch);
-		obtenerRolesAction(dispatch);
-		obtenerFacturasAction(dispatch);
-		obtenerMovimientosAction(dispatch);
-		obtenerCajasAction(dispatch);
-		obtenerTiposMovimientosAction(dispatch);
-		obtenerImpresorasAction(dispatch);
-		obtenerEstadosCierreAction(dispatch);
 		reloginAction(dispatch, navigate);
 	}, []);
+
+	useEffect(() => {
+		if (login.role === 'Mesero') {
+			obtenerImpresorasAction(dispatch);
+			obtenerProductosAction(dispatch);
+			obtenerCategoriasAction(dispatch);
+		} else {
+			obtenerImpresorasAction(dispatch);
+			obtenerProductosAction(dispatch);
+			obtenerCategoriasAction(dispatch);
+			obtenerUsuariosAction(dispatch);
+			obtenerFacturasAction(dispatch);
+			obtenerRolesAction(dispatch);
+			obtenerMovimientosAction(dispatch);
+			obtenerCajasAction(dispatch);
+			obtenerTiposMovimientosAction(dispatch);
+			obtenerEstadosCierreAction(dispatch);
+		}
+	}, [login]);
 
 	return null; // 👈 componente invisible
 };

@@ -396,3 +396,18 @@ export const CheckIcon = ({ className }) => (
 export const AlertIcon = ({ className }) => (
 	<span className={className}>⚠️</span>
 );
+export const HomeIcon = ({ className }) => (
+	<span className={className}>🍺</span>
+);
+export const HistoryIcon = ({ className }) => (
+	<span className={className}>🕒</span>
+);
+export const CashIcon2 = ({ className }) => (
+	<span className={className}>💰</span>
+);
+export const ArrowRightIcon = ({ className }) => (
+	<span className={className}>➡️</span>
+);
+export const BackIcon = ({ className }) => (
+	<span className={className}>⬅️</span>
+);

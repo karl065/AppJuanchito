@@ -20,7 +20,8 @@ const allowedOrigins = [
 	'http://localhost',
 	'https://appjuanchitoserver.onrender.com',
 	'https://f3a9d8a1.ngrok-free.app',
-	"https://8824b071bf3e.ngrok-free.app/"
+	"https://8824b071bf3e.ngrok-free.app/",
+	"http://192.168.137.1:5173/"
 ];
 
 const io = new socketIO(httpServer, {

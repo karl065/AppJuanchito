@@ -1,4 +1,4 @@
-import { alertSuccess, alertWarning } from '../../../helpers/alertas.jsx';
+import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import { loadingAction } from '../../app/actions/loadingAction.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; // función que veremos abajo
@@ -41,7 +41,7 @@ export const loginAction = async (
 
 		loadingAction(false, dispatch);
 	} catch (error) {
-		alertWarning(error.message);
+		alertInfo(error.message);
 		loadingAction(false, dispatch);
 	}
 };
