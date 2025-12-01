@@ -1,5 +1,6 @@
 import actualizarStockProducto from '../../helpers/stock/actualizarStockMovimientos.js';
 import Movimiento from './../../models/Movimientos.js';
+import getControllerMovimientos from './getControllerMovimientos.js';
 
 const postControllerMovimientos = async (movimiento) => {
 	try {
@@ -7,7 +8,9 @@ const postControllerMovimientos = async (movimiento) => {
 
 		await actualizarStockProducto(movimientoNuevo);
 
-		return movimientoNuevo;
+		const movimientoAcoplado = await getControllerMovimientos({_id: movimientoNuevo._id})
+
+		return movimientoAcoplado;
 	} catch (error) {
 		return error;
 	}

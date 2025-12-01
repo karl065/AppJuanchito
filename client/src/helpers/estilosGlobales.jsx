@@ -25,9 +25,9 @@ export const getInputClasses = (error, extraClasses = '') => {
 export const getErrorClasses = (extraClasses = '') => {
 	return `
         text-xs font-semibold text-red-400 
-        bg-linear-to-r from-red-900/40 via-red-700/20 to-red-900/40 
-        border border-red-800/40 rounded-md px-2 py-1 mt-1 
-        shadow-[0_0_8px_rgba(255,0,0,0.4)] tracking-wide animate-pulse
+										bg-linear-to-r from-red-900/40 via-red-700/20 to-red-900/40
+										border border-red-800/40 rounded-md px-2 py-1 mt-1 
+										shadow-[0_0_8px_rgba(255,0,0,0.4)] tracking-wide animate-pulse
         ${extraClasses}
     `
 		.trim()
