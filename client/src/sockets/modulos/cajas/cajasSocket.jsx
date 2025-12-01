@@ -1,9 +1,11 @@
+// src/sockets/cajaSockets.js
+
 // Importa tus funciones de Redux/Contexto aquí si es necesario
 // import { dispatchCajaActualizada, dispatchCierreEnviado } from '../redux/cajas/actions';
 
-const movimiententoListeners = (socket) => {
+const cajaListeners = (socket) => {
 	// Escucha el evento que el BACKEND emite cuando alguien abre una caja
-	socket.on('movimiento:actualizado', (data) => {
+	socket.on('caja:actualizada', (data) => {
 		console.log('Evento recibido: caja:actualizada', data);
 		// Llama a tu función de Redux para actualizar el estado global de la app
 		// dispatchCajaActualizada(data);
@@ -24,4 +26,4 @@ const movimiententoListeners = (socket) => {
 	});
 };
 
-export default movimiententoListeners;
+export default cajaListeners;

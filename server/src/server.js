@@ -27,6 +27,7 @@ const io = new socketIO(httpServer, {
 	cors: {
 		origin: allowedOrigins, // Ajusta según tu configuración de React
 		methods: ['GET', 'POST'],
+		credentials: true
 	},
 }); // Crea una instancia de Socket.io
 
