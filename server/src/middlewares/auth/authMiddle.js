@@ -14,6 +14,7 @@ const authMiddle = async (req, res, next) => {
 		try {
 			decoded = jwt.verify(token, SECRETA);
 		} catch (err) {
+			res.clearCookie('token');
 			if (err.name === 'TokenExpiredError') {
 				throw new Error('Token expirado');
 			}
