@@ -1,4 +1,4 @@
-import { alertSuccess } from '../../../helpers/alertas.jsx';
+import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import reloginServices from '../../../services/auth/reloginServices.jsx';
 import obtenerCajasServices from '../../../services/cajas/obtenerCajasServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
@@ -30,7 +30,11 @@ export const reloginAction = async (dispatch, navigate) => {
 
 		return true;
 	} catch (error) {
-		console.log('Error relogin action: ', error.message);
+		console.log(
+			'Error relogin action: ',
+			JSON.stringify(error.response.data.msg, null, 2)
+		);
+		alertInfo(error);
 
 		// ⚠️ Si falla → redirecciona al login
 		if (navigate) navigate('/');
