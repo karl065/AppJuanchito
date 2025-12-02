@@ -9,6 +9,8 @@ const usuarioAutenticado = async (id) => {
 		.populate('facturas')
 		.populate('caja');
 
+	console.log(usuario);
+
 	if (!usuario) throw new Error('Usuario no encontrado');
 
 	if (!usuario.userStatus) throw new Error('Vuelva a iniciar sesion');
