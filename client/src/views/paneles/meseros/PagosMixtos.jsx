@@ -2,35 +2,81 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { formatearPesos } from '../../../helpers/formatearPesos';
 import { ArrowRightIcon, XIcon } from '../../../components/Icons/Icons';
+import { useDispatch } from 'react-redux';
+import { crearFacturaAction } from '../../../redux/facturas/actions/crearFacturasAction';
 
-const ModalPagosMixtos = ({ total, onClose, onConfirmarVenta }) => {
+const ModalPagosMixtos = ({
+	total,
+	carrito,
+	usuarioId,
+	cajaId,
+	onClose,
+	setFacturaReciente,
+	showModalFactura,
+}) => {
+	const dispatch = useDispatch();
 	// Configuración de Formik
 	const formik = useFormik({
 		initialValues: {
-			mesa: '',
-			nequi: '',
-			daviplata: '',
+			observaciones: '',
+			nequi: 0,
+			daviplata: 0,
 			efectivo: total, // Inicia con el total
 		},
 		enableReinitialize: true, // Permite reiniciar si cambia el total
-		onSubmit: (values) => {
+		onSubmit: async (values) => {
 			const valNequi = parseInt(values.nequi) || 0;
 			const valDavi = parseInt(values.daviplata) || 0;
-			const valEfectivo = parseInt(values.efectivo) || 0;
+			const valEfectivoCliente = parseInt(values.efectivo) || 0;
 
-			const totalPagado = valNequi + valDavi + valEfectivo;
-			const diferencia = totalPagado - total;
+			const metodosConSaldo = [
+				{ nombre: 'nequi', valor: valNequi },
+				{ nombre: 'daviplata', valor: valDavi },
+				{ nombre: 'efectivo', valor: valEfectivoCliente },
+			].filter((m) => m.valor > 0);
 
-			onConfirmarVenta({
-				mesa: values.mesa,
-				metodos: {
-					efectivo: valEfectivo - (diferencia > 0 ? diferencia : 0), // Solo registramos lo que cubrió la deuda
-					nequi: valNequi,
-					daviplata: valDavi,
+			let metodoPagoFinal = 'efectivo'; // Default
+
+			if (metodosConSaldo.length > 1) {
+				// Si hay más de 1 método usado (ej: Nequi+Efectivo, o Nequi+Daviplata)
+				metodoPagoFinal = 'mixto';
+			} else if (metodosConSaldo.length === 1) {
+				// Si solo hay 1 método usado, tomamos su nombre
+				metodoPagoFinal = metodosConSaldo[0].nombre;
+			}
+
+			console.log(metodoPagoFinal);
+
+			const facturaNueva = {
+				metodoPago: metodoPagoFinal,
+				caja: cajaId,
+				detallePago: {
+					efectivoCliente: values.efectivo,
+					daviplata: values.daviplata,
+					nequi: values.nequi,
+					totalPagado: totalPagado,
+					cambio: diferencia,
 				},
-				dineroEntregado: valEfectivo, // Lo que entregó fisicamente
-				cambio: diferencia > 0 ? diferencia : 0,
-			});
+				usuario: usuarioId,
+				productos: carrito.map((car) => {
+					return {
+						producto: car._id,
+						cantidad: car.cantidad,
+						precioUnitario: car.precio,
+						precioTotalProducto: car.cantidad * car.precio,
+					};
+				}),
+				precioVenta: total,
+				observaciones: values.observaciones,
+			};
+
+			const facturaCreada = await crearFacturaAction(dispatch, facturaNueva);
+
+			console.log(facturaCreada);
+
+			setFacturaReciente(facturaCreada);
+			onClose();
+			showModalFactura(true);
 		},
 	});
 
@@ -60,7 +106,7 @@ const ModalPagosMixtos = ({ total, onClose, onConfirmarVenta }) => {
 	const totalPagado = valNequi + valDavi + valEfectivo;
 	const diferencia = totalPagado - total; // 0 = exacto, >0 = cambio, <0 = faltante
 
-	const esValido = formik.values.mesa.trim() !== '' && diferencia >= 0;
+	const esValido = formik.values.observaciones.trim() !== '';
 
 	// Determinar estilo y texto de la barra de estado
 	let statusColor = 'bg-gray-800 text-white';
@@ -105,11 +151,11 @@ const ModalPagosMixtos = ({ total, onClose, onConfirmarVenta }) => {
 						</label>
 						<input
 							type='text'
-							name='mesa'
+							name='observaciones'
 							placeholder='Ej: Mesa 5'
 							autoFocus
 							className='w-full  text-white p-3 rounded-xl border border-white focus:border-red-500 outline-none text-sm font-bold placeholder-gray-600'
-							value={formik.values.mesa}
+							value={formik.values.observaciones}
 							onChange={formik.handleChange}
 						/>
 					</div>

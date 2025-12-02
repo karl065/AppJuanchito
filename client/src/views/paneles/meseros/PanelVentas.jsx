@@ -4,18 +4,18 @@ import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
 import ModalPagosMixtos from './PagosMixtos.jsx';
 import ModalFactura from './Factura.jsx';
 import { SearchIcon } from '../../../components/Icons/Icons.jsx';
+import DetalleFactura from '../admin/DetalleFactura.jsx';
 
-const PanelVentas = ({ onRealizarVenta }) => {
+const PanelVentas = ({ usuarioId, cajaActual }) => {
 	const [categoriaActiva, setCategoriaActiva] = useState('Todo');
 	const [busqueda, setBusqueda] = useState('');
 	const [carrito, setCarrito] = useState([]);
+	const [showModalPago, setShowModalPago] = useState(false);
+	const [showModalFactura, setShowModalFactura] = useState(false);
+	const [facturaReciente, setFacturaReciente] = useState(null);
 
 	const categorias = useSelector((state) => state.categorias.categorias);
 	const productos = useSelector((state) => state.productos.productos);
-
-	// Estados para el flujo de cobro
-	const [stepCobro, setStepCobro] = useState(null); // null | 'pago' | 'factura'
-	const [datosPago, setDatosPago] = useState(null); // Se llena en el paso 1
 
 	// Filtros
 
@@ -57,6 +57,11 @@ const PanelVentas = ({ onRealizarVenta }) => {
 		0
 	);
 	const itemsTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+
+	const handleCloseModalFactura = () => {
+		setShowModalFactura(false);
+		setFacturaReciente(null);
+	};
 
 	return (
 		<div className='flex flex-col h-full  relative'>
@@ -143,7 +148,7 @@ const PanelVentas = ({ onRealizarVenta }) => {
 						</div>
 					</div>
 					<button
-						onClick={() => setStepCobro('pago')}
+						onClick={() => setShowModalPago(true)}
 						className='bg-red-600 hover:bg-red-500 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-red-900/50 active:scale-95 transition-transform'>
 						COBRAR
 					</button>
@@ -151,34 +156,22 @@ const PanelVentas = ({ onRealizarVenta }) => {
 			)}
 
 			{/* MODALES DEL FLUJO DE PAGO */}
-			{stepCobro === 'pago' && (
+			{showModalPago && (
 				<ModalPagosMixtos
 					total={totalCarrito}
-					onClose={() => setStepCobro(null)}
-					onNext={(datos) => {
-						setDatosPago(datos);
-						setStepCobro('factura');
-					}}
+					carrito={carrito} // Pasamos el carrito para armar los productos
+					usuarioId={usuarioId} // Pasamos el ID del usuario
+					cajaId={cajaActual._id} // Pasamos el ID de la caja
+					onClose={() => setShowModalPago(false)}
+					setFacturaReciente={setFacturaReciente}
+					showModalFactura={setShowModalFactura}
 				/>
 			)}
 
-			{stepCobro === 'factura' && datosPago && (
-				<ModalFactura
-					carrito={carrito}
-					datosPago={datosPago}
-					total={totalCarrito}
-					onBack={() => setStepCobro('pago')}
-					onConfirm={(imprimir) => {
-						onRealizarVenta({
-							carrito,
-							total: totalCarrito,
-							...datosPago, // contiene metodos, cambio, mesa, etc.
-							imprimirFactura: imprimir,
-						});
-						setCarrito([]);
-						setStepCobro(null);
-						setDatosPago(null);
-					}}
+			{showModalFactura && (
+				<DetalleFactura
+					factura={facturaReciente}
+					onClose={handleCloseModalFactura}
 				/>
 			)}
 		</div>

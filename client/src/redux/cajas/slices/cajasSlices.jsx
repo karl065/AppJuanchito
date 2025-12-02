@@ -17,6 +17,13 @@ const cajasSlice = createSlice({
 		cargarCajaActual: (state, action) => {
 			state.cajaActual = action.payload;
 		},
+		actualizarCajaActual: (state, action) => {
+			const facturaNueva = action.payload;
+			state.cajaActual = {
+				...state.cajaActual,
+				...state.cajaActual.facturas.push(facturaNueva),
+			};
+		},
 		actualizarCaja: (state, action) => {
 			const cajaActualizada = action.payload;
 
@@ -41,6 +48,7 @@ export const {
 	cargarCajas,
 	agregarCaja,
 	actualizarCaja,
+	actualizarCajaActual,
 	cargarEstadosCierre,
 	cargarCajaActual,
 } = cajasSlice.actions;

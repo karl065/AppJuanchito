@@ -8,10 +8,12 @@ const getControllerCaja = async (query) => {
 			return estadoEnum;
 		}
 
-		if (query.obtenerEstadoCierre) { 
-			const estadoCierreEnum = Caja.schema.path('resultadoCierre.estado').enumValues;   	
+		if (query.obtenerEstadoCierre) {
+			const estadoCierreEnum = Caja.schema.path(
+				'resultadoCierre.estado'
+			).enumValues;
 
-   			 return estadoCierreEnum ;
+			return estadoCierreEnum;
 		}
 
 		const filtro = filtroAvanzado(query, Caja.schema);
@@ -19,6 +21,8 @@ const getControllerCaja = async (query) => {
 		const cajas = await Caja.find(Object.keys(filtro).length > 0 ? filtro : {})
 			.populate('usuario', '_id nombre role')
 			.populate('facturas');
+
+		console.log(cajas);
 
 		return cajas;
 	} catch (error) {

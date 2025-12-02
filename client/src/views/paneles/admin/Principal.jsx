@@ -17,10 +17,12 @@ import {
 	UserGroupIcon,
 } from '../../../components/Icons/Icons.jsx';
 import ConfiguracionImpresora from '../../formularios/generales/ConfiguracionImpresora.jsx';
+import { useSelector } from 'react-redux';
 
 const Principal = () => {
 	const [tab, setTab] = useState(0);
 	const [showMenu, setShowMenu] = useState(true);
+	const facturas = useSelector((state) => state.facturas.facturas);
 
 	const renderView = () => {
 		switch (tab) {
@@ -29,7 +31,7 @@ const Principal = () => {
 			case 1:
 				return <Inventario />;
 			case 2:
-				return <Facturas />;
+				return <Facturas facturas={facturas} />;
 			case 3:
 				return <Cajas />;
 			case 4:
@@ -45,7 +47,7 @@ const Principal = () => {
 
 	return (
 		// 1. CAMBIO CLAVE: h-screen y overflow-hidden para bloquear scroll global
-		<div className="flex flex-col w-full h-full overflow-hidden bg-transparent font-sans">
+		<div className='flex flex-col w-full h-full overflow-hidden bg-transparent font-sans'>
 			{/* CONTENEDOR DE VISTAS 
                - Usamos padding-bottom (pb) condicional.
                - overflow-hidden aquí es crucial para contener las tablas largas.
@@ -55,7 +57,7 @@ const Principal = () => {
 					showMenu ? 'pb-[72px]' : 'pb-0'
 				}`}>
 				{/* El renderView ocupa el 100% de este espacio y maneja su propio scroll */}
-				<div className="h-full w-full">{renderView()}</div>
+				<div className='h-full w-full'>{renderView()}</div>
 			</div>
 
 			{/* BOTÓN FLOTANTE (TOGGLE) */}
@@ -67,9 +69,9 @@ const Principal = () => {
                 ${showMenu ? 'bottom-[85px]' : 'bottom-6'}`}
 				aria-label={showMenu ? 'Ocultar menú' : 'Mostrar menú'}>
 				{showMenu ? (
-					<ChevronDoubleDownIcon className="h-5 w-5" />
+					<ChevronDoubleDownIcon className='h-5 w-5' />
 				) : (
-					<ChevronDoubleUpIcon className="h-5 w-5" />
+					<ChevronDoubleUpIcon className='h-5 w-5' />
 				)}
 			</button>
 
@@ -80,53 +82,53 @@ const Principal = () => {
                 bg-linear-to-tr from-[#1a0000] to-[#000000] text-white py-2 flex justify-around items-center h-[72px]
                 ${showMenu ? 'translate-y-0' : 'translate-y-full'}`}>
 				<NavButton
-					icon={<UserGroupIcon className="h-6 w-6" />}
+					icon={<UserGroupIcon className='h-6 w-6' />}
 					index={0}
 					tab={tab}
 					setTab={setTab}
-					label="Usuarios"
+					label='Usuarios'
 				/>
 				<NavButton
-					icon={<CollectionIcon className="h-6 w-6" />}
+					icon={<CollectionIcon className='h-6 w-6' />}
 					index={1}
 					tab={tab}
 					setTab={setTab}
-					label="Productos"
+					label='Productos'
 				/>
 				<NavButton
-					icon={<ReceiptTaxIcon className="h-6 w-6" />}
+					icon={<ReceiptTaxIcon className='h-6 w-6' />}
 					index={2}
 					tab={tab}
 					setTab={setTab}
-					label="Facturas"
+					label='Facturas'
 				/>
 				<NavButton
-					icon={<CashIcon className="h-6 w-6" />}
+					icon={<CashIcon className='h-6 w-6' />}
 					index={3}
 					tab={tab}
 					setTab={setTab}
-					label="Cajas"
+					label='Cajas'
 				/>
 				<NavButton
-					icon={<SwitchHorizontalIcon className="h-6 w-6" />}
+					icon={<SwitchHorizontalIcon className='h-6 w-6' />}
 					index={4}
 					tab={tab}
 					setTab={setTab}
-					label="Movim."
+					label='Movim.'
 				/>
 				<NavButton
-					icon={<ChartPieIcon className="h-6 w-6" />}
+					icon={<ChartPieIcon className='h-6 w-6' />}
 					index={5}
 					tab={tab}
 					setTab={setTab}
-					label="Informes"
+					label='Informes'
 				/>
 				<NavButton
-					icon={<CogIcon className="h-6 w-6" />}
+					icon={<CogIcon className='h-6 w-6' />}
 					index={6}
 					tab={tab}
 					setTab={setTab}
-					label="Impr."
+					label='Impr.'
 				/>
 			</div>
 		</div>

@@ -11,6 +11,7 @@ import MiCajaView from './Caja.jsx';
 import PerfilSuperior from '../../../components/PerfilSuperior/PerfilSuperior.jsx';
 import AperturaCaja from '../../formularios/shared/AperturaCaja.jsx';
 import { crearCajasAction } from '../../../redux/cajas/actions/crearCajasAction.jsx';
+import Facturas from '../admin/Facturas.jsx';
 
 const PrincipalMeseros = () => {
 	const dispatch = useDispatch();
@@ -18,45 +19,15 @@ const PrincipalMeseros = () => {
 	// 1. ESTADOS PRINCIPALES
 	const login = useSelector((state) => state.login.login);
 	const cajaActual = useSelector((state) => state.cajas.cajaActual);
-	const [facturasTurno, setFacturasTurno] = useState([]); // Array de facturas devueltas por Back
 
 	console.log(cajaActual);
 
 	// Estado UI
 	const [vistaActual, setVistaActual] = useState('vender');
-	const [facturaReciente, setFacturaReciente] = useState(null); // Para mostrar modal de éxito
 
 	// HANDLERS
 	const handleAbrirCaja = async (nuevaCaja) => {
 		crearCajasAction(dispatch, nuevaCaja);
-	};
-
-	const handleProcesarVenta = (datosVenta) => {
-		console.log('🚀 ENVIANDO VENTA AL BACKEND...', datosVenta);
-
-		// MOCK: El backend procesa y RETORNA la factura creada
-		// Aquí se simula el delay y la respuesta
-		setTimeout(() => {
-			const nuevaFactura = {
-				_id: datosVenta._id,
-				cajaId: cajaActual._id,
-				mesa: datosVenta.mesa,
-				total: datosVenta.total,
-				metodos: datosVenta.metodos,
-				cambio: datosVenta.cambio,
-				items: datosVenta.carrito, // Guardamos detalle de items
-				hora: new Date().toLocaleTimeString('es-CO', {
-					hour: '2-digit',
-					minute: '2-digit',
-				}),
-				fecha: new Date().toISOString(),
-			};
-
-			// 1. Guardamos en historial local
-			setFacturasTurno((prev) => [nuevaFactura, ...prev]);
-			// 2. Mostramos el modal de éxito con la factura retornada
-			setFacturaReciente(nuevaFactura);
-		}, 500);
 	};
 
 	// Si no hay caja abierta, forzar vista de apertura
@@ -67,17 +38,13 @@ const PrincipalMeseros = () => {
 	const renderContent = () => {
 		switch (vistaActual) {
 			case 'vender':
-				return (
-					<PanelVentas
-						onProcesarVenta={handleProcesarVenta}
-						facturaReciente={facturaReciente}
-						onCerrarFactura={() => setFacturaReciente(null)}
-					/>
-				);
+				return <PanelVentas usuarioId={login._id} cajaActual={cajaActual} />;
 			case 'historial':
-				return <HistorialView facturas={cajaActual.facturas} />;
+				return <Facturas facturas={cajaActual.facturas} />;
 			case 'caja':
-				return <MiCajaView facturas={facturasTurno} cajaActual={cajaActual} />;
+				return (
+					<MiCajaView facturas={cajaActual.facturas} cajaActual={cajaActual} />
+				);
 			default:
 				return <PanelVentas />;
 		}
@@ -106,7 +73,6 @@ const PrincipalMeseros = () => {
 					onClick={() => setVistaActual('historial')}
 					icon={<HistoryIcon className='text-xl' />}
 					label='Ventas'
-					badge={facturasTurno.length}
 				/>
 				<NavButton
 					active={vistaActual === 'caja'}

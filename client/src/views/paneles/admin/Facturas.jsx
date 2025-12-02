@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { usePaginacionResponsiva } from '../../../Hooks/usePaginacionResponsiva.jsx';
 import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
 import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
@@ -8,9 +7,7 @@ import Paginado from '../../../components/Paginado/Paginado.jsx';
 import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
 import DetalleFactura from './DetalleFactura.jsx';
 
-const Facturas = () => {
-	const facturas = useSelector((state) => state.facturas.facturas);
-
+const Facturas = ({ facturas }) => {
 	const [busqueda, setBusqueda] = useState('');
 
 	// Estados para el Modal
@@ -93,46 +90,46 @@ const Facturas = () => {
 		return {
 			id: factura._id,
 			info: (
-				<div className="flex flex-col text-left max-w-[150px] sm:max-w-full">
-					<span className="font-bold text-white uppercase text-xs wrap-break-word leading-tight">
+				<div className='flex flex-col text-left max-w-[150px] sm:max-w-full'>
+					<span className='font-bold text-white uppercase text-xs wrap-break-word leading-tight'>
 						Ref: {factura._id.substring(0, 8)}...
 					</span>
-					<span className="text-[10px] text-gray-400 mt-0.5">
+					<span className='text-[10px] text-gray-400 mt-0.5'>
 						{formatearFechaHora(factura.createdAt)}
 					</span>
-					<span className="text-[10px] text-gray-500 italic mt-1">
+					<span className='text-[10px] text-gray-500 italic mt-1'>
 						Cajero: {factura.usuario?.nombre || 'N/A'}
 					</span>
 					{factura.observaciones && (
-						<span className="text-[10px] text-yellow-400 font-medium mt-1">
+						<span className='text-[10px] text-yellow-400 font-medium mt-1'>
 							Obs: {factura.observaciones}
 						</span>
 					)}
 				</div>
 			),
 			pago: (
-				<div className="flex flex-col items-end gap-1">
-					<span className="font-bold text-green-400 text-sm whitespace-nowrap">
+				<div className='flex flex-col items-end gap-1'>
+					<span className='font-bold text-green-400 text-sm whitespace-nowrap'>
 						{formatearPesos(factura.precioVenta)}
 					</span>
 
 					{/* Visualización de Método de Pago y Detalle Mixto */}
 					{factura.metodoPago !== 'mixto' ? (
-						<span className="text-[10px] text-gray-400 font-mono tracking-wide mt-1">
+						<span className='text-[10px] text-gray-400 font-mono tracking-wide mt-1'>
 							Método:{' '}
-							<span className="uppercase font-bold text-white">
+							<span className='uppercase font-bold text-white'>
 								{factura.metodoPago}
 							</span>
 						</span>
 					) : (
-						<div className="flex flex-col items-end text-[10px] text-gray-400 mt-1">
-							<span className="uppercase font-bold text-white mb-0.5">
+						<div className='flex flex-col items-end text-[10px] text-gray-400 mt-1'>
+							<span className='uppercase font-bold text-white mb-0.5'>
 								Mixto:
 							</span>
 							{metodosUsados.map((m, index) => (
-								<span key={index} className="flex gap-1 text-right">
-									<span className="text-gray-500">{m.name}:</span>
-									<span className="font-bold text-gray-300">
+								<span key={index} className='flex gap-1 text-right'>
+									<span className='text-gray-500'>{m.name}:</span>
+									<span className='font-bold text-gray-300'>
 										{formatearPesos(m.amount)}
 									</span>
 								</span>
@@ -141,7 +138,7 @@ const Facturas = () => {
 					)}
 
 					{detalle?.cambio > 0 && (
-						<span className="text-[10px] text-orange-400 font-bold mt-1">
+						<span className='text-[10px] text-orange-400 font-bold mt-1'>
 							Cambio: {formatearPesos(detalle.cambio)}
 						</span>
 					)}
@@ -151,17 +148,17 @@ const Facturas = () => {
 	});
 
 	return (
-		<div className="flex flex-col h-full gap-3 p-2 ">
+		<div className='flex flex-col h-full gap-3 p-2 '>
 			{/* Cabecera de Filtros Reutilizable */}
 			<Filtros
 				busqueda={busqueda}
 				setBusqueda={setBusqueda}
-				placeholder="Buscar por ID, cajero u observación..."
+				placeholder='Buscar por ID, cajero u observación...'
 				filters={filtersConfig}
 			/>
 
 			{/* Tabla con scroll Reutilizable */}
-			<div className="flex-1 min-h-0 overflow-y-auto pb-4">
+			<div className='flex-1 min-h-0 overflow-y-auto pb-4'>
 				{tableData.length > 0 ? (
 					<MobileTable
 						columns={columns}
@@ -169,7 +166,7 @@ const Facturas = () => {
 						onViewDetail={handleViewDetail}
 					/>
 				) : (
-					<div className="text-center text-gray-500 text-sm mt-8">
+					<div className='text-center text-gray-500 text-sm mt-8'>
 						Sin resultados.
 					</div>
 				)}
@@ -185,8 +182,8 @@ const Facturas = () => {
 
 			{/* MODAL INTEGRADO */}
 			{isModalOpen && facturaSeleccionada && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in bg-black/50">
-					<div className="w-full max-w-md h-[85vh] animate-fade-in-up">
+				<div className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in bg-black/50'>
+					<div className='w-full max-w-md h-[85vh] animate-fade-in-up'>
 						<DetalleFactura
 							factura={facturaSeleccionada}
 							onClose={handleCloseModal}
