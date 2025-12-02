@@ -24,6 +24,7 @@ const authMiddle = async (req, res, next) => {
 		req.usuario = decoded;
 		next();
 	} catch (error) {
+		console.log(error);
 		return res.status(401).json({ msg: error.message });
 	}
 };

@@ -9,18 +9,18 @@ export const reloginAction = async (dispatch, navigate) => {
 	try {
 		const data = await reloginServices();
 
-		if (data.role === 'Mesero') {
-			const verificarCajaAbierta = data.caja.filter(
-				(caj) => caj.estado === 'abierta'
-			);
+		console.log(JSON.stringify(data, null, 2));
 
-			const idCaja = verificarCajaAbierta[0]._id;
+		const verificarCajaAbierta = data.caja.filter(
+			(caj) => caj.estado === 'abierta'
+		);
 
-			const cajaActual = await obtenerCajasServices({
-				_id: idCaja,
-			});
-			dispatch(cargarCajaActual(cajaActual[0]));
-		}
+		const idCaja = verificarCajaAbierta[0]._id;
+
+		const cajaActual = await obtenerCajasServices({
+			_id: idCaja,
+		});
+		dispatch(cargarCajaActual(cajaActual[0]));
 
 		dispatch(setLogin(data));
 
@@ -30,7 +30,7 @@ export const reloginAction = async (dispatch, navigate) => {
 
 		return true;
 	} catch (error) {
-		console.log('Error relogin action: ', error);
+		console.log('Error relogin action: ', error.message);
 
 		// ⚠️ Si falla → redirecciona al login
 		if (navigate) navigate('/');

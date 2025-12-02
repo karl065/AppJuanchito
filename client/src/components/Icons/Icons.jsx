@@ -426,3 +426,16 @@ export const ChevronDownIcon2 = ({ className }) => (
 export const TrashIcon2 = ({ className }) => (
 	<span className={className}>🗑️</span>
 );
+export const CalculatorIcon = ({ className }) => (
+	<span className={className}>🧮</span>
+);
+export const CheckIcon2 = ({ className }) => (
+	<span className={className}>✅</span>
+);
+export const XIcon2 = ({ className }) => <span className={className}>❌</span>;
+export const StoreIcon = ({ className }) => (
+	<span className={className}>🏪</span>
+);
+export const AdminIcon = ({ className }) => (
+	<span className={className}>💼</span>
+);
