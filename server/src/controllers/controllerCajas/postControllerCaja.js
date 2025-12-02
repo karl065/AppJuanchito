@@ -5,8 +5,6 @@ const postControllerCaja = async (datos) => {
 	try {
 		datos.totalEfectivo = datos.apertura.baseInicial;
 		// Crear la caja
-
-		console.log(datos);
 		const cajaNueva = await Caja.create(datos);
 
 		// Asociarlo al usuario

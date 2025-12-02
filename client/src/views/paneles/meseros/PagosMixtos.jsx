@@ -1,192 +1,200 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { formatearPesos } from '../../../helpers/formatearPesos';
 import { ArrowRightIcon, XIcon } from '../../../components/Icons/Icons';
 
-const ModalPagosMixtos = ({ total, onClose, onNext }) => {
-	const [mesa, setMesa] = useState('');
-	// Montos a pagar por método (la suma debe dar el total)
-	const [pagos, setPagos] = useState({ efectivo: 0, nequi: 0, daviplata: 0 });
-	// Dinero físico entregado por el cliente (para calcular cambio)
-	const [dineroEntregado, setDineroEntregado] = useState('');
+const ModalPagosMixtos = ({ total, onClose, onConfirmarVenta }) => {
+	// Configuración de Formik
+	const formik = useFormik({
+		initialValues: {
+			mesa: '',
+			nequi: '',
+			daviplata: '',
+			efectivo: total, // Inicia con el total
+		},
+		enableReinitialize: true, // Permite reiniciar si cambia el total
+		onSubmit: (values) => {
+			const valNequi = parseInt(values.nequi) || 0;
+			const valDavi = parseInt(values.daviplata) || 0;
+			const valEfectivo = parseInt(values.efectivo) || 0;
 
-	// Inicializar efectivo con el total al abrir
-	useEffect(() => {
-		setPagos((prev) => ({ ...prev, efectivo: total }));
-	}, [total]);
+			const totalPagado = valNequi + valDavi + valEfectivo;
+			const diferencia = totalPagado - total;
 
-	const handleChangePago = (metodo, valor) => {
-		const val = parseInt(valor) || 0;
-		setPagos((prev) => ({ ...prev, [metodo]: val }));
+			onConfirmarVenta({
+				mesa: values.mesa,
+				metodos: {
+					efectivo: valEfectivo - (diferencia > 0 ? diferencia : 0), // Solo registramos lo que cubrió la deuda
+					nequi: valNequi,
+					daviplata: valDavi,
+				},
+				dineroEntregado: valEfectivo, // Lo que entregó fisicamente
+				cambio: diferencia > 0 ? diferencia : 0,
+			});
+		},
+	});
+
+	// Manejador especial para inputs digitales (Nequi/Daviplata)
+	// Recalcula automáticamente el efectivo sugerido
+	const handleDigitalChange = (e) => {
+		const { name, value } = e.target;
+		formik.handleChange(e); // Actualiza el campo digital
+
+		// Obtenemos valores numéricos para calcular
+		const valNum = parseInt(value) || 0;
+		const currentNequi =
+			name === 'nequi' ? valNum : parseInt(formik.values.nequi) || 0;
+		const currentDavi =
+			name === 'daviplata' ? valNum : parseInt(formik.values.daviplata) || 0;
+
+		// Ajustamos efectivo a lo que falta
+		const restante = Math.max(0, total - currentNequi - currentDavi);
+		formik.setFieldValue('efectivo', restante);
 	};
 
-	// Cálculos
-	const sumaPagos = pagos.efectivo + pagos.nequi + pagos.daviplata;
-	const faltante = total - sumaPagos;
-	const cambio = (parseInt(dineroEntregado) || 0) - pagos.efectivo;
+	// Cálculos Finales para la UI (Barra de estado)
+	const valNequi = parseInt(formik.values.nequi) || 0;
+	const valDavi = parseInt(formik.values.daviplata) || 0;
+	const valEfectivo = parseInt(formik.values.efectivo) || 0;
 
-	const esValido =
-		sumaPagos === total &&
-		mesa.trim() !== '' &&
-		(pagos.efectivo === 0 || cambio >= 0);
+	const totalPagado = valNequi + valDavi + valEfectivo;
+	const diferencia = totalPagado - total; // 0 = exacto, >0 = cambio, <0 = faltante
+
+	const esValido = formik.values.mesa.trim() !== '' && diferencia >= 0;
+
+	// Determinar estilo y texto de la barra de estado
+	let statusColor = 'bg-gray-800 text-white';
+	let statusText = 'Ingrese montos';
+
+	if (diferencia < 0) {
+		statusColor = 'bg-red-900/40 text-red-400 border border-red-900/50';
+		statusText = `FALTAN: ${formatearPesos(Math.abs(diferencia))}`;
+	} else if (diferencia === 0) {
+		statusColor = 'bg-green-900/40 text-green-400 border border-green-900/50';
+		statusText = 'PAGO EXACTO (Cambio $0)';
+	} else {
+		statusColor =
+			'bg-yellow-900/40 text-yellow-400 border border-yellow-900/50';
+		statusText = `CAMBIO A DEVOLVER: ${formatearPesos(diferencia)}`;
+	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4 animate-fade-in">
-			<div className="bg-[linear-gradient(180deg,#1a1a1a_0%,#000000_100%)] w-full max-w-sm rounded-t-2xl sm:rounded-2xl border-t sm:border border-gray-700 shadow-2xl flex flex-col max-h-[90dvh]">
+		<div className='fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4 animate-fade-in'>
+			<div className='bg-[linear-gradient(60deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-t-2xl sm:rounded-2xl border-t sm:border border-gray-700 shadow-2xl flex flex-col max-h-[90dvh]'>
 				{/* Header */}
-				<div className="p-4 border-b border-gray-800 flex justify-between items-center bg-gray-900/50 rounded-t-2xl">
+				<div className='p-4 border-b border-white flex justify-between items-center  rounded-t-2xl'>
 					<div>
-						<h3 className="text-lg font-bold text-white">Métodos de Pago</h3>
-						<p className="text-xs text-gray-400">
+						<h3 className='text-lg font-bold text-white'>Métodos de Pago</h3>
+						<p className='text-xs text-green-400'>
 							Total a Pagar:{' '}
-							<span className="text-green-400 font-bold text-sm">
+							<span className='text-green-400 font-black text-sm'>
 								{formatearPesos(total)}
 							</span>
 						</p>
 					</div>
-					<button onClick={onClose} className="text-gray-400 hover:text-white">
-						<XIcon className="w-6 h-6" />
+					<button onClick={onClose} className='text-white hover:text-white'>
+						<XIcon className='w-6 h-6' />
 					</button>
 				</div>
 
-				{/* Body */}
-				<div className="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-5">
+				<div className='flex-1 overflow-y-auto p-5 custom-scrollbar space-y-4'>
 					{/* Referencia */}
 					<div>
-						<label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">
-							Referencia (Mesa / Barra)
+						<label className='text-[10px] font-bold text-white uppercase mb-1 block'>
+							Referencia
 						</label>
 						<input
-							type="text"
-							placeholder="Ej: Barra 1"
+							type='text'
+							name='mesa'
+							placeholder='Ej: Mesa 5'
 							autoFocus
-							className="w-full bg-gray-800 text-white p-3 rounded-xl border border-gray-700 focus:border-red-500 outline-none text-sm font-bold"
-							value={mesa}
-							onChange={(e) => setMesa(e.target.value)}
+							className='w-full  text-white p-3 rounded-xl border border-white focus:border-red-500 outline-none text-sm font-bold placeholder-gray-600'
+							value={formik.values.mesa}
+							onChange={formik.handleChange}
 						/>
 					</div>
 
-					{/* Inputs de Pagos */}
-					<div className="space-y-3">
-						<label className="text-[10px] font-bold text-gray-400 uppercase block">
-							Distribución del Pago
-						</label>
-
-						{/* Fila Nequi */}
-						<div className="flex items-center gap-2 bg-gray-800/50 p-2 rounded-xl border border-gray-700">
-							<span className="text-2xl">📱</span>
-							<div className="flex-1">
-								<span className="text-xs text-gray-300 block font-bold">
+					<div className='space-y-3'>
+						{/* Nequi */}
+						<div className='flex items-center gap-3  p-2 rounded-xl border border-white'>
+							<div className='w-10 h-10  rounded-lg flex items-center justify-center text-xl shadow-inner'>
+								📱
+							</div>
+							<div className='flex-1'>
+								<span className='text-[10px] text-white font-bold uppercase block mb-0.5'>
 									Nequi
 								</span>
 								<input
-									type="number"
-									className="bg-transparent w-full text-white outline-none text-sm font-mono placeholder-gray-600"
-									placeholder="0"
-									value={pagos.nequi || ''}
-									onChange={(e) => handleChangePago('nequi', e.target.value)}
+									type='number'
+									name='nequi'
+									className='bg-transparent w-full text-white outline-none text-base font-bold placeholder-gray-700'
+									placeholder='0'
+									value={formik.values.nequi}
+									onChange={handleDigitalChange}
 								/>
 							</div>
 						</div>
 
-						{/* Fila Daviplata */}
-						<div className="flex items-center gap-2 bg-gray-800/50 p-2 rounded-xl border border-gray-700">
-							<span className="text-2xl">🔴</span>
-							<div className="flex-1">
-								<span className="text-xs text-gray-300 block font-bold">
+						{/* Daviplata */}
+						<div className='flex items-center gap-3  p-2 rounded-xl border border-white'>
+							<div className='w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-inner'>
+								🔴
+							</div>
+							<div className='flex-1'>
+								<span className='text-[10px] text-white font-bold uppercase block mb-0.5'>
 									Daviplata
 								</span>
 								<input
-									type="number"
-									className="bg-transparent w-full text-white outline-none text-sm font-mono placeholder-gray-600"
-									placeholder="0"
-									value={pagos.daviplata || ''}
-									onChange={(e) =>
-										handleChangePago('daviplata', e.target.value)
-									}
+									type='number'
+									name='daviplata'
+									className='bg-transparent w-full text-white outline-none text-base font-bold placeholder-gray-700'
+									placeholder='0'
+									value={formik.values.daviplata}
+									onChange={handleDigitalChange}
 								/>
 							</div>
 						</div>
 
-						{/* Fila Efectivo (Calculado o Manual) */}
-						<div className="flex items-center gap-2 bg-gray-800/50 p-2 rounded-xl border border-gray-700">
-							<span className="text-2xl">💵</span>
-							<div className="flex-1">
-								<span className="text-xs text-gray-300 block font-bold">
-									Efectivo (Monto a cubrir)
+						{/* Efectivo */}
+						<div className='flex items-center gap-3 bg-gray-800 p-2 rounded-xl border border-gray-600 shadow-lg relative overflow-hidden'>
+							{/* Glow effect for cash focus */}
+							<div className='absolute top-0 left-0 w-1 h-full bg-green-500'></div>
+							<div className='w-10 h-10  rounded-lg flex items-center justify-center text-xl'>
+								💵
+							</div>
+							<div className='flex-1'>
+								<span className='text-[10px] text-green-400 font-bold uppercase block mb-0.5'>
+									Efectivo Recibido
 								</span>
 								<input
-									type="number"
-									className="bg-transparent w-full text-white outline-none text-sm font-mono placeholder-gray-600"
-									placeholder="0"
-									value={pagos.efectivo || ''}
-									onChange={(e) => handleChangePago('efectivo', e.target.value)}
+									type='number'
+									name='efectivo'
+									className='bg-transparent w-full text-white outline-none text-xl font-black placeholder-gray-700'
+									placeholder='0'
+									value={formik.values.efectivo}
+									onChange={formik.handleChange}
 								/>
 							</div>
 						</div>
 					</div>
 
-					{/* Alerta de Cuadre */}
-					{faltante !== 0 && (
-						<div
-							className={`text-center text-xs font-bold py-1 rounded ${
-								faltante > 0
-									? 'text-red-400 bg-red-900/20'
-									: 'text-yellow-400 bg-yellow-900/20'
-							}`}>
-							{faltante > 0
-								? `Faltan: ${formatearPesos(faltante)}`
-								: `Sobran: ${formatearPesos(Math.abs(faltante))}`}
-						</div>
-					)}
-
-					{/* Sección de Cambio (Solo si paga algo en efectivo) */}
-					{pagos.efectivo > 0 && (
-						<div className="bg-gray-800 p-3 rounded-xl border border-gray-600 mt-2 animate-fade-in">
-							<label className="text-[10px] font-bold text-green-400 uppercase mb-1 block">
-								¿Con cuánto paga en efectivo?
-							</label>
-							<input
-								type="number"
-								className="w-full bg-black text-white p-3 rounded-lg border border-gray-700 focus:border-green-500 outline-none text-xl font-bold text-center tracking-widest"
-								placeholder={pagos.efectivo}
-								value={dineroEntregado}
-								onChange={(e) => setDineroEntregado(e.target.value)}
-							/>
-							<div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-700">
-								<span className="text-xs text-gray-400 uppercase font-bold">
-									Cambio a devolver:
-								</span>
-								<span
-									className={`text-xl font-black ${
-										cambio < 0 ? 'text-red-500' : 'text-green-400'
-									}`}>
-									{formatearPesos(cambio > 0 ? cambio : 0)}
-								</span>
-							</div>
-						</div>
-					)}
+					{/* BARRA DE ESTADO DINÁMICA */}
+					<div
+						className={`p-3 rounded-xl text-center font-bold text-sm transition-all duration-300 shadow-lg flex items-center justify-center gap-2 ${statusColor}`}>
+						{diferencia < 0 && <span>⚠️</span>}
+						{diferencia === 0 && <span>👌</span>}
+						{diferencia > 0 && <span>🤑</span>}
+						{statusText}
+					</div>
 				</div>
 
-				{/* Footer Actions */}
-				<div className="p-4 bg-gray-900 border-t border-gray-800 flex gap-3">
+				<div className='p-4 bg-gray-900 border-t border-gray-800'>
 					<button
-						onClick={() =>
-							onNext({
-								mesa,
-								metodos: pagos,
-								dineroEntregado: parseInt(dineroEntregado) || 0,
-								cambio: cambio > 0 ? cambio : 0,
-							})
-						}
+						onClick={formik.handleSubmit}
 						disabled={!esValido}
-						className={`w-full py-3 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all ${
-							esValido
-								? 'bg-green-600 hover:bg-green-500 text-white shadow-green-900/40 active:scale-95'
-								: 'bg-gray-800 text-gray-500 cursor-not-allowed'
-						}`}>
-						<span>Ver Factura</span>
-						<ArrowRightIcon className="w-4 h-4" />
+						className={`w-full py-4 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all uppercase tracking-wide ${esValido ? 'bg-red-600 hover:bg-red-500 text-white shadow-red-900/40 active:scale-95' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}>
+						<span>Confirmar Venta</span>
+						<ArrowRightIcon className='w-4 h-4' />
 					</button>
 				</div>
 			</div>

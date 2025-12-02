@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	CashIcon,
 	CashIcon2,
 	HistoryIcon,
 	HomeIcon,
@@ -29,7 +28,6 @@ const PrincipalMeseros = () => {
 
 	// HANDLERS
 	const handleAbrirCaja = async (nuevaCaja) => {
-		console.log('🚀 CREANDO CAJA EN BACKEND:', nuevaCaja);
 		crearCajasAction(dispatch, nuevaCaja);
 	};
 
@@ -77,7 +75,7 @@ const PrincipalMeseros = () => {
 					/>
 				);
 			case 'historial':
-				return <HistorialView facturas={facturasTurno} />;
+				return <HistorialView facturas={cajaActual.facturas} />;
 			case 'caja':
 				return <MiCajaView facturas={facturasTurno} cajaActual={cajaActual} />;
 			default:
@@ -86,17 +84,17 @@ const PrincipalMeseros = () => {
 	};
 
 	return (
-		<div className='flex flex-col h-dvh bg-gray-900 text-white font-sans overflow-hidden'>
+		<div className='flex flex-col h-dvh text-white font-sans overflow-hidden'>
 			{/* Header */}
 			<PerfilSuperior />
 
 			{/* Main */}
-			<main className='flex-1 overflow-hidden relative bg-black'>
+			<main className='flex-1 overflow-hidden relative '>
 				{renderContent()}
 			</main>
 
 			{/* Nav */}
-			<nav className='h-16 bg-black/95 backdrop-blur-md border-t border-gray-800 flex justify-around items-center px-1 pb-1 shrink-0 z-30 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]'>
+			<nav className='h-16  backdrop-blur-md  flex justify-around items-center px-1 pb-1 shrink-0 z-30 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]'>
 				<NavButton
 					active={vistaActual === 'vender'}
 					onClick={() => setVistaActual('vender')}
@@ -113,7 +111,7 @@ const PrincipalMeseros = () => {
 				<NavButton
 					active={vistaActual === 'caja'}
 					onClick={() => setVistaActual('caja')}
-					icon={<CashIcon className='text-xl' />}
+					icon={<CashIcon2 className='text-xl' />}
 					label='Mi Caja'
 				/>
 			</nav>
