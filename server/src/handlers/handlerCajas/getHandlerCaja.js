@@ -5,8 +5,6 @@ const getHandlerCaja = async (req, res) => {
 		const query = req.query;
 		const cajas = await getControllerCaja(query);
 
-		console.log(cajas);
-
 		return res.status(200).json(cajas);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });

@@ -19,10 +19,7 @@ export const reloginAction = async (dispatch, navigate) => {
 			const cajaActual = await obtenerCajasServices({
 				_id: idCaja,
 			});
-
-			console.log(cajaActual);
-
-			dispatch(cargarCajaActual(cajaActual));
+			dispatch(cargarCajaActual(cajaActual[0]));
 		}
 
 		dispatch(setLogin(data));

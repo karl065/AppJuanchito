@@ -71,8 +71,6 @@ const ModalPagosMixtos = ({
 
 			const facturaCreada = await crearFacturaAction(dispatch, facturaNueva);
 
-			console.log(facturaCreada);
-
 			setFacturaReciente(facturaCreada);
 			setCarrito([]);
 			onClose();

@@ -76,8 +76,6 @@ const Usuarios = () => {
 	const handleToggleStatus = (id, userStatus) => {
 		// En producción: dispatch(updateUserStatus({ id, status: !currentStatus }))
 		actualizarUsuariosAction(dispatch, id, { userStatus: !userStatus });
-		console.log('Cambia Status: ', id);
-		console.log('Cambia Status: ', userStatus);
 	};
 
 	const handleEdit = (user) => {
@@ -110,14 +108,14 @@ const Usuarios = () => {
 	const tableData = paginatedData.map((user) => ({
 		id: user._id,
 		info: (
-			<div className="flex flex-col text-left max-w-[150px] sm:max-w-full">
-				<span className="font-bold text-white uppercase text-xs wrap-break-word leading-tight">
+			<div className='flex flex-col text-left max-w-[150px] sm:max-w-full'>
+				<span className='font-bold text-white uppercase text-xs wrap-break-word leading-tight'>
 					{user.nombre}
 				</span>
-				<span className="text-[10px] text-gray-400 truncate mt-0.5">
+				<span className='text-[10px] text-gray-400 truncate mt-0.5'>
 					{user.correo}
 				</span>
-				<div className="mt-1">
+				<div className='mt-1'>
 					<span
 						className={`text-[9px] px-1.5 py-0.5 rounded border ${
 							user.role === 'Administrador'
@@ -130,7 +128,7 @@ const Usuarios = () => {
 			</div>
 		),
 		estado: (
-			<div className="flex flex-col items-end gap-1">
+			<div className='flex flex-col items-end gap-1'>
 				<button
 					onClick={() => handleToggleStatus(user._id, user.userStatus)}
 					className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 transition-all active:scale-95 border cursor-pointer hover:opacity-80 ${
@@ -145,11 +143,11 @@ const Usuarios = () => {
 						}`}></span>
 					<span>{user.userStatus ? 'Activo' : 'Inactivo'}</span>
 				</button>
-				<span className="text-[10px] text-gray-400 font-mono tracking-wide">
+				<span className='text-[10px] text-gray-400 font-mono tracking-wide'>
 					{user.celular}
 				</span>
 				{user.dispositivos?.length > 0 && (
-					<span className="text-[9px] text-gray-500">
+					<span className='text-[9px] text-gray-500'>
 						{user.dispositivos.length} Disp.
 					</span>
 				)}
@@ -163,7 +161,7 @@ const Usuarios = () => {
 	];
 
 	return (
-		<div className="flex flex-col h-full gap-3 p-2 ">
+		<div className='flex flex-col h-full gap-3 p-2 '>
 			{/* 🚨 NUEVO: Reemplazamos el espacio vacío con el Perfil Superior */}
 			<PerfilSuperior />
 
@@ -172,13 +170,13 @@ const Usuarios = () => {
 				busqueda={busqueda}
 				setBusqueda={setBusqueda}
 				onAdd={handleAddUser}
-				placeholder="Buscar por nombre o correo..."
-				addButtonTitle="Crear nuevo usuario"
+				placeholder='Buscar por nombre o correo...'
+				addButtonTitle='Crear nuevo usuario'
 				extraControls={filtersConfig}
 			/>
 
 			{/* Tabla con scroll Reutilizable */}
-			<div className="flex-1 min-h-0 overflow-y-auto pb-4">
+			<div className='flex-1 min-h-0 overflow-y-auto pb-4'>
 				{tableData.length > 0 ? (
 					<MobileTable
 						columns={columns}
@@ -191,7 +189,7 @@ const Usuarios = () => {
 						onDelete={handleDelete}
 					/>
 				) : (
-					<div className="text-center text-gray-500 text-sm mt-8">
+					<div className='text-center text-gray-500 text-sm mt-8'>
 						{usuarios?.length === 0 ? 'No hay usuarios.' : 'Sin resultados.'}
 					</div>
 				)}
@@ -207,18 +205,18 @@ const Usuarios = () => {
 
 			{/* MODAL DE CREACIÓN DE USUARIO */}
 			{isModalCrearUsuarioOpen && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm p-4 animate-fade-in">
-					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
-						<div className="flex justify-between items-center p-4 border-b border-gray-700">
-							<h3 className="text-lg font-bold text-white">Nuevo Usuario</h3>
+				<div className='fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm p-4 animate-fade-in'>
+					<div className='bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative'>
+						<div className='flex justify-between items-center p-4 border-b border-gray-700'>
+							<h3 className='text-lg font-bold text-white'>Nuevo Usuario</h3>
 							<button
 								onClick={handleCloseCrearUsuarioModal}
-								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
-								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+								className='p-1 rounded-full hover:bg-gray-700 transition-colors'>
+								<XIcon className='w-5 h-5 text-gray-400 hover:text-white' />
 							</button>
 						</div>
 
-						<div className="p-4">
+						<div className='p-4'>
 							<FormularioCrearUsuario
 								onSuccess={handleSuccessCreate}
 								onClose={handleCloseCrearUsuarioModal}
@@ -229,19 +227,19 @@ const Usuarios = () => {
 			)}
 			{/* MODAL DE ACTUALIZACIÓN */}
 			{isModalActualizarUsuarioOpen && usuarioEditar && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in">
-					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
-						<div className="flex justify-between items-center p-4 border-b border-gray-700">
-							<h3 className="text-lg font-bold text-white">
+				<div className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in'>
+					<div className='bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative'>
+						<div className='flex justify-between items-center p-4 border-b border-gray-700'>
+							<h3 className='text-lg font-bold text-white'>
 								Actualizar Usuario
 							</h3>
 							<button
 								onClick={handleCloseActualizarUsuarioModal}
-								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
-								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+								className='p-1 rounded-full hover:bg-gray-700 transition-colors'>
+								<XIcon className='w-5 h-5 text-gray-400 hover:text-white' />
 							</button>
 						</div>
-						<div className="p-4">
+						<div className='p-4'>
 							<FormularioActualizarUsuario
 								userToEdit={usuarioEditar}
 								onSuccess={handleSuccessUpdate}

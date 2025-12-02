@@ -23,8 +23,6 @@ const facturaMiddle = async (req, res, next) => {
 			});
 		}
 
-		console.log(caja);
-
 		// Si existe una caja abierta y no es la misma que se está intentando abrir
 		const cajaAbierta = await Caja.findById(caja);
 		if (cajaAbierta.estado === 'cerrada') {

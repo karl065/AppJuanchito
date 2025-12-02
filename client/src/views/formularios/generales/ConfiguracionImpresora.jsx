@@ -68,7 +68,6 @@ const ConfiguracionImpresora = () => {
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
-			console.log(JSON.stringify(values, null, 2));
 			crearImpresorasAction(dispatch, values);
 			alertSuccess(
 				`Configuración de ${values.modoImpresion.toUpperCase()} guardada con éxito.`
@@ -85,18 +84,18 @@ const ConfiguracionImpresora = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className="flex-1 flex-col h-full overflow-y-auto">
+			className='flex-1 flex-col h-full overflow-y-auto'>
 			{/* --- 1. CONTENIDO SCROLLABLE (Todo el formulario menos el footer) --- */}
-			<div className="flex-1 overflow-y-auto space-y-5 px-4 pt-4 pb-1 pr-6">
+			<div className='flex-1 overflow-y-auto space-y-5 px-4 pt-4 pb-1 pr-6'>
 				{/* 🚨 NUEVO: CAMPO NOMBRE */}
 				<div>
 					<label className={getLabelClasses('text-yellow-400')}>
 						Nombre de la Conexión (Ej: Caja Principal)
 					</label>
 					<input
-						type="text"
-						name="nombre"
-						placeholder="Nombre único para identificar esta impresora"
+						type='text'
+						name='nombre'
+						placeholder='Nombre único para identificar esta impresora'
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 						value={formik.values.nombre}
@@ -105,16 +104,16 @@ const ConfiguracionImpresora = () => {
 						)}
 					/>
 					{formik.touched.nombre && formik.errors.nombre && (
-						<p className="text-xs text-red-400 mt-1">{formik.errors.nombre}</p>
+						<p className='text-xs text-red-400 mt-1'>{formik.errors.nombre}</p>
 					)}
 				</div>
 
 				{/* 1. SELECCIÓN DE MODO */}
 				<div>
 					<label className={getLabelClasses()}>Modo de Conexión</label>
-					<div className="flex gap-4 mt-2 bg-black/80 p-2 rounded-xl border border-red-900/50">
+					<div className='flex gap-4 mt-2 bg-black/80 p-2 rounded-xl border border-red-900/50'>
 						<button
-							type="button"
+							type='button'
 							onClick={() => setModoImpresion('Bluetooth')}
 							className={`flex-1 py-2 rounded-lg font-bold transition-all ${
 								modoImpresion === 'Bluetooth'
@@ -124,7 +123,7 @@ const ConfiguracionImpresora = () => {
 							Bluetooth
 						</button>
 						<button
-							type="button"
+							type='button'
 							onClick={() => setModoImpresion('Wifi')}
 							className={`flex-1 py-2 rounded-lg font-bold transition-all ${
 								modoImpresion === 'Wifi'
@@ -138,17 +137,17 @@ const ConfiguracionImpresora = () => {
 
 				{/* 2. CONFIGURACIÓN BLUETOOTH */}
 				{modoImpresion === 'Bluetooth' && (
-					<div className="space-y-3 p-3 border border-gray-700 rounded-xl bg-gray-800/50 shadow-inner">
+					<div className='space-y-3 p-3 border border-gray-700 rounded-xl bg-gray-800/50 shadow-inner'>
 						<label className={getLabelClasses('text-red-400')}>
 							Seleccionar Impresora
 						</label>
 
 						{/* Botón Escaneo */}
 						<button
-							type="button"
+							type='button'
 							onClick={iniciarEscaneo}
 							disabled={scanning}
-							className="w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+							className='w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2'>
 							<ScanIcon
 								className={`w-5 h-5 ${scanning ? 'animate-spin' : ''}`}
 							/>
@@ -156,9 +155,9 @@ const ConfiguracionImpresora = () => {
 						</button>
 
 						{/* Lista de Dispositivos */}
-						<div className="max-h-32 overflow-y-auto border border-gray-600 rounded-lg p-2 bg-black/50 custom-scrollbar">
+						<div className='max-h-32 overflow-y-auto border border-gray-600 rounded-lg p-2 bg-black/50 custom-scrollbar'>
 							{dispositivosBT.length === 0 ? (
-								<p className="text-xs text-gray-500 py-2 text-center">
+								<p className='text-xs text-gray-500 py-2 text-center'>
 									Inicie el escaneo para ver dispositivos.
 								</p>
 							) : (
@@ -174,7 +173,7 @@ const ConfiguracionImpresora = () => {
 												? 'bg-red-700/50 border border-red-500'
 												: 'bg-gray-700/20'
 										}`}>
-										<p className="font-bold truncate">{device.name}</p>
+										<p className='font-bold truncate'>{device.name}</p>
 									</div>
 								))
 							)}
@@ -182,7 +181,7 @@ const ConfiguracionImpresora = () => {
 
 						{/* 🚨 Mensaje de error (Validación de selección) */}
 						{formik.touched.macAddress && formik.errors.macAddress && (
-							<p className="text-xs text-red-400 mt-1">
+							<p className='text-xs text-red-400 mt-1'>
 								{formik.errors.macAddress}
 							</p>
 						)}
@@ -191,16 +190,16 @@ const ConfiguracionImpresora = () => {
 
 				{/* 3. CONFIGURACIÓN WI-FI / LAN */}
 				{modoImpresion === 'Wifi' && (
-					<div className="space-y-3 p-3 border border-gray-700 rounded-xl bg-gray-800/50 shadow-inner">
+					<div className='space-y-3 p-3 border border-gray-700 rounded-xl bg-gray-800/50 shadow-inner'>
 						<label className={getLabelClasses('text-red-400')}>
 							Wi-Fi / LAN (IP y Puerto)
 						</label>
 						<div>
 							<label className={getLabelClasses()}>Dirección IP</label>
 							<input
-								type="text"
-								name="ipAddress"
-								placeholder="Ej: 192.168.1.100"
+								type='text'
+								name='ipAddress'
+								placeholder='Ej: 192.168.1.100'
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
 								value={formik.values.ipAddress}
@@ -209,7 +208,7 @@ const ConfiguracionImpresora = () => {
 								)}
 							/>
 							{formik.touched.ipAddress && formik.errors.ipAddress && (
-								<p className="text-xs text-red-400 mt-1">
+								<p className='text-xs text-red-400 mt-1'>
 									{formik.errors.ipAddress}
 								</p>
 							)}
@@ -217,9 +216,9 @@ const ConfiguracionImpresora = () => {
 						<div>
 							<label className={getLabelClasses()}>Puerto (Port)</label>
 							<input
-								type="number"
-								name="port"
-								placeholder="9100 (Estándar)"
+								type='number'
+								name='port'
+								placeholder='9100 (Estándar)'
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
 								value={formik.values.port}
@@ -228,7 +227,7 @@ const ConfiguracionImpresora = () => {
 								)}
 							/>
 							{formik.touched.port && formik.errors.port && (
-								<p className="text-xs text-red-400 mt-1">
+								<p className='text-xs text-red-400 mt-1'>
 									{formik.errors.port}
 								</p>
 							)}
@@ -239,9 +238,9 @@ const ConfiguracionImpresora = () => {
 			{/* --- FIN DEL CONTENIDO SCROLLABLE --- */}
 
 			{/* 4. BOTONES DE ACCIÓN (FOOTER FIJO) */}
-			<div className="flex gap-3 pt-3 border-t border-gray-700 px-4 pb-2 shrink-0">
+			<div className='flex gap-3 pt-3 border-t border-gray-700 px-4 pb-2 shrink-0'>
 				<button
-					type="submit"
+					type='submit'
 					className={`flex-1 py-3 rounded-xl font-bold text-white shadow-lg transition-all bg-red-600 `}>
 					Guardar Configuración
 				</button>

@@ -2,8 +2,6 @@ import verificar2FALoginController from './../../../controllers/controllersUsuar
 
 const verificar2FALoginHandler = async (req, res) => {
 	try {
-
-		console.log(req.body)
 		const data = await verificar2FALoginController(req.body);
 
 		const token = data.token;

@@ -4,11 +4,6 @@ import { generarTextoFactura } from './generarTextoFactura.jsx';
 export const imprimirFacturaBluetooth = async (factura, printerAddress) => {
 	// 1. Verificar si el plugin está disponible
 	if (!window.bluetoothSerial) {
-		console.warn('Simulación de impresión: Plugin BT no disponible.');
-		// Usamos la simulación si no estamos en entorno nativo
-		console.log('--- TICKET BLUETOOTH SIMULADO (ESC/POS) ---');
-		console.log('Dirección MAC objetivo: ', printerAddress);
-		console.log(generarTextoFactura(factura));
 		alertInfo('¡Impresión Bluetooth Simulada Enviada!');
 		return;
 	}

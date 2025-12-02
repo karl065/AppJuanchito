@@ -328,7 +328,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 					carrito={carrito} // Pasamos el carrito para armar los productos
 					setCarrito={setCarrito}
 					usuarioId={usuarioId} // Pasamos el ID del usuario
-					cajaId={cajaActual[0]._id} // Pasamos el ID de la caja
+					cajaId={cajaActual._id} // Pasamos el ID de la caja
 					onClose={() => setShowModalPago(false)}
 					setFacturaReciente={setFacturaReciente}
 					showModalFactura={setShowModalFactura}

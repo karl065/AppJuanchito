@@ -14,11 +14,10 @@ import { crearCajasAction } from '../../../redux/cajas/actions/crearCajasAction.
 import Facturas from '../admin/Facturas.jsx';
 
 const PrincipalMeseros = () => {
-	const dispatch = useDispatch();
-
 	// 1. ESTADOS PRINCIPALES
 	const login = useSelector((state) => state.login.login);
 	const cajaActual = useSelector((state) => state.cajas.cajaActual);
+	const dispatch = useDispatch();
 
 	// Estado UI
 	const [vistaActual, setVistaActual] = useState('vender');
@@ -32,17 +31,16 @@ const PrincipalMeseros = () => {
 	if (!cajaActual) {
 		return <AperturaCaja usuario={login} onAbrirCaja={handleAbrirCaja} />;
 	}
-
 	const renderContent = () => {
 		switch (vistaActual) {
 			case 'vender':
 				return <PanelVentas usuarioId={login._id} cajaActual={cajaActual} />;
 			case 'historial':
 				return (
-					<Facturas facturas={cajaActual[0].facturas} cajero={login.nombre} />
+					<Facturas facturas={cajaActual.facturas} cajero={login.nombre} />
 				);
 			case 'caja':
-				return <MiCajaView cajaActual={cajaActual[0]} />;
+				return <MiCajaView />;
 			default:
 				return <PanelVentas />;
 		}

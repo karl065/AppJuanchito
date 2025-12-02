@@ -22,8 +22,6 @@ const getControllerCaja = async (query) => {
 			.populate('usuario', '_id nombre role')
 			.populate('facturas');
 
-		console.log(cajas);
-
 		return cajas;
 	} catch (error) {
 		return error;
