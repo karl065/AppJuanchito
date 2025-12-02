@@ -46,8 +46,6 @@ const ModalPagosMixtos = ({
 				metodoPagoFinal = metodosConSaldo[0].nombre;
 			}
 
-			console.log(metodoPagoFinal);
-
 			const facturaNueva = {
 				metodoPago: metodoPagoFinal,
 				caja: cajaId,

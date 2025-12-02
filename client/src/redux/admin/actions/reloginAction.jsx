@@ -14,8 +14,10 @@ export const reloginAction = async (dispatch, navigate) => {
 				(caj) => caj.estado === 'abierta'
 			);
 
+			const idCaja = verificarCajaAbierta[0]._id;
+
 			const cajaActual = await obtenerCajasServices({
-				_id: verificarCajaAbierta[0]._id,
+				_id: idCaja,
 			});
 
 			console.log(cajaActual);

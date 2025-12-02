@@ -19,10 +19,11 @@ const cajasSlice = createSlice({
 		},
 		actualizarCajaActual: (state, action) => {
 			const facturaNueva = action.payload;
-			state.cajaActual = {
-				...state.cajaActual,
-				...state.cajaActual.facturas.push(facturaNueva),
-			};
+			const facturasActuales = state.cajaActual.facturas || [];
+
+			console.log(facturasActuales);
+
+			state.cajaActual.facturas = [...facturasActuales, facturaNueva]; // <-- Agrega la factura aquí
 		},
 		actualizarCaja: (state, action) => {
 			const cajaActualizada = action.payload;
