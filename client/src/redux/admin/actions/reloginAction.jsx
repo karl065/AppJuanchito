@@ -1,5 +1,6 @@
 import { alertSuccess } from '../../../helpers/alertas.jsx';
 import reloginServices from '../../../services/auth/reloginServices.jsx';
+import obtenerCajasServices from '../../../services/cajas/obtenerCajasServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 
@@ -13,7 +14,13 @@ export const reloginAction = async (dispatch, navigate) => {
 				(caj) => caj.estado === 'abierta'
 			);
 
-			dispatch(cargarCajaActual(verificarCajaAbierta[0]));
+			const cajaActual = await obtenerCajasServices({
+				_id: verificarCajaAbierta[0]._id,
+			});
+
+			console.log(cajaActual);
+
+			dispatch(cargarCajaActual(cajaActual));
 		}
 
 		dispatch(setLogin(data));
