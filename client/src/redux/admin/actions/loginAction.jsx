@@ -14,11 +14,6 @@ export const loginAction = async (
 	try {
 		loadingAction(true, dispatch);
 
-		console.log(
-			'UserLogin en loginAction ',
-			JSON.stringify(userLogin, null, 2)
-		);
-
 		// Obtener fingerprint del dispositivo
 		const fingerprint = await obtenerFingerprint();
 
@@ -26,8 +21,6 @@ export const loginAction = async (
 			...userLogin,
 			fingerprint,
 		});
-
-		console.log('data respuesta loginService ', JSON.stringify(data, null, 2));
 
 		data.fingerprint = fingerprint;
 

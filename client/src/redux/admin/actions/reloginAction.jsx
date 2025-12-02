@@ -7,6 +7,8 @@ export const reloginAction = async (dispatch, navigate) => {
 	try {
 		const data = await reloginServices();
 
+		console.log(JSON.stringify(data, null, 2));
+
 		dispatch(setLogin(data));
 
 		alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);

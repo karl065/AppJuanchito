@@ -411,3 +411,9 @@ export const ArrowRightIcon = ({ className }) => (
 export const BackIcon = ({ className }) => (
 	<span className={className}>⬅️</span>
 );
+export const UserIcon = ({ className }) => (
+	<span className={className}>👤</span>
+);
+export const LockIcon = ({ className }) => (
+	<span className={className}>🔒</span>
+);

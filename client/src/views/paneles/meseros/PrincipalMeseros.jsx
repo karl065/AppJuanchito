@@ -1,100 +1,117 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+	CashIcon,
 	CashIcon2,
 	HistoryIcon,
 	HomeIcon,
-	LogoutIcon,
-	UsersIcon,
 } from '../../../components/Icons/Icons.jsx';
 import PanelVentas from './PanelVentas.jsx';
 import HistorialView from './HistoriasVista.jsx';
 import MiCajaView from './Caja.jsx';
 import PerfilSuperior from '../../../components/PerfilSuperior/PerfilSuperior.jsx';
+import AperturaCaja from '../../formularios/shared/AperturaCaja.jsx';
+import { crearCajasAction } from '../../../redux/cajas/actions/crearCajasAction.jsx';
 
 const PrincipalMeseros = () => {
-	// Estado de navegación
-	const [vistaActual, setVistaActual] = useState('vender');
-	const facturas = useSelector((state) => state.facturas.facturas);
+	const dispatch = useDispatch();
+
+	// 1. ESTADOS PRINCIPALES
 	const login = useSelector((state) => state.login.login);
+	const cajaActual = useSelector((state) => state.cajas.cajaActual);
+	const [facturasTurno, setFacturasTurno] = useState([]); // Array de facturas devueltas por Back
 
-	const facturasUsuario = facturas.filter(
-		(factura) => factura.usuario._id === login._id
-	);
+	// Estado UI
+	const [vistaActual, setVistaActual] = useState('vender');
+	const [facturaReciente, setFacturaReciente] = useState(null); // Para mostrar modal de éxito
 
-	// Estado Global (Simulado) de Ventas
-	const [historialVentas, setHistorialVentas] = useState(facturasUsuario);
-
-	const handleRealizarVenta = (datosVenta) => {
-		const nuevaVenta = {
-			_id: `v${Date.now()}`,
-			mesa: datosVenta.mesa,
-			total: datosVenta.total,
-			metodos: datosVenta.metodos, // Objeto {efectivo, nequi, daviplata}
-			items: datosVenta.carrito.reduce((acc, i) => acc + i.cantidad, 0),
-			hora: new Date().toLocaleTimeString('es-CO', {
-				hour: '2-digit',
-				minute: '2-digit',
-			}),
-			imprimirFactura: datosVenta.imprimirFactura,
-		};
-
-		// Agregamos al historial (al principio)
-		setHistorialVentas((prev) => [nuevaVenta, ...prev]);
-
-		console.log('✅ VENTA REALIZADA:', nuevaVenta);
-		if (datosVenta.imprimirFactura) console.log('🖨️ IMPRIMIENDO FACTURA...');
+	// HANDLERS
+	const handleAbrirCaja = async (nuevaCaja) => {
+		console.log('🚀 CREANDO CAJA EN BACKEND:', nuevaCaja);
+		crearCajasAction(dispatch, nuevaCaja);
 	};
 
-	const totalVentasSesion = historialVentas?.reduce(
-		(acc, v) => acc + v.total,
-		0
-	);
+	const handleProcesarVenta = (datosVenta) => {
+		console.log('🚀 ENVIANDO VENTA AL BACKEND...', datosVenta);
+
+		// MOCK: El backend procesa y RETORNA la factura creada
+		// Aquí se simula el delay y la respuesta
+		setTimeout(() => {
+			const nuevaFactura = {
+				_id: datosVenta._id,
+				cajaId: cajaActual._id,
+				mesa: datosVenta.mesa,
+				total: datosVenta.total,
+				metodos: datosVenta.metodos,
+				cambio: datosVenta.cambio,
+				items: datosVenta.carrito, // Guardamos detalle de items
+				hora: new Date().toLocaleTimeString('es-CO', {
+					hour: '2-digit',
+					minute: '2-digit',
+				}),
+				fecha: new Date().toISOString(),
+			};
+
+			// 1. Guardamos en historial local
+			setFacturasTurno((prev) => [nuevaFactura, ...prev]);
+			// 2. Mostramos el modal de éxito con la factura retornada
+			setFacturaReciente(nuevaFactura);
+		}, 500);
+	};
+
+	// Si no hay caja abierta, forzar vista de apertura
+	if (!cajaActual) {
+		return <AperturaCaja usuario={login} onAbrirCaja={handleAbrirCaja} />;
+	}
 
 	const renderContent = () => {
 		switch (vistaActual) {
 			case 'vender':
-				return <PanelVentas onRealizarVenta={handleRealizarVenta} />;
+				return (
+					<PanelVentas
+						onProcesarVenta={handleProcesarVenta}
+						facturaReciente={facturaReciente}
+						onCerrarFactura={() => setFacturaReciente(null)}
+					/>
+				);
 			case 'historial':
-				return <HistorialView ventas={historialVentas} />;
+				return <HistorialView facturas={facturasTurno} />;
 			case 'caja':
-				return <MiCajaView totalVentas={totalVentasSesion} />;
+				return <MiCajaView facturas={facturasTurno} cajaActual={cajaActual} />;
 			default:
-				return <VenderView />;
+				return <PanelVentas />;
 		}
 	};
 
 	return (
-		<div className="flex flex-col h-dvh  text-white font-sans overflow-hidden">
-			{/* --- HEADER --- */}
+		<div className="flex flex-col h-dvh bg-gray-900 text-white font-sans overflow-hidden">
+			{/* Header */}
 			<PerfilSuperior />
 
-			{/* --- CONTENIDO --- */}
-			<main className="flex-1 overflow-hidden relative ">
+			{/* Main */}
+			<main className="flex-1 overflow-hidden relative bg-black">
 				{renderContent()}
 			</main>
 
-			{/* --- NAV INFERIOR --- */}
-			<nav className="h-16  backdrop-blur-md border-t border-gray-800 flex justify-around items-center px-1 pb-1 shrink-0 z-30 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]">
+			{/* Nav */}
+			<nav className="h-16 bg-black/95 backdrop-blur-md border-t border-gray-800 flex justify-around items-center px-1 pb-1 shrink-0 z-30 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]">
 				<NavButton
 					active={vistaActual === 'vender'}
 					onClick={() => setVistaActual('vender')}
 					icon={<HomeIcon className="text-xl" />}
 					label="Carta"
 				/>
-
 				<NavButton
 					active={vistaActual === 'historial'}
 					onClick={() => setVistaActual('historial')}
 					icon={<HistoryIcon className="text-xl" />}
 					label="Ventas"
-					badge={historialVentas.length}
+					badge={facturasTurno.length}
 				/>
-
 				<NavButton
 					active={vistaActual === 'caja'}
 					onClick={() => setVistaActual('caja')}
-					icon={<CashIcon2 className="text-xl" />}
+					icon={<CashIcon className="text-xl" />}
 					label="Mi Caja"
 				/>
 			</nav>
@@ -102,7 +119,6 @@ const PrincipalMeseros = () => {
 	);
 };
 
-// Componente auxiliar de navegación
 const NavButton = ({ active, onClick, icon, label, badge }) => (
 	<button
 		onClick={onClick}

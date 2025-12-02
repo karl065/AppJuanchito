@@ -4,11 +4,14 @@ import sanitizarUsuario from '../../../helpers/sanitizadores/sanitizarUsuario.js
 const usuarioAutenticado = async (id) => {
 	const usuario = await Usuarios.findById(id)
 		.select('-password')
-		.populate('dispositivos');
+		.populate('dispositivos')
+		.populate('movimientos')
+		.populate('facturas')
+		.populate('cajas');
 
 	if (!usuario) throw new Error('Usuario no encontrado');
 
-	if (!usuario.userStatus) throw new Error("Vuelva a iniciar sesion")
+	if (!usuario.userStatus) throw new Error('Vuelva a iniciar sesion');
 
 	const usuarioPlano = usuario.toObject();
 

@@ -12,7 +12,7 @@ const Setup2FA = ({ data }) => {
 	const [secret, setSecret] = useState('');
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	console.log('Data que llega a setup2FA:', JSON.stringify(data, null, 2));
+
 	/* --- FORMULARIO FORMik --- */
 	const formik = useFormik({
 		initialValues: {
@@ -29,11 +29,6 @@ const Setup2FA = ({ data }) => {
 						recordar: values.recordar,
 					},
 					dispatch
-				);
-
-				console.log(
-					'respuesta Verficar2FAAction',
-					JSON.stringify(verificado, null, 2)
 				);
 
 				if (verificado.ok.autorizado) {

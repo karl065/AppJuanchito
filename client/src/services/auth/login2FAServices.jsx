@@ -7,7 +7,6 @@ const login2FAServices = async (loginData) => {
 			`${server.api.baseURL}auth/login-2fa`,
 			loginData
 		);
-		console.log(JSON.stringify(data, null, 2));
 
 		return data;
 	} catch (error) {

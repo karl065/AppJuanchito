@@ -8,14 +8,7 @@ export const verificar2FAAction = async (verificar, dispatch) => {
 
 		verificar.nombreDispositivo = nombreDispositivo;
 
-		console.log(
-			'entrada a Verficar2FAAction',
-			JSON.stringify(verificar, null, 2)
-		);
-
 		const data = await verificar2FAServices(verificar);
-
-		console.log('respuesta Verficar2FAAction', JSON.stringify(data, null, 2));
 
 		dispatch(setLogin(data.ok));
 		return data;

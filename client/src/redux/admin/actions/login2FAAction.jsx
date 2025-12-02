@@ -7,8 +7,6 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 	try {
 		const nombreDispositivo = obtenerNombreDispositivo();
 
-		console.log('Datos que llegan a login2FA', JSON.stringify(datos, null, 2));
-
 		const data = await login2FAServices({
 			userId: datos.userId,
 			fingerprint: datos.fingerprint,
@@ -16,11 +14,6 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 			nombreDispositivo,
 			recordar: datos.recordar,
 		});
-
-		console.log(
-			'Datos de respuesta de login2FA',
-			JSON.stringify(data, null, 2)
-		);
 
 		dispatch(setLogin(data));
 		alertSuccess(`Bienvenido ${data.nombre}`);
