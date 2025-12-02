@@ -1,5 +1,6 @@
 import { alertSuccess } from '../../../helpers/alertas.jsx';
 import reloginServices from '../../../services/auth/reloginServices.jsx';
+import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 
 // 👉 Se recibe dispatch y navigate
@@ -7,7 +8,13 @@ export const reloginAction = async (dispatch, navigate) => {
 	try {
 		const data = await reloginServices();
 
-		console.log(JSON.stringify(data, null, 2));
+		if (data.role === 'Mesero') {
+			const verificarCajaAbierta = data.caja.filter(
+				(caj) => caj.estado === 'abierta'
+			);
+
+			dispatch(cargarCajaActual(verificarCajaAbierta[0]));
+		}
 
 		dispatch(setLogin(data));
 

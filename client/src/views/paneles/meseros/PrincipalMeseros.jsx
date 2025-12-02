@@ -21,6 +21,8 @@ const PrincipalMeseros = () => {
 	const cajaActual = useSelector((state) => state.cajas.cajaActual);
 	const [facturasTurno, setFacturasTurno] = useState([]); // Array de facturas devueltas por Back
 
+	console.log(cajaActual);
+
 	// Estado UI
 	const [vistaActual, setVistaActual] = useState('vender');
 	const [facturaReciente, setFacturaReciente] = useState(null); // Para mostrar modal de éxito
@@ -84,35 +86,35 @@ const PrincipalMeseros = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-dvh bg-gray-900 text-white font-sans overflow-hidden">
+		<div className='flex flex-col h-dvh bg-gray-900 text-white font-sans overflow-hidden'>
 			{/* Header */}
 			<PerfilSuperior />
 
 			{/* Main */}
-			<main className="flex-1 overflow-hidden relative bg-black">
+			<main className='flex-1 overflow-hidden relative bg-black'>
 				{renderContent()}
 			</main>
 
 			{/* Nav */}
-			<nav className="h-16 bg-black/95 backdrop-blur-md border-t border-gray-800 flex justify-around items-center px-1 pb-1 shrink-0 z-30 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]">
+			<nav className='h-16 bg-black/95 backdrop-blur-md border-t border-gray-800 flex justify-around items-center px-1 pb-1 shrink-0 z-30 shadow-[0_-4px_10px_rgba(0,0,0,0.5)]'>
 				<NavButton
 					active={vistaActual === 'vender'}
 					onClick={() => setVistaActual('vender')}
-					icon={<HomeIcon className="text-xl" />}
-					label="Carta"
+					icon={<HomeIcon className='text-xl' />}
+					label='Carta'
 				/>
 				<NavButton
 					active={vistaActual === 'historial'}
 					onClick={() => setVistaActual('historial')}
-					icon={<HistoryIcon className="text-xl" />}
-					label="Ventas"
+					icon={<HistoryIcon className='text-xl' />}
+					label='Ventas'
 					badge={facturasTurno.length}
 				/>
 				<NavButton
 					active={vistaActual === 'caja'}
 					onClick={() => setVistaActual('caja')}
-					icon={<CashIcon className="text-xl" />}
-					label="Mi Caja"
+					icon={<CashIcon className='text-xl' />}
+					label='Mi Caja'
 				/>
 			</nav>
 		</div>
@@ -131,7 +133,7 @@ const NavButton = ({ active, onClick, icon, label, badge }) => (
 			}`}>
 			{icon}
 			{badge > 0 && (
-				<span className="absolute -top-1 -right-1 min-w-4 h-4 flex items-center justify-center bg-gray-700 text-white text-[9px] font-bold rounded-full border-2 border-black px-0.5">
+				<span className='absolute -top-1 -right-1 min-w-4 h-4 flex items-center justify-center bg-gray-700 text-white text-[9px] font-bold rounded-full border-2 border-black px-0.5'>
 					{badge}
 				</span>
 			)}
