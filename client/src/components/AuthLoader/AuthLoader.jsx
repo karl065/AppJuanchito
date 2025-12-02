@@ -24,6 +24,7 @@ const AuthLoader = () => {
 	useEffect(() => {
 		connectSocket();
 		reloginAction(dispatch, navigate);
+		obtenerUsuariosAction(dispatch);
 	}, []);
 
 	useEffect(() => {
@@ -32,11 +33,9 @@ const AuthLoader = () => {
 			obtenerProductosAction(dispatch);
 			obtenerCategoriasAction(dispatch);
 		} else if (login.role === 'Administrador' || login.role === 'Supervisor') {
-			console.log(login);
 			obtenerImpresorasAction(dispatch);
 			obtenerProductosAction(dispatch);
 			obtenerCategoriasAction(dispatch);
-			obtenerUsuariosAction(dispatch);
 			obtenerFacturasAction(dispatch);
 			obtenerRolesAction(dispatch);
 			obtenerMovimientosAction(dispatch);

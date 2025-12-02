@@ -4,7 +4,7 @@
 	"webDir": "dist",
 	"bundledWebRuntime": false,
 	"server": {
-		"url": "http://192.168.101.5:5173",
+		"url": "http://192.168.137.1:5173",
 		"cleartext": true
 	},
 	"plugins": {

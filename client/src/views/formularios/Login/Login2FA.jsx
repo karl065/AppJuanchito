@@ -7,6 +7,8 @@ const Login2FA = ({ data }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	console.log(JSON.stringify(data, null, 2));
+
 	const formik = useFormik({
 		initialValues: {
 			code: '',
@@ -119,6 +121,7 @@ const Login2FA = ({ data }) => {
 
 					{/* BOTÓN */}
 					<button
+						type="submit"
 						onClick={formik.handleSubmit}
 						className="
                             w-full p-3 rounded-xl

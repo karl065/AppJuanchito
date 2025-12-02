@@ -39,6 +39,8 @@ const loginController = async ({ correo, password, fingerprint }) => {
 			fingerprint,
 		});
 
+		console.log(confiable)
+
 		const vigente = confiable && new Date(confiable.expiresAt) > new Date();
 		if (vigente) {
 			// 🔥 Dispositivo confiable → generar token de sesión

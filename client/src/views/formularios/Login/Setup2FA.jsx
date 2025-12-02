@@ -5,34 +5,44 @@ import { generar2FAAction } from '../../../redux/admin/actions/generar2FAAction.
 import { verificar2FAAction } from '../../../redux/admin/actions/verificar2FAAction.jsx';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const Setup2FA = ({ data, setStep }) => {
+const Setup2FA = ({ data }) => {
 	const [qrCode, setQrCode] = useState('');
 	const [secret, setSecret] = useState('');
 	const dispatch = useDispatch();
-
+	const navigate = useNavigate();
+	console.log('Data que llega a setup2FA:', JSON.stringify(data, null, 2));
 	/* --- FORMULARIO FORMik --- */
 	const formik = useFormik({
 		initialValues: {
 			code: '',
-			// recordar: false,
+			recordar: false,
 		},
 		onSubmit: async (values) => {
 			try {
-				console.log(JSON.stringify(values, null, 2));
 				const verificado = await verificar2FAAction(
 					{
 						userId: data.data.userId,
 						fingerprint: data.data.fingerprint,
 						code: values.code,
-						// recordar: values.recordar,
+						recordar: values.recordar,
 					},
 					dispatch
 				);
 
-				if (verificado) {
-					alertSuccess('2FA activado correctamente');
-					setStep('login2FA');
+				console.log(
+					'respuesta Verficar2FAAction',
+					JSON.stringify(verificado, null, 2)
+				);
+
+				if (verificado.ok.autorizado) {
+					alertSuccess(
+						`2FA activado correctamente, Bienvenido ${verificado.ok.nombre}`
+					);
+					verificado.ok.role === 'Mesero'
+						? navigate('/caja')
+						: navigate('/admin');
 				}
 			} catch (error) {
 				alertInfo(error.message);
@@ -155,6 +165,25 @@ const Setup2FA = ({ data, setStep }) => {
                                 focus:ring-red-500 border border-red-900/50 outline-none transition
                             "
 						/>
+
+						{/* Checkbox */}
+						<label
+							className="
+                                flex items-center justify-center space-x-3 cursor-pointer 
+                                text-sm sm:text-base font-bold uppercase tracking-wide text-center
+                                p-2 hover:opacity-80 transition select-none
+                            ">
+							<input
+								type="checkbox"
+								name="recordar"
+								checked={formik.values.recordar}
+								onChange={formik.handleChange}
+								className="w-5 h-5 rounded accent-red-600 bg-gray-900 border-red-500"
+							/>
+							<span className="text-red-200 bg-clip-text bg-linear-to-r from-red-400 to-red-200 drop-shadow-[0_0_5px_rgba(255,0,0,0.5)]">
+								Recordar dispositivo
+							</span>
+						</label>
 
 						{/* BOTÓN VERIFICAR */}
 						<button

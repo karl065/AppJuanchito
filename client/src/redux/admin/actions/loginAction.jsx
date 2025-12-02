@@ -14,6 +14,11 @@ export const loginAction = async (
 	try {
 		loadingAction(true, dispatch);
 
+		console.log(
+			'UserLogin en loginAction ',
+			JSON.stringify(userLogin, null, 2)
+		);
+
 		// Obtener fingerprint del dispositivo
 		const fingerprint = await obtenerFingerprint();
 
@@ -22,11 +27,17 @@ export const loginAction = async (
 			fingerprint,
 		});
 
+		console.log('data respuesta loginService ', JSON.stringify(data, null, 2));
+
 		data.fingerprint = fingerprint;
 
 		if (data.require2FASetup) {
 			// Paso 1: Usuario necesita configurar 2FA
-			set2FAData({ data, qrCode: null, secret: null });
+			set2FAData({
+				data,
+				qrCode: null,
+				secret: null,
+			});
 			setStep('setup2FA'); // Cambia la vista al componente de setup2FA
 		} else if (data.require2FA) {
 			// Paso 2: Usuario necesita ingresar código 2FA
