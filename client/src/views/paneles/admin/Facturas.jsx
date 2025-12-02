@@ -7,7 +7,7 @@ import Paginado from '../../../components/Paginado/Paginado.jsx';
 import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
 import DetalleFactura from './DetalleFactura.jsx';
 
-const Facturas = ({ facturas }) => {
+const Facturas = ({ facturas, cajero }) => {
 	const [busqueda, setBusqueda] = useState('');
 
 	// Estados para el Modal
@@ -98,7 +98,7 @@ const Facturas = ({ facturas }) => {
 						{formatearFechaHora(factura.createdAt)}
 					</span>
 					<span className='text-[10px] text-gray-500 italic mt-1'>
-						Cajero: {factura.usuario?.nombre || 'N/A'}
+						Cajero: {factura.usuario?.nombre || cajero || 'N/A'}
 					</span>
 					{factura.observaciones && (
 						<span className='text-[10px] text-yellow-400 font-medium mt-1'>

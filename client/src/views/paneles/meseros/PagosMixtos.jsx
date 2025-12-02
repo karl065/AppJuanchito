@@ -8,6 +8,7 @@ import { crearFacturaAction } from '../../../redux/facturas/actions/crearFactura
 const ModalPagosMixtos = ({
 	total,
 	carrito,
+	setCarrito,
 	usuarioId,
 	cajaId,
 	onClose,
@@ -75,6 +76,7 @@ const ModalPagosMixtos = ({
 			console.log(facturaCreada);
 
 			setFacturaReciente(facturaCreada);
+			setCarrito([]);
 			onClose();
 			showModalFactura(true);
 		},

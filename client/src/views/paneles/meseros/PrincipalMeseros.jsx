@@ -20,8 +20,6 @@ const PrincipalMeseros = () => {
 	const login = useSelector((state) => state.login.login);
 	const cajaActual = useSelector((state) => state.cajas.cajaActual);
 
-	console.log(cajaActual);
-
 	// Estado UI
 	const [vistaActual, setVistaActual] = useState('vender');
 
@@ -40,11 +38,11 @@ const PrincipalMeseros = () => {
 			case 'vender':
 				return <PanelVentas usuarioId={login._id} cajaActual={cajaActual} />;
 			case 'historial':
-				return <Facturas facturas={cajaActual.facturas} />;
-			case 'caja':
 				return (
-					<MiCajaView facturas={cajaActual.facturas} cajaActual={cajaActual} />
+					<Facturas facturas={cajaActual[0].facturas} cajero={login.nombre} />
 				);
+			case 'caja':
+				return <MiCajaView cajaActual={cajaActual[0]} />;
 			default:
 				return <PanelVentas />;
 		}

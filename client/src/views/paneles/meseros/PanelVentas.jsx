@@ -160,6 +160,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 				<ModalPagosMixtos
 					total={totalCarrito}
 					carrito={carrito} // Pasamos el carrito para armar los productos
+					setCarrito={setCarrito}
 					usuarioId={usuarioId} // Pasamos el ID del usuario
 					cajaId={cajaActual._id} // Pasamos el ID de la caja
 					onClose={() => setShowModalPago(false)}

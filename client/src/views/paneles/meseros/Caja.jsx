@@ -1,6 +1,7 @@
 import { formatearPesos } from '../../../helpers/formatearPesos';
 
-const MiCajaView = ({ totalVentas, cajaActual }) => {
+const MiCajaView = ({ cajaActual }) => {
+	const totalVentas = console.log(cajaActual);
 	return (
 		<div className='p-3 flex flex-col h-full pb-20 bg-gray-900'>
 			<div className='bg-[linear-gradient(135deg,#1f2937_0%,#000000_100%)] p-5 rounded-2xl border border-gray-700 shadow-lg mb-4 text-center'>
@@ -8,7 +9,7 @@ const MiCajaView = ({ totalVentas, cajaActual }) => {
 					Total Recaudado Hoy
 				</p>
 				<h2 className='text-3xl font-black text-white mb-2 tracking-tight'>
-					{formatearPesos(cajaActual.apertura.baseInicial + totalVentas)}
+					{formatearPesos(cajaActual.apertura?.baseInicial + totalVentas)}
 				</h2>
 				<span className='inline-block px-3 py-0.5 bg-green-900/30 text-green-400 text-[10px] font-bold rounded-full border border-green-800/50'>
 					CAJA ABIERTA
@@ -21,7 +22,7 @@ const MiCajaView = ({ totalVentas, cajaActual }) => {
 						Base Inicial
 					</span>
 					<span className='font-bold text-sm text-white'>
-						{formatearPesos(cajaActual.apertura.baseInicial)}
+						{formatearPesos(cajaActual.apertura?.baseInicial)}
 					</span>
 				</div>
 				<div className='bg-gray-800/60 p-3 rounded-xl flex justify-between items-center border border-gray-700/50'>
