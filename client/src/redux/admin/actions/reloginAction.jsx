@@ -1,4 +1,4 @@
-import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
+import { alertSuccess } from '../../../helpers/alertas.jsx';
 import reloginServices from '../../../services/auth/reloginServices.jsx';
 import obtenerCajasServices from '../../../services/cajas/obtenerCajasServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
@@ -9,18 +9,17 @@ export const reloginAction = async (dispatch, navigate) => {
 	try {
 		const data = await reloginServices();
 
-		console.log(JSON.stringify(data, null, 2));
+		if (data.role === 'Mesero') {
+			const verificarCajaAbierta = data.caja.filter(
+				(caj) => caj.estado === 'abierta'
+			);
 
-		const verificarCajaAbierta = data.caja.filter(
-			(caj) => caj.estado === 'abierta'
-		);
+			const cajaActual = await obtenerCajasServices({
+				_id: verificarCajaAbierta[0]._id,
+			});
 
-		const idCaja = verificarCajaAbierta[0]._id;
-
-		const cajaActual = await obtenerCajasServices({
-			_id: idCaja,
-		});
-		dispatch(cargarCajaActual(cajaActual[0]));
+			dispatch(cargarCajaActual(cajaActual));
+		}
 
 		dispatch(setLogin(data));
 
@@ -30,11 +29,7 @@ export const reloginAction = async (dispatch, navigate) => {
 
 		return true;
 	} catch (error) {
-		console.log(
-			'Error relogin action: ',
-			JSON.stringify(error.response.data.msg, null, 2)
-		);
-		alertInfo(error);
+		console.log('Error relogin action: ', error);
 
 		// ⚠️ Si falla → redirecciona al login
 		if (navigate) navigate('/');

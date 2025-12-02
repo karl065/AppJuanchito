@@ -12,7 +12,7 @@ const App = () => {
 
 	return (
 		<Routes>
-			<Route path="/" element={<LoginFull />} />
+			<Route path='/' element={<LoginFull />} />
 
 			{routesToRender.map(({ path, element }, i) => (
 				<Route key={i} path={path} element={element} />
