@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import putControllerUsuario from '../../controllers/controllersUsuarios/putControllerUsuario';
+import putControllerUsuario from '../../controllers/controllersUsuarios/putControllerUsuario.js';
 dotenv.config();
 const { SECRETA } = process.env;
 
