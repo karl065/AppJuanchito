@@ -20,15 +20,14 @@ import ConfiguracionImpresora from '../../formularios/generales/ConfiguracionImp
 import { useSelector } from 'react-redux';
 
 const Principal = () => {
-	const [tab, setTab] = useState(0);
 	const [showMenu, setShowMenu] = useState(true);
 	const facturas = useSelector((state) => state.facturas.facturas);
 	const login = useSelector((state) => state.login.login);
-
+	const [tab, setTab] = useState(login.role === 'Administrador' ? 0 : 1);
 	const renderView = () => {
 		switch (tab) {
 			case 0:
-				return <Usuarios />;
+				return login.role === 'Administrador' && <Usuarios />;
 			case 1:
 				return <Inventario />;
 			case 2:
@@ -38,11 +37,11 @@ const Principal = () => {
 			case 4:
 				return <Movimientos />;
 			case 5:
-				return <Informes />;
+				return login.role === 'Administrador' && <Informes />;
 			case 6:
 				return <ConfiguracionImpresora />;
 			default:
-				return <Usuarios />;
+				return login.role === 'Administrador' ? <Usuarios /> : <Inventario />;
 		}
 	};
 

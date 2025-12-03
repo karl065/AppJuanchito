@@ -3,5 +3,6 @@ import { meserosRoutes } from './meserosRoutes/meserosRoutes.jsx';
 
 export const allRoutes = {
 	Administrador: adminRoutes,
+	Supervisor: adminRoutes,
 	Mesero: meserosRoutes,
 };
