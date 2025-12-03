@@ -18,24 +18,24 @@ const allowedOrigins = [
 	'http://192.168.101.5:5173',
 	'capacitor://localhost',
 	'http://localhost',
+	'https://localhost',
 	'https://appjuanchitoserver.onrender.com',
 	'https://f3a9d8a1.ngrok-free.app',
-	"https://8824b071bf3e.ngrok-free.app",
-	"http://192.168.137.1:5173"
+	'https://8824b071bf3e.ngrok-free.app',
+	'http://192.168.137.1:5173',
 ];
 
 const io = new socketIO(httpServer, {
 	cors: {
 		origin: allowedOrigins, // Ajusta según tu configuración de React
 		methods: ['GET', 'POST'],
-		credentials: true
+		credentials: true,
 	},
 }); // Crea una instancia de Socket.io
 
 server.use(morgan('dev'));
 server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
 
 // CORS seguro: permite cookies entre front y back
 server.use(
