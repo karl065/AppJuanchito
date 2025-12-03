@@ -82,3 +82,6 @@ client/resources/
 client/assets/
 
 urls de conexion.txt
+
+server.key
+server.crt

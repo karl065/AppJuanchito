@@ -14,7 +14,10 @@ import { obtenerCajasAction } from '../../redux/cajas/actions/obtenerCajasAction
 import { obtenerTiposMovimientosAction } from '../../redux/movimientos/actions/obtenerTiposMovimientosAction.jsx';
 import { obtenerImpresorasAction } from '../../redux/impresoras/actions/obtenerImpresorasAction.jsx';
 import { obtenerEstadosCierreAction } from '../../redux/cajas/actions/obtenerEstadosCierre.jsx';
-import { connectSocket } from '../../services/sockets/socketServices.jsx';
+import {
+	connectSocket,
+	setAppDispatch,
+} from '../../services/sockets/socketServices.jsx';
 
 const AuthLoader = () => {
 	const dispatch = useDispatch();
@@ -23,6 +26,7 @@ const AuthLoader = () => {
 
 	useEffect(() => {
 		connectSocket();
+		setAppDispatch(dispatch);
 		reloginAction(dispatch, navigate);
 		obtenerUsuariosAction(dispatch);
 	}, []);

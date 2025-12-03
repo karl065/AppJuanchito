@@ -37,7 +37,7 @@ const MiCajaView = () => {
 						Efectivo Neto en Caja:{' '}
 						<span className='text-white font-bold'>
 							{formatearPesos(
-								cajaActual.apertura.baseInicial + cajaActual.totalEfectivo
+								cajaActual.apertura?.baseInicial + cajaActual.totalEfectivo
 							)}
 						</span>
 					</span>
@@ -52,7 +52,7 @@ const MiCajaView = () => {
 						<LockIcon className='w-3 h-3 text-gray-500' /> Base Inicial
 					</span>
 					<span className='font-bold text-sm text-white'>
-						{formatearPesos(cajaActual.apertura.baseInicial)}
+						{formatearPesos(cajaActual.apertura?.baseInicial)}
 					</span>
 				</div>
 

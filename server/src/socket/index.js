@@ -4,7 +4,7 @@ import usuariosSockets from './modulos/usuariosSockets.js';
 import ventasSockets from './modulos/ventasSockets.js';
 import movimientosSockets from './modulos/movimientosSockets.js';
 
-export default function registerSocketModules(io) {
+const registerSocketModules = (io) => {
 	io.on('connection', (socket) => {
 		console.log('Cliente conectado:', socket.id);
 
@@ -18,4 +18,6 @@ export default function registerSocketModules(io) {
 			console.log('Cliente desconectado:', socket.id);
 		});
 	});
-}
+};
+
+export default registerSocketModules;
