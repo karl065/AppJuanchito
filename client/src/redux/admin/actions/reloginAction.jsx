@@ -13,13 +13,15 @@ export const reloginAction = async (dispatch, navigate) => {
 			const verificarCajaAbierta = data.caja.filter(
 				(caj) => caj.estado === 'abierta'
 			);
-			console.log(verificarCajaAbierta);
 
-			const cajaActual = await obtenerCajasServices({
-				_id: verificarCajaAbierta[0]._id,
-			});
-
-			dispatch(cargarCajaActual(cajaActual));
+			if (verificarCajaAbierta.length > 0) {
+				const cajaActual = await obtenerCajasServices({
+					_id: verificarCajaAbierta[0]._id,
+				});
+				dispatch(cargarCajaActual(cajaActual));
+			} else {
+				dispatch(cargarCajaActual(null));
+			}
 		}
 
 		dispatch(setLogin(data));

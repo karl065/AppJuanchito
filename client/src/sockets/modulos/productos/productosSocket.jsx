@@ -12,11 +12,6 @@ const productosSocketsListeners = (socket) => {
 	// --- ESCUCHAR ACTUALIZACIONES ---
 	// Este nombre 'productos:recargar_lista' debe coincidir EXACTAMENTE con el emit de tu backend
 	socket.on('productos:recargar_lista', (productoActualizado) => {
-		console.log(
-			'🔄 Socket: Recibiendo actualización de producto',
-			productoActualizado
-		);
-
 		// Disparamos la acción de Redux para actualizar el store de ESTE cliente
 		dispatch(actualizarProducto(productoActualizado));
 	});

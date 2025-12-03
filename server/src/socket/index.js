@@ -3,6 +3,7 @@ import cajaSockets from './modulos/cajaSockets.js';
 import usuariosSockets from './modulos/usuariosSockets.js';
 import ventasSockets from './modulos/ventasSockets.js';
 import movimientosSockets from './modulos/movimientosSockets.js';
+import productosSockets from './modulos/inventarioSockets.js';
 
 const registerSocketModules = (io) => {
 	io.on('connection', (socket) => {
@@ -13,6 +14,7 @@ const registerSocketModules = (io) => {
 		usuariosSockets(io, socket);
 		ventasSockets(io, socket);
 		movimientosSockets(io, socket);
+		productosSockets(io, socket);
 
 		socket.on('disconnect', () => {
 			console.log('Cliente desconectado:', socket.id);
