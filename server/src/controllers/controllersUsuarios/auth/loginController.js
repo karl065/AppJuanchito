@@ -21,10 +21,6 @@ const loginController = async ({ correo, password, fingerprint }) => {
 		const passOk = await bcryptjs.compare(password, usuario.password);
 		if (!passOk) throw new Error('Correo o contraseña incorrectos');
 
-		const usuarioPlano = usuario.toObject();
-
-		const usuarioSeguro = sanitizarUsuario(usuarioPlano);
-
 		// 1️⃣ Si el usuario NO tiene 2FA → forzar configuración
 		if (!usuario.twoFactorEnabled) {
 			return {
@@ -52,13 +48,16 @@ const loginController = async ({ correo, password, fingerprint }) => {
 				{ expiresIn: '7d' }
 			);
 
-			await putControllerUsuario({ userStatus: true }, usuario._id);
+			const usuarioActivo = await putControllerUsuario(
+				{ userStatus: true },
+				usuario._id
+			);
 
 			return {
 				loginApproved: true,
 				require2FA: false,
 				token: tokenSesion,
-				usuario: usuarioSeguro,
+				usuario: usuarioActivo[0],
 			};
 		}
 

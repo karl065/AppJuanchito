@@ -12,7 +12,6 @@ import {
 	PlusIcon,
 	SearchIcon,
 	TrashIcon,
-	TrashIcon2,
 } from '../../../components/Icons/Icons.jsx';
 import DetalleFactura from '../admin/DetalleFactura.jsx';
 import { getInputClasses } from '../../../helpers/estilosGlobales.jsx';
@@ -27,6 +26,8 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 
 	const categorias = useSelector((state) => state.categorias.categorias);
 	const productos = useSelector((state) => state.productos.productos);
+
+	const idCaja = cajaActual._id ? cajaActual?._id : cajaActual[0]?._id;
 
 	// Filtros
 
@@ -105,6 +106,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 				</div>
 				<div className='flex gap-2 overflow-x-auto pb-1 custom-scrollbar scroll-smooth'>
 					<button
+						type='button'
 						className={`px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-all border ${
 							categoriaActiva === 'Todo'
 								? 'bg-red-600 text-white border-red-500 shadow-md shadow-red-900/30'
@@ -115,6 +117,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 					</button>
 					{categorias.map((cat) => (
 						<button
+							type='button'
 							key={cat._id}
 							onClick={() => setCategoriaActiva(cat.nombre)}
 							className={`px-3 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap transition-all border ${
@@ -144,13 +147,26 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 							🍺
 						</div>
 						<div className='flex-1 min-h-0 flex flex-col justify-between pointer-events-none'>
-							<div>
-								<h4 className='font-bold text-white text-xs leading-tight line-clamp-2 mb-0.5'>
-									{prod.nombre}
-								</h4>
-								<p className='text-red-400 font-black text-sm'>
-									{formatearPesos(prod.precio)}
-								</p>
+							<div className='flex justify-between'>
+								<div>
+									<h4 className='font-bold text-white text-xs leading-tight line-clamp-2 mb-0.5'>
+										{prod.nombre}
+									</h4>
+									<p className='text-red-400 font-black text-sm'>
+										{formatearPesos(prod.precio)}
+									</p>
+								</div>
+								<div
+									className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center justify-end gap-1 ${
+										prod.stock <= 0
+											? 'bg-red-900/50 text-red-400 border border-red-800'
+											: prod.stock <= 5
+												? 'bg-orange-900/50 text-orange-400 border border-orange-800'
+												: 'bg-green-900/50 text-green-400 border border-green-800'
+									}`}>
+									<span>Stock:</span>
+									<span className='text-sm'>{prod.stock}</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -198,7 +214,9 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 											</p>
 										</div>
 									</div>
-									<button className='p-2 rounded-full bg-gray-800 text-gray-400'>
+									<button
+										type='button'
+										className='p-2 rounded-full bg-gray-800 text-gray-400'>
 										<ChevronDownIcon2 className='w-5 h-5' />
 									</button>
 								</div>
@@ -223,6 +241,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 									</div>
 									{/* Botón Cobrar Rápido */}
 									<button
+										type='button'
 										onClick={(e) => {
 											e.stopPropagation(); // Evitar expandir al dar click en cobrar
 											setShowModalPago(true);
@@ -261,6 +280,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 												{/* Controles de Cantidad */}
 												<div className='flex items-center bg-gray-900 rounded-lg border border-gray-700'>
 													<button
+														type='button'
 														onClick={() => restarDelCarrito(item._id)}
 														className='w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white active:bg-gray-800 rounded-l-lg'>
 														{item.cantidad === 1 ? (
@@ -273,6 +293,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 														{item.cantidad}
 													</span>
 													<button
+														type='button'
 														onClick={() => agregarAlCarrito(item)}
 														className='w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white active:bg-gray-800 rounded-r-lg'>
 														<PlusIcon className='w-3 h-3' />
@@ -288,6 +309,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 										</div>
 										{/* BOTÓN DE ELIMINAR (Integrado) */}
 										<button
+											type='button'
 											onClick={() => eliminarItemCarrito(item._id)}
 											className='w-8 h-8 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-gray-700 rounded-lg transition-all'
 											title='Eliminar producto'>
@@ -310,6 +332,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 									</span>
 								</div>
 								<button
+									type='button'
 									onClick={() => setShowModalPago(true)}
 									className='w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-red-900/40 active:scale-95 transition-transform flex items-center justify-center gap-2'>
 									<span>IR A PAGAR</span>
@@ -328,7 +351,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 					carrito={carrito} // Pasamos el carrito para armar los productos
 					setCarrito={setCarrito}
 					usuarioId={usuarioId} // Pasamos el ID del usuario
-					cajaId={cajaActual._id} // Pasamos el ID de la caja
+					cajaId={idCaja} // Pasamos el ID de la caja
 					onClose={() => setShowModalPago(false)}
 					setFacturaReciente={setFacturaReciente}
 					showModalFactura={setShowModalFactura}
@@ -338,7 +361,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 			{showModalFactura && (
 				<div className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in bg-black/50'>
 					<DetalleFactura
-						factura={facturaReciente}
+						factura={facturaReciente[0]}
 						onClose={handleCloseModalFactura}
 					/>
 				</div>

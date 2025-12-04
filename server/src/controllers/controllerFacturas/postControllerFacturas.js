@@ -18,11 +18,7 @@ const postControllerFacturas = async (facturaData) => {
 		await actualizarCajaEnVenta(facturaNueva);
 
 		// Populate opcional: usuario, productos, movimientos
-		return await facturaNueva.populate([
-			{ path: 'usuario', select: '_id nombre role' },
-			{ path: 'productos.producto', select: '_id nombre precio' },
-			{ path: 'movimientos', select: '_id salida descripcion tipo' },
-		]);
+		return facturaNueva;
 	} catch (error) {
 		console.error('Error al crear factura:', error);
 		throw error;

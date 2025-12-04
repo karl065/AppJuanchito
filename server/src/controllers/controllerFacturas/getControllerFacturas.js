@@ -14,8 +14,27 @@ const getControllerFacturas = async (query) => {
 			Object.keys(filtro).length > 0 ? filtro : {}
 		)
 			.populate('usuario', '_id nombre role')
-			.populate('productos.producto', '_id nombre precio')
-			.populate('movimientos', '_id salida descripcion tipo');
+			.populate({
+				path: 'productos.producto',
+				populate: {
+					path: 'categoria',
+				},
+			})
+			.populate({
+				path: 'movimientos',
+				populate: [
+					{ path: 'producto' },
+					{ path: 'usuario', select: '-password' },
+				],
+			})
+			.populate({
+				path: 'caja', // 1. Poblamos 'caja'
+				populate: {
+					// 2. Dentro de 'caja', poblamos...
+					path: 'usuario', // ... el campo 'usuario'
+					select: '-password', // 3. Excluyendo el password
+				},
+			});
 
 		return facturas;
 	} catch (error) {

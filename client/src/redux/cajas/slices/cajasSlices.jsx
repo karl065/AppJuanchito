@@ -21,7 +21,7 @@ const cajasSlice = createSlice({
 			const cajaActualizada = action.payload;
 
 			const index = state.cajas.findIndex(
-				(caja) => caja._id === cajaActualizada._id
+				(caja) => caja && caja._id === cajaActualizada._id
 			);
 
 			if (index !== -1) {

@@ -16,7 +16,7 @@ const usuariosSlice = createSlice({
 			const usuarioActualizado = action.payload;
 
 			const index = state.usuarios.findIndex(
-				(usuario) => usuario._id === usuarioActualizado._id
+				(usuario) => usuario && usuario._id === usuarioActualizado._id
 			);
 
 			if (index !== -1) {

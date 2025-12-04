@@ -15,6 +15,8 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 			recordar: datos.recordar,
 		});
 
+		console.log(data);
+
 		dispatch(setLogin(data));
 		alertSuccess(`Bienvenido ${data.nombre}`);
 

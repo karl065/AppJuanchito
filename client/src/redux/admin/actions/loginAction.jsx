@@ -3,6 +3,7 @@ import { loadingAction } from '../../app/actions/loadingAction.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; // función que veremos abajo
 import loginServices from '../../../services/auth/loginServices.jsx';
+import { emitEvent } from '../../../services/sockets/socketServices.jsx';
 
 export const loginAction = async (
 	userLogin,
@@ -38,10 +39,13 @@ export const loginAction = async (
 			setStep('login2FA'); // Cambia la vista al componente de login2FA
 		} else if (data.loginApproved) {
 			// Login completo
-			dispatch(setLogin(data));
+
+			dispatch(setLogin(data.usuario));
+			emitEvent('usuario:login', data);
 			data.usuario.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
 			alertSuccess(`Bienvenido ${data.usuario.nombre}`);
 		}
+		emitEvent('usuario:login', data.usuario);
 
 		loadingAction(false, dispatch);
 	} catch (error) {

@@ -14,6 +14,8 @@ const Facturas = ({ facturas, cajero }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
 
+	console.log(facturas);
+
 	// --- 1. Lógica de Filtrado ---
 	const facturasFiltradas = useMemo(() => {
 		if (!facturas) return [];
@@ -71,11 +73,11 @@ const Facturas = ({ facturas, cajero }) => {
 
 	// --- 4. Mapeo de Datos para la Tabla ---
 	const tableData = paginatedData.map((factura) => {
-		const detalle = factura.detallePago;
+		const detalle = factura?.detallePago;
 		const metodosUsados = [];
 
 		// Lógica para desglosar métodos de pago si es mixto
-		if (factura.metodoPago === 'mixto' && detalle) {
+		if (factura?.metodoPago === 'mixto' && detalle) {
 			if (detalle.efectivoCliente > 0)
 				metodosUsados.push({
 					name: 'Efectivo',

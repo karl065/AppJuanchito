@@ -7,7 +7,7 @@ const productosSockets = (io, socket) => {
 	});
 
 	socket.on('producto:creado', (productData) => {
-		socket.broadcast.emir('productos:agregar_producto');
+		socket.broadcast.emit('productos:agregar_producto', productData);
 	});
 
 	socket.on('producto:eliminado', (productoId) => {

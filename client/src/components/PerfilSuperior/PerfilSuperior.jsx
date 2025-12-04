@@ -15,6 +15,8 @@ const PerfilSuperior = () => {
 	const login = useSelector((state) => state.login.login);
 	const cajaActual = useSelector((state) => state.cajas.cajaActual);
 
+	console.log(cajaActual);
+
 	const path = location.pathname;
 
 	const [showModalCierre, setShowModalCierre] = useState(false);
@@ -24,8 +26,7 @@ const PerfilSuperior = () => {
 	const usuarioLogin = login?.usuario || login;
 	const esAdminOSupervisor =
 		usuarioLogin.role === 'Administrador' || usuarioLogin.role === 'Supervisor';
-	const cajaEstaAbierta =
-		!!cajaActual.estado && cajaActual.estado === 'abierta';
+	const cajaEstaAbierta = !cajaActual.estado && cajaActual.estado === 'abierta';
 
 	const handleAbrirCaja = async (nuevaCaja) => {
 		await crearCajasAction(dispatch, nuevaCaja);

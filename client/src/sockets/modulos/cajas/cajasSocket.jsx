@@ -1,28 +1,30 @@
-// src/sockets/cajaSockets.js
-
-// Importa tus funciones de Redux/Contexto aquí si es necesario
-// import { dispatchCajaActualizada, dispatchCierreEnviado } from '../redux/cajas/actions';
+import {
+	actualizarCaja,
+	agregarCaja,
+} from '../../../redux/cajas/slices/cajasSlices.jsx';
+import { getAppDispatch } from '../../../services/sockets/socketServices.jsx';
 
 const cajaListeners = (socket) => {
+	const dispatch = getAppDispatch();
+
+	if (!dispatch) {
+		console.error('❌ No se ha configurado el dispatch para los sockets.');
+		return;
+	}
+
 	// Escucha el evento que el BACKEND emite cuando alguien abre una caja
-	socket.on('caja:actualizada', (data) => {
-		console.log('Evento recibido: caja:actualizada', data);
-		// Llama a tu función de Redux para actualizar el estado global de la app
-		// dispatchCajaActualizada(data);
-		// alert('¡Una caja ha sido abierta/actualizada!');
+	socket.on('caja:nueva', (data) => {
+		dispatch(agregarCaja(data));
 	});
 
 	// Escucha cuando un cajero cierra su caja
 	socket.on('caja:cierreEnviado', (data) => {
-		console.log('Evento recibido: caja:cierreEnviado', data);
-		// dispatchCierreEnviado(data);
-		// alert('¡Un cierre de caja ha sido enviado para verificación!');
+		dispatch(actualizarCaja(data));
 	});
 
 	// Escucha cuando un supervisor valida un cierre
 	socket.on('caja:verificacionActualizada', (data) => {
-		console.log('Evento recibido: caja:verificacionActualizada', data);
-		// Actualiza el estado de verificación en tu frontend
+		dispatch(actualizarCaja(data));
 	});
 };
 

@@ -1,3 +1,4 @@
+import getControllerFacturas from '../../controllers/controllerFacturas/getControllerFacturas.js';
 import postControllerFacturas from '../../controllers/controllerFacturas/postControllerFacturas.js';
 import postControllerMovimientos from './../../controllers/controllerMovimientos/postControllerMovimientos.js';
 
@@ -20,7 +21,7 @@ const procesarVenta = async (dataFactura) => {
 
 			const movimientoCreado = await postControllerMovimientos(movimientoData);
 
-			movimientosGenerados.push(movimientoCreado._id);
+			movimientosGenerados.push(movimientoCreado[0]._id);
 		}
 
 		// 2. Armar documento final con movimientos
@@ -32,8 +33,10 @@ const procesarVenta = async (dataFactura) => {
 		// 3. Registrar factura en DB
 		const facturaNueva = await postControllerFacturas(facturaCompleta);
 
+		const facturaFull = await getControllerFacturas({ _id: facturaNueva._id });
+
 		// 4. Retornar factura ya procesada
-		return facturaNueva;
+		return facturaFull;
 	} catch (error) {
 		console.error('Error en procesarVenta:', error);
 		throw error;

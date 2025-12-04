@@ -136,7 +136,10 @@ const ModalPagosMixtos = ({
 							</span>
 						</p>
 					</div>
-					<button onClick={onClose} className='text-white hover:text-white'>
+					<button
+						type='button'
+						onClick={onClose}
+						className='text-white hover:text-white'>
 						<XIcon className='w-6 h-6' />
 					</button>
 				</div>

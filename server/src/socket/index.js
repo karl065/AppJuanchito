@@ -1,9 +1,9 @@
 // src/sockets/index.js
 import cajaSockets from './modulos/cajaSockets.js';
 import usuariosSockets from './modulos/usuariosSockets.js';
-import ventasSockets from './modulos/ventasSockets.js';
 import movimientosSockets from './modulos/movimientosSockets.js';
 import productosSockets from './modulos/inventarioSockets.js';
+import facturasSockets from './modulos/facturasSockets.js';
 
 const registerSocketModules = (io) => {
 	io.on('connection', (socket) => {
@@ -12,7 +12,7 @@ const registerSocketModules = (io) => {
 		// Registrar módulos
 		cajaSockets(io, socket);
 		usuariosSockets(io, socket);
-		ventasSockets(io, socket);
+		facturasSockets(io, socket);
 		movimientosSockets(io, socket);
 		productosSockets(io, socket);
 

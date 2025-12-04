@@ -19,8 +19,13 @@ const getControllerCaja = async (query) => {
 		const filtro = filtroAvanzado(query, Caja.schema);
 
 		const cajas = await Caja.find(Object.keys(filtro).length > 0 ? filtro : {})
-			.populate('usuario', '_id nombre role')
-			.populate('facturas');
+			.populate({
+				path: 'usuario',
+				select: '-password',
+			})
+			.populate({
+				path: 'facturas',
+			});
 
 		return cajas;
 	} catch (error) {

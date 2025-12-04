@@ -2,7 +2,14 @@ import Caja from '../../models/Caja.js';
 
 const cerrarCaja = async (cierreCaja) => {
 	try {
-		const caja = await Caja.findById(cierreCaja._id);
+		const caja = await Caja.findById(cierreCaja._id)
+			.populate({
+				path: 'usuario',
+				select: '-password',
+			})
+			.populate({
+				path: 'facturas',
+			});
 		if (!caja) throw new Error('Caja no encontrada');
 
 		if (caja.estado !== 'abierta') {

@@ -1,6 +1,5 @@
-import { alertSuccess } from '../../../helpers/alertas.jsx';
+import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import reloginServices from '../../../services/auth/reloginServices.jsx';
-import obtenerCajasServices from '../../../services/cajas/obtenerCajasServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 
@@ -9,16 +8,16 @@ export const reloginAction = async (dispatch, navigate) => {
 	try {
 		const data = await reloginServices();
 
-		if (data.role === 'Mesero') {
+		if (data === 'Token no valido') throw new Error(data);
+
+		console.log(data);
+
+		if (data.caja.length > 0) {
 			const verificarCajaAbierta = data.caja.filter(
 				(caj) => caj.estado === 'abierta'
 			);
-
 			if (verificarCajaAbierta.length > 0) {
-				const cajaActual = await obtenerCajasServices({
-					_id: verificarCajaAbierta[0]._id,
-				});
-				dispatch(cargarCajaActual(cajaActual));
+				dispatch(cargarCajaActual(verificarCajaAbierta[0]));
 			} else {
 				dispatch(cargarCajaActual(null));
 			}
@@ -32,7 +31,11 @@ export const reloginAction = async (dispatch, navigate) => {
 
 		return true;
 	} catch (error) {
-		console.log('Error relogin action: ', error);
+		if (
+			error.message === 'Token no válido' ||
+			error.message === 'Token expirado'
+		)
+			alertInfo('Sesion expirada, por favor inicie sesion nuevamente');
 
 		// ⚠️ Si falla → redirecciona al login
 		if (navigate) navigate('/');
