@@ -23,6 +23,7 @@ const allowedOrigins = [
 	'https://f3a9d8a1.ngrok-free.app',
 	'https://8824b071bf3e.ngrok-free.app',
 	'http://192.168.137.1:5173',
+	'https://juanchitopos.onrender.com',
 ];
 
 const io = new socketIO(httpServer, {
