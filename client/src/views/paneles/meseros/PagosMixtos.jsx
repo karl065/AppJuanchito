@@ -1,13 +1,14 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { formatearPesos } from '../../../helpers/formatearPesos';
-import { ArrowRightIcon, XIcon } from '../../../components/Icons/Icons';
+import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
+import { ArrowRightIcon, XIcon } from '../../../components/Icons/Icons.jsx';
 import { useDispatch } from 'react-redux';
-import { crearFacturaAction } from '../../../redux/facturas/actions/crearFacturasAction';
+import { crearFacturaAction } from '../../../redux/facturas/actions/crearFacturasAction.jsx';
+import { crearMovimientosAction } from '../../../redux/movimientos/actions/crearMovimientosAction.jsx';
 
 const ModalPagosMixtos = ({
 	total,
-	carrito,
+	datosPago,
 	setCarrito,
 	usuarioId,
 	cajaId,
@@ -16,6 +17,8 @@ const ModalPagosMixtos = ({
 	showModalFactura,
 }) => {
 	const dispatch = useDispatch();
+	console.log(datosPago);
+
 	// Configuración de Formik
 	const formik = useFormik({
 		initialValues: {
@@ -26,6 +29,8 @@ const ModalPagosMixtos = ({
 		},
 		enableReinitialize: true, // Permite reiniciar si cambia el total
 		onSubmit: async (values) => {
+			const { carrito, acompanantes } = datosPago;
+
 			const valNequi = parseInt(values.nequi) || 0;
 			const valDavi = parseInt(values.daviplata) || 0;
 			const valEfectivoCliente = parseInt(values.efectivo) || 0;
@@ -70,6 +75,24 @@ const ModalPagosMixtos = ({
 			};
 
 			const facturaCreada = await crearFacturaAction(dispatch, facturaNueva);
+
+			// =======================================================
+			// PASO B: CREAR MOVIMIENTOS (Array 'acompanantes' limpio)
+			// =======================================================
+
+			if (acompanantes && acompanantes.length > 0) {
+				acompanantes.map(async (acomp) => {
+					const payloadMovimiento = {
+						salida: acomp.cantidad,
+						// Usamos metadatos del padre para una descripción clara
+						descripcion: `Cortesía para ${acomp.productoPadre} - Ref: ${values.observaciones}`,
+						tipo: 'cortesía',
+						producto: acomp._id,
+						usuario: usuarioId,
+					};
+					await crearMovimientosAction(dispatch, payloadMovimiento);
+				});
+			}
 
 			setFacturaReciente(facturaCreada);
 			setCarrito([]);

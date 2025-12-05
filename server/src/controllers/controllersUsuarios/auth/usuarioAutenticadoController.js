@@ -7,7 +7,12 @@ const usuarioAutenticado = async (id) => {
 		.populate('dispositivos')
 		.populate('movimientos')
 		.populate('facturas')
-		.populate('caja');
+		.populate({
+			path: 'caja', // 1. Entramos a 'caja'
+			populate: {
+				path: 'facturas', // 2. Dentro de 'caja', poblamos 'facturas'
+			},
+		});
 
 	if (!usuario) throw new Error('Usuario no encontrado');
 

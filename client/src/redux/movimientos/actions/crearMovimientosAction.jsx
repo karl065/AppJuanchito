@@ -5,6 +5,8 @@ import { agregarMovimiento } from '../slices/movimientosSlices.jsx';
 export const crearMovimientosAction = async (dispatch, nuevoMovimiento) => {
 	try {
 		const data = await crearMovimientosServices(nuevoMovimiento);
+
+		console.log(data);
 		dispatch(agregarMovimiento(data[0]));
 		emitEvent('movimiento:crear', data[0]);
 	} catch (error) {

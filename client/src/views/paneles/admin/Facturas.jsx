@@ -89,12 +89,14 @@ const Facturas = ({ facturas, cajero }) => {
 				metodosUsados.push({ name: 'Nequi', amount: detalle.nequi });
 		}
 
+		console.log(factura);
+
 		return {
 			id: factura._id,
 			info: (
 				<div className='flex flex-col text-left max-w-[150px] sm:max-w-full'>
 					<span className='font-bold text-white uppercase text-xs wrap-break-word leading-tight'>
-						Ref: {factura._id.substring(0, 8)}...
+						Ref: {factura?._id.substring(0, 8)}...
 					</span>
 					<span className='text-[10px] text-gray-400 mt-0.5'>
 						{formatearFechaHora(factura.createdAt)}

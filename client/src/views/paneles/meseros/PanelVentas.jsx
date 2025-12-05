@@ -15,6 +15,7 @@ import {
 } from '../../../components/Icons/Icons.jsx';
 import DetalleFactura from '../admin/DetalleFactura.jsx';
 import { getInputClasses } from '../../../helpers/estilosGlobales.jsx';
+import ModalAcompanantes from '../../formularios/generales/usuarios/ModalAcompanantes.jsx';
 
 const PanelVentas = ({ usuarioId, cajaActual }) => {
 	const [categoriaActiva, setCategoriaActiva] = useState('Todo');
@@ -26,6 +27,10 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 
 	const categorias = useSelector((state) => state.categorias.categorias);
 	const productos = useSelector((state) => state.productos.productos);
+
+	// Estados para acompanantes
+	const [showModalAcompanantes, setShowModalAcompanantes] = useState(false);
+	const [productoParaAcompañar, setProductoParaAcompañar] = useState(null);
 
 	const idCaja = cajaActual._id ? cajaActual?._id : cajaActual[0]?._id;
 
@@ -59,7 +64,8 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 						? { ...item, cantidad: item.cantidad + 1 }
 						: item
 				);
-			return [...prev, { ...prod, cantidad: 1 }];
+			// Inicializamos el array de acompanantes vacío para nuevos productos
+			return [...prev, { ...prod, cantidad: 1, acompanantes: [] }];
 		});
 	};
 
@@ -79,6 +85,26 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 		setCarrito((prev) => prev.filter((item) => item._id !== prodId));
 	};
 
+	// --- LÓGICA DE acompanantes ---
+	const abrirModalAcompanantes = (producto) => {
+		setProductoParaAcompañar(producto);
+		setShowModalAcompanantes(true);
+	};
+
+	const confirmarAcompanantes = (listaacompanantes) => {
+		setCarrito((prev) =>
+			prev.map((item) => {
+				if (item._id === productoParaAcompañar._id) {
+					// Fusionamos o reemplazamos los acompanantes
+					return { ...item, acompanantes: listaacompanantes };
+				}
+				return item;
+			})
+		);
+		setShowModalAcompanantes(false);
+		setProductoParaAcompañar(null);
+	};
+
 	const totalCarrito = carrito.reduce(
 		(acc, item) => acc + item.precio * item.cantidad,
 		0
@@ -88,6 +114,37 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 	const handleCloseModalFactura = () => {
 		setShowModalFactura(false);
 		setFacturaReciente(null);
+	};
+
+	console.log(carrito);
+	// 🚨 NUEVA LÓGICA DE PREPARACIÓN DE DATOS
+	// Separa limpiamente en dos arrays sin modificar los objetos originales
+	const prepararDatosParaPago = () => {
+		const itemsVenta = [];
+		const itemsAcompanantes = [];
+
+		carrito.forEach((item) => {
+			// 1. El producto principal va al array de VENTA
+			itemsVenta.push(item);
+
+			// 2. Extraemos sus acompañantes y los ponemos en el array de ACOMPAÑANTES
+			if (item.acompanantes && item.acompanantes.length > 0) {
+				item.acompanantes.forEach((acomp) => {
+					itemsAcompanantes.push({
+						...acomp,
+						// Agregamos metadatos útiles para la descripción del movimiento,
+						// pero NO tocamos precio ni nombre del producto base.
+						productoPadre: item.nombre,
+						cantidadPadre: item.cantidad,
+					});
+				});
+			}
+		});
+
+		return {
+			carrito: itemsVenta, // Array puro para Factura
+			acompanantes: itemsAcompanantes, // Array puro para Movimientos (Cortesía)
+		};
 	};
 
 	return (
@@ -259,25 +316,26 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 								{carrito.map((item) => (
 									<div
 										key={item._id}
-										className='flex items-center justify-between p-3 rounded-xl border border-gray-700/50 bg-gray-800/40'>
-										<div className='flex items-center gap-3'>
-											{/* Miniatura o Icono */}
-											<div className='w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center text-lg'>
-												🍺
+										className='bg-gray-800/40 rounded-xl border border-gray-700/50 overflow-hidden'>
+										{/* Item Principal */}
+										<div className='flex items-center justify-between p-3'>
+											<div className='flex items-center gap-3'>
+												<div className='w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center text-lg'>
+													🍺
+												</div>
+												<div>
+													<h4 className='text-xs font-bold text-white leading-tight'>
+														{item.nombre}
+													</h4>
+													<p className='text-xs text-red-400 font-bold'>
+														{formatearPesos(item.precio)}{' '}
+														<span className='text-gray-500 font-normal'>
+															c/u
+														</span>
+													</p>
+												</div>
 											</div>
-											<div>
-												<h4 className='text-xs font-bold text-white leading-tight'>
-													{item.nombre}
-												</h4>
-												<p className='text-xs text-red-400 font-bold'>
-													{formatearPesos(item.precio)}{' '}
-													<span className='text-gray-500 font-normal'>c/u</span>
-												</p>
-											</div>
-										</div>
-										<div className='flex space-x-2'>
-											<div className='flex flex-col items-center gap-3'>
-												{/* Controles de Cantidad */}
+											<div className='flex space-x-2 items-center'>
 												<div className='flex items-center bg-gray-900 rounded-lg border border-gray-700'>
 													<button
 														type='button'
@@ -299,22 +357,49 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 														<PlusIcon className='w-3 h-3' />
 													</button>
 												</div>
-												{/* Subtotal Item */}
 												<div className='text-right w-16'>
 													<p className='text-sm font-bold text-white'>
 														{formatearPesos(item.precio * item.cantidad)}
 													</p>
 												</div>
+												<button
+													type='button'
+													onClick={() => eliminarItemCarrito(item._id)}
+													className='w-8 h-8 flex items-center justify-center text-gray-500 hover:text-red-500'
+													title='Eliminar'>
+													<TrashIcon className='w-4 h-4' />
+												</button>
 											</div>
 										</div>
-										{/* BOTÓN DE ELIMINAR (Integrado) */}
-										<button
-											type='button'
-											onClick={() => eliminarItemCarrito(item._id)}
-											className='w-8 h-8 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-gray-700 rounded-lg transition-all'
-											title='Eliminar producto'>
-											<TrashIcon className='w-4 h-4' />
-										</button>
+
+										{/* Sección de Acompanantes */}
+										<div className='bg-black/30 p-2 border-t border-gray-700/50'>
+											{/* Botón para agregar acompañante */}
+											<button
+												onClick={() => abrirModalAcompanantes(item)}
+												className='w-full py-1.5 rounded-lg border border-dashed border-gray-600 hover:border-blue-500 hover:bg-blue-900/10 text-gray-400 hover:text-blue-400 text-xs font-bold transition-all flex items-center justify-center gap-1 mb-2'>
+												<PlusIcon className='w-3 h-3' />
+												Elegir Acompanantes / Cortesía
+											</button>
+
+											{/* Lista de Acompanantes seleccionados */}
+											{item.acompanantes && item.acompanantes.length > 0 && (
+												<div className='space-y-1'>
+													{item.acompanantes.map((acomp, idx) => (
+														<div
+															key={idx}
+															className='flex justify-between items-center text-[10px] pl-2 border-l-2 border-blue-500/50 ml-1'>
+															<span className='text-blue-200'>
+																{acomp.cantidad}x {acomp.nombre}
+															</span>
+															<span className='text-gray-500 uppercase font-bold'>
+																Gratis
+															</span>
+														</div>
+													))}
+												</div>
+											)}
+										</div>
 									</div>
 								))}
 							</div>
@@ -348,13 +433,22 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 			{showModalPago && (
 				<ModalPagosMixtos
 					total={totalCarrito}
-					carrito={carrito} // Pasamos el carrito para armar los productos
+					datosPago={prepararDatosParaPago()} // Pasamos el carrito para armar los productos
 					setCarrito={setCarrito}
 					usuarioId={usuarioId} // Pasamos el ID del usuario
 					cajaId={idCaja} // Pasamos el ID de la caja
 					onClose={() => setShowModalPago(false)}
 					setFacturaReciente={setFacturaReciente}
 					showModalFactura={setShowModalFactura}
+				/>
+			)}
+
+			{/* MODAL ACOMPAÑANTES */}
+			{showModalAcompanantes && productoParaAcompañar && (
+				<ModalAcompanantes
+					productoPrincipal={productoParaAcompañar}
+					onClose={() => setShowModalAcompanantes(false)}
+					onConfirm={confirmarAcompanantes}
 				/>
 			)}
 

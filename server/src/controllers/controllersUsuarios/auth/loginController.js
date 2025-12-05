@@ -12,7 +12,17 @@ const { SECRETA } = process.env;
 
 const loginController = async ({ correo, password, fingerprint }) => {
 	try {
-		const usuario = await Usuarios.findOne({ correo }).populate('dispositivos');
+		const usuario = await Usuarios.findOne({ correo })
+			.select('-password')
+			.populate('dispositivos')
+			.populate('movimientos')
+			.populate('facturas')
+			.populate({
+				path: 'caja', // 1. Entramos a 'caja'
+				populate: {
+					path: 'facturas', // 2. Dentro de 'caja', poblamos 'facturas'
+				},
+			});
 
 		if (!usuario) throw new Error('Correo o contraseña incorrectos');
 
