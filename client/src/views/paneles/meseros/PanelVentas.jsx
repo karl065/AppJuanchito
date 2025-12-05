@@ -379,7 +379,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 												onClick={() => abrirModalAcompanantes(item)}
 												className='w-full py-1.5 rounded-lg border border-dashed border-gray-600 hover:border-blue-500 hover:bg-blue-900/10 text-gray-400 hover:text-blue-400 text-xs font-bold transition-all flex items-center justify-center gap-1 mb-2'>
 												<PlusIcon className='w-3 h-3' />
-												Elegir Acompanantes / Cortesía
+												Elegir Acompañantes / Cortesía
 											</button>
 
 											{/* Lista de Acompanantes seleccionados */}
