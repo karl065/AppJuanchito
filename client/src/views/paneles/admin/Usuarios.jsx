@@ -18,6 +18,7 @@ const Usuarios = () => {
 	const dispatch = useDispatch();
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 	const roles = useSelector((state) => state.roles.roles);
+	const login = useSelector((state) => state.login.login);
 
 	const [busqueda, setBusqueda] = useState('');
 	const [isModalCrearUsuarioOpen, setIsModalCrearUsuarioOpen] = useState(false);
@@ -204,7 +205,7 @@ const Usuarios = () => {
 			/>
 
 			{/* MODAL DE CREACIÓN DE USUARIO */}
-			{isModalCrearUsuarioOpen && (
+			{isModalCrearUsuarioOpen && login.role === 'Administrador' && (
 				<div className='fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm p-4 animate-fade-in'>
 					<div className='bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative'>
 						<div className='flex justify-between items-center p-4 border-b border-gray-700'>

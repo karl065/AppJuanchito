@@ -1,4 +1,3 @@
-import React from 'react';
 import DropdownControl from '../DropdownControl/DropdownControl.jsx';
 import { PlusIcon, SearchIcon } from '../Icons/Icons.jsx';
 

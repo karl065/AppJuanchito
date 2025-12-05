@@ -23,7 +23,7 @@ const Principal = () => {
 	const [showMenu, setShowMenu] = useState(true);
 	const facturas = useSelector((state) => state.facturas.facturas);
 	const login = useSelector((state) => state.login.login);
-	const [tab, setTab] = useState(0);
+	const [tab, setTab] = useState(login.role === 'Administrador' ? 0 : 1);
 	const renderView = () => {
 		switch (tab) {
 			case 0:
@@ -81,13 +81,15 @@ const Principal = () => {
                 border-t border-red-900/50 shadow-[0_-5px_15px_rgba(0,0,0,0.5)]
                 bg-linear-to-tr from-[#1a0000] to-[#000000] text-white py-2 flex justify-around items-center h-[72px]
                 ${showMenu ? 'translate-y-0' : 'translate-y-full'}`}>
-				<NavButton
-					icon={<UserGroupIcon className='h-6 w-6' />}
-					index={0}
-					tab={tab}
-					setTab={setTab}
-					label='Usuarios'
-				/>
+				{login.role === 'Administrador' && (
+					<NavButton
+						icon={<UserGroupIcon className='h-6 w-6' />}
+						index={0}
+						tab={tab}
+						setTab={setTab}
+						label='Usuarios'
+					/>
+				)}
 				<NavButton
 					icon={<CollectionIcon className='h-6 w-6' />}
 					index={1}
@@ -109,13 +111,15 @@ const Principal = () => {
 					setTab={setTab}
 					label='Cajas'
 				/>
-				<NavButton
-					icon={<SwitchHorizontalIcon className='h-6 w-6' />}
-					index={4}
-					tab={tab}
-					setTab={setTab}
-					label='Movim.'
-				/>
+				{login.role === 'Administrador' && (
+					<NavButton
+						icon={<SwitchHorizontalIcon className='h-6 w-6' />}
+						index={4}
+						tab={tab}
+						setTab={setTab}
+						label='Movim.'
+					/>
+				)}
 				{login.role === 'Administrador' && (
 					<NavButton
 						icon={<ChartPieIcon className='h-6 w-6' />}

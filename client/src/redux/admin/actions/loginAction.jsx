@@ -5,6 +5,7 @@ import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; //
 import loginServices from '../../../services/auth/loginServices.jsx';
 import { emitEvent } from '../../../services/sockets/socketServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
+import { actualizarUsuario } from '../slices/usuariosSlice.jsx';
 
 export const loginAction = async (
 	userLogin,
@@ -48,6 +49,7 @@ export const loginAction = async (
 			dispatch(cargarCajaActual(cajaActual[0]));
 
 			dispatch(setLogin(data.usuario));
+			dispatch(actualizarUsuario(data.usuario));
 
 			emitEvent('usuario:login', data);
 			data.usuario.role === 'Mesero' ? navigate('/caja') : navigate('/admin');

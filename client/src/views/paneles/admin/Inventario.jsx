@@ -12,11 +12,13 @@ import { XIcon } from '../../../components/Icons/Icons.jsx';
 import FormularioCrearProducto from '../../formularios/generales/productos/CrearProducto.jsx';
 import FormularioActualizarProducto from '../../formularios/generales/productos/ActualizarProductos.jsx';
 import { eliminarProductosAction } from '../../../redux/productos/actions/eliminarProductosAction.jsx';
+import PerfilSuperior from '../../../components/PerfilSuperior/PerfilSuperior.jsx';
 
 const Inventario = () => {
 	const dispatch = useDispatch();
 	const productos = useSelector((state) => state.productos.productos);
 	const categorias = useSelector((state) => state.categorias.categorias);
+	const login = useSelector((state) => state.login.login);
 
 	const [busqueda, setBusqueda] = useState('');
 
@@ -107,23 +109,23 @@ const Inventario = () => {
 	const tableData = paginatedData.map((prod) => ({
 		id: prod._id,
 		info: (
-			<div className="flex flex-col text-left max-w-[140px] sm:max-w-full">
-				<span className="font-bold text-white uppercase text-xs wrap-break-word leading-tight">
+			<div className='flex flex-col text-left max-w-[140px] sm:max-w-full'>
+				<span className='font-bold text-white uppercase text-xs wrap-break-word leading-tight'>
 					{prod.nombre}
 				</span>
-				<div className="flex flex-wrap gap-1 mt-1">
-					<span className="text-[10px] text-gray-400 px-1 border border-gray-600 rounded">
+				<div className='flex flex-wrap gap-1 mt-1'>
+					<span className='text-[10px] text-gray-400 px-1 border border-gray-600 rounded'>
 						{prod.unidadMedida}
 					</span>
-					<span className="text-[10px] text-gray-500 italic truncate max-w-20">
+					<span className='text-[10px] text-gray-500 italic truncate max-w-20'>
 						{prod.categoria?.nombre}
 					</span>
 				</div>
 			</div>
 		),
 		estado: (
-			<div className="flex flex-col items-end gap-1">
-				<span className="font-bold text-yellow-400 text-xs whitespace-nowrap">
+			<div className='flex flex-col items-end gap-1'>
+				<span className='font-bold text-yellow-400 text-xs whitespace-nowrap'>
 					{formatearPesos(prod.precio)}
 				</span>
 				<div
@@ -131,11 +133,11 @@ const Inventario = () => {
 						prod.stock <= 0
 							? 'bg-red-900/50 text-red-400 border border-red-800'
 							: prod.stock <= 5
-							? 'bg-orange-900/50 text-orange-400 border border-orange-800'
-							: 'bg-green-900/50 text-green-400 border border-green-800'
+								? 'bg-orange-900/50 text-orange-400 border border-orange-800'
+								: 'bg-green-900/50 text-green-400 border border-green-800'
 					}`}>
 					<span>Stock:</span>
-					<span className="text-sm">{prod.stock}</span>
+					<span className='text-sm'>{prod.stock}</span>
 				</div>
 			</div>
 		),
@@ -146,33 +148,41 @@ const Inventario = () => {
 		{ key: 'estado', label: 'Estado' },
 	];
 
+	const esSupervisor = login.role === 'Supervisor';
+
 	return (
-		<div className="flex flex-col h-full  gap-3 p-2 ">
+		<div className='flex flex-col h-full  gap-3 p-2 '>
 			{/* Cabecera de Filtros Reutilizable */}
+			{login.role === 'Supervisor' && <PerfilSuperior />}
 			<Filtros
 				busqueda={busqueda}
 				setBusqueda={setBusqueda}
-				onAdd={handleAddProduct}
-				placeholder="Buscar producto o categoría..."
-				addButtonTitle="Crear nuevo producto"
+				onAdd={esSupervisor ? null : handleAddProduct}
+				placeholder='Buscar producto o categoría...'
+				addButtonTitle='Crear nuevo producto'
 				extraControls={filtersConfig}
 			/>
 
 			{/* Tabla con scroll Reutilizable */}
-			<div className="flex-1 min-h-0 overflow-y-auto pb-4">
+			<div className='flex-1 min-h-0 overflow-y-auto pb-4'>
 				{tableData.length > 0 ? (
 					<MobileTable
 						columns={columns}
 						data={tableData}
-						onEdit={(row) => {
-							// Encontramos el usuario original basado en el ID
-							const producto = productos.find((u) => u._id === row.id);
-							handleEdit(producto);
-						}}
-						onDelete={handleDelete}
+						// 2. Ocultar botón de Editar
+						onEdit={
+							esSupervisor
+								? null
+								: (row) => {
+										const producto = productos.find((u) => u._id === row.id);
+										handleEdit(producto);
+									}
+						}
+						// 3. Ocultar botón de Eliminar
+						onDelete={esSupervisor ? null : handleDelete}
 					/>
 				) : (
-					<div className="text-center text-gray-500 text-sm mt-8">
+					<div className='text-center text-gray-500 text-sm mt-8'>
 						{productos?.length === 0 ? 'No hay productos.' : 'Sin resultados.'}
 					</div>
 				)}
@@ -188,18 +198,18 @@ const Inventario = () => {
 
 			{/* 🚨 4. MODAL INTEGRADO */}
 			{isModalCrearProductoOpen && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in">
-					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
-						<div className="flex justify-between items-center p-4 border-b border-gray-700">
-							<h3 className="text-lg font-bold text-white">Nuevo Producto</h3>
+				<div className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in'>
+					<div className='bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative'>
+						<div className='flex justify-between items-center p-4 border-b border-gray-700'>
+							<h3 className='text-lg font-bold text-white'>Nuevo Producto</h3>
 							<button
 								onClick={handleCloseCrearProductoModal}
-								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
-								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+								className='p-1 rounded-full hover:bg-gray-700 transition-colors'>
+								<XIcon className='w-5 h-5 text-gray-400 hover:text-white' />
 							</button>
 						</div>
 
-						<div className="p-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+						<div className='p-4 max-h-[80vh] overflow-y-auto custom-scrollbar'>
 							<FormularioCrearProducto
 								onSuccess={handleSuccessCreate}
 								onClose={handleCloseCrearProductoModal}
@@ -211,19 +221,19 @@ const Inventario = () => {
 
 			{/* MODAL ACTUALIZAR */}
 			{isModalActualizarProductoOpen && productoEditar && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in">
-					<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative">
-						<div className="flex justify-between items-center p-4 border-b border-gray-700">
-							<h3 className="text-lg font-bold text-white">
+				<div className='fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4 animate-fade-in'>
+					<div className='bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl animate-fade-in-up relative'>
+						<div className='flex justify-between items-center p-4 border-b border-gray-700'>
+							<h3 className='text-lg font-bold text-white'>
 								Actualizar Producto
 							</h3>
 							<button
 								onClick={handleCloseActualizar}
-								className="p-1 rounded-full hover:bg-gray-700 transition-colors">
-								<XIcon className="w-5 h-5 text-gray-400 hover:text-white" />
+								className='p-1 rounded-full hover:bg-gray-700 transition-colors'>
+								<XIcon className='w-5 h-5 text-gray-400 hover:text-white' />
 							</button>
 						</div>
-						<div className="p-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+						<div className='p-4 max-h-[80vh] overflow-y-auto custom-scrollbar'>
 							<FormularioActualizarProducto
 								productoAEditar={productoEditar}
 								onSuccess={handleSuccessUpdate}
