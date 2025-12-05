@@ -4,6 +4,7 @@ import { setLogin } from '../slices/loginSlice.jsx';
 import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; // función que veremos abajo
 import loginServices from '../../../services/auth/loginServices.jsx';
 import { emitEvent } from '../../../services/sockets/socketServices.jsx';
+import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 
 export const loginAction = async (
 	userLogin,
@@ -40,7 +41,14 @@ export const loginAction = async (
 		} else if (data.loginApproved) {
 			// Login completo
 
+			const cajaActual = data.usuario.caja.filter(
+				(caj) => caj.estado === 'abierta'
+			);
+
+			dispatch(cargarCajaActual(cajaActual[0]));
+
 			dispatch(setLogin(data.usuario));
+
 			emitEvent('usuario:login', data);
 			data.usuario.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
 			alertSuccess(`Bienvenido ${data.usuario.nombre}`);

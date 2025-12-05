@@ -24,7 +24,6 @@ const PerfilSuperior = () => {
 	const usuarioLogin = login?.usuario || login;
 	const esAdminOSupervisor =
 		usuarioLogin.role === 'Administrador' || usuarioLogin.role === 'Supervisor';
-	const cajaEstaAbierta = !cajaActual.estado && cajaActual.estado === 'abierta';
 
 	const handleAbrirCaja = async (nuevaCaja) => {
 		await crearCajasAction(dispatch, nuevaCaja);
@@ -35,7 +34,7 @@ const PerfilSuperior = () => {
 		e.preventDefault();
 
 		if (esAdminOSupervisor) {
-			if (!cajaEstaAbierta) {
+			if (!cajaActual) {
 				// Si no hay caja abierta, muestra el modal de apertura
 				setShowAperturaCaja(true);
 			} else {
@@ -52,7 +51,7 @@ const PerfilSuperior = () => {
 	// Función para manejar el cierre de caja (abre el modal de cierre)
 	const handlerCerrarCaja = (e) => {
 		e.preventDefault();
-		if (cajaEstaAbierta) {
+		if (cajaActual) {
 			setShowModalCierre(true);
 		} else {
 			// Si no hay caja abierta, simplemente desloguea
@@ -92,10 +91,10 @@ const PerfilSuperior = () => {
 					{esAdminOSupervisor && (
 						<Button
 							onClick={handlerAbrirYCerrarVista}
-							title={cajaEstaAbierta ? 'Cambiar Vista' : 'Abrir Caja'}
+							title={cajaActual ? 'Cambiar Vista' : 'Abrir Caja'}
 							className='w-10 h-10 p-0 flex items-center justify-center rounded-full bg-red-700 hover:bg-red-600 shadow-md shadow-red-900/50 active:scale-90 transition-all shrink-0'>
 							{/* Icono: Basamos la lógica en la RUTA ACTUAL */}
-							{cajaEstaAbierta ? (
+							{cajaActual ? (
 								path === '/admin' ? (
 									<StoreIcon className='w-5 h-5 text-white' /> // Muestra icono de tienda para ir a caja
 								) : (
@@ -111,7 +110,7 @@ const PerfilSuperior = () => {
 					{/* Botón de Cerrar Sesión / Cerrar Caja (Meseros usan este para todo) */}
 					<Button
 						onClick={handlerCerrarCaja} // Usamos el nuevo handler para decidir si abrir modal o logout
-						title={cajaEstaAbierta ? 'Cerrar Caja' : 'Cerrar Sesión'}
+						title={cajaActual ? 'Cerrar Caja' : 'Cerrar Sesión'}
 						className='w-10 h-10 p-0 flex items-center justify-center rounded-full bg-red-700 hover:bg-red-600 shadow-md shadow-red-900/50 active:scale-90 transition-all shrink-0'>
 						<LogoutIcon className='w-5 h-5 text-white' />
 					</Button>

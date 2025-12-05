@@ -27,6 +27,6 @@ router.post('/login-2fa', verificar2FALoginHandler);
 router.get('/relogin', authMiddle, handlerAutenticado);
 
 // Logout
-router.put('/logout/:id', authMiddle, logoutHandler);
+router.put('/logout/:id', logoutHandler);
 
 export default router;
