@@ -41,3 +41,10 @@ export const getLabelClasses = (extraClasses = '') => {
 		.trim()
 		.replace(/\s+/g, ' ');
 };
+
+export const colorThemeRed = (entrada = '', valor = '') => {
+	return `${entrada}-red-${valor}`;
+};
+export const colorThemeGreen = (entrada = '', valor = '') => {
+	return `${entrada}-green-${valor}`;
+};

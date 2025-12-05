@@ -100,33 +100,38 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 		formik.values.tipo.includes('negativo') ||
 		formik.values.tipo === 'cortesía';
 
-	const colorTheme = isSalida ? 'red' : 'green';
+	const themeText = isSalida ? 'text-red-400' : 'text-green-400';
+
+	// Clases explícitas para el botón. IMPORTANTE: Tailwind necesita ver la clase completa.
+	const buttonClass = isSalida
+		? 'bg-red-600 hover:bg-red-500 shadow-red-900/30'
+		: 'bg-green-600 hover:bg-green-500 shadow-green-900/30';
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4 animate-fade-in">
+		<div className='fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4 animate-fade-in'>
 			{/* Contenedor optimizado para Android (Bottom Sheet feel en móviles) */}
-			<div className="bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-lg sm:rounded-2xl rounded-t-2xl border-t sm:border border-gray-700 shadow-2xl relative flex flex-col max-h-[90dvh]">
+			<div className='bg-[linear-gradient(180deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-lg sm:rounded-2xl rounded-t-2xl border-t sm:border border-gray-700 shadow-2xl relative flex flex-col max-h-[90dvh]'>
 				{/* Cabecera */}
-				<div className="flex justify-between items-center p-4 border-b border-gray-700 shrink-0">
-					<h3 className={`text-xl font-bold text-${colorTheme}-400`}>
+				<div className='flex justify-between items-center p-4 border-b border-gray-700 shrink-0'>
+					<h3 className={`text-xl font-bold ${themeText}`}>
 						{isSalida ? 'Registrar Salida' : 'Registrar Entrada'}
 					</h3>
 					<button
 						onClick={onClose}
-						className="p-2 rounded-full hover:bg-gray-800 text-gray-400 hover:text-white transition-colors active:scale-90">
-						<XIcon className="w-6 h-6" />
+						className='p-2 rounded-full hover:bg-gray-800 text-gray-400 hover:text-white transition-colors active:scale-90'>
+						<XIcon className='w-6 h-6' />
 					</button>
 				</div>
 
 				{/* Formulario Scrollable */}
 				<form
 					onSubmit={formik.handleSubmit}
-					className="flex flex-col p-5 space-y-5 overflow-y-auto custom-scrollbar pb-8 sm:pb-5">
+					className='flex flex-col p-5 space-y-5 overflow-y-auto custom-scrollbar pb-8 sm:pb-5'>
 					{/* Grid Tipo y Producto */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+					<div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
 						{/* Tipo */}
-						<div className="space-y-1">
-							<label className={getLabelClasses(`text-${colorTheme}-400`)}>
+						<div className='space-y-1'>
+							<label className={getLabelClasses(themeText)}>
 								Tipo de Movimiento
 							</label>
 							<Dropdown
@@ -136,12 +141,12 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 										? 'border-red-600 ring-1 ring-red-600'
 										: 'border-gray-700 focus:ring-red-500'
 								}`}>
-								<div className="max-h-56 overflow-y-auto custom-scrollbar">
+								<div className='max-h-56 overflow-y-auto custom-scrollbar'>
 									{tiposDisponibles.map((tipo, i) => (
 										<DropdownItem
 											key={i}
 											onClick={() => handleTipoSelect(tipo)}
-											className="uppercase text-gray-300">
+											className='uppercase text-gray-300'>
 											{formatearLabel(tipo)}
 										</DropdownItem>
 									))}
@@ -153,7 +158,7 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 						</div>
 
 						{/* Producto */}
-						<div className="space-y-1">
+						<div className='space-y-1'>
 							<label className={getLabelClasses('text-blue-400')}>
 								Producto
 							</label>
@@ -164,15 +169,15 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 										? 'border-red-600 ring-1 ring-red-600'
 										: 'border-gray-700 focus:ring-red-500'
 								}`}>
-								<div className="max-h-56 overflow-y-auto custom-scrollbar">
+								<div className='max-h-56 overflow-y-auto custom-scrollbar'>
 									{productos.map((prod) => (
 										<DropdownItem
 											key={prod._id}
 											onClick={() => handleProductosSelect(prod)}
-											className="text-gray-300">
-											<div className="flex justify-between uppercase w-full">
+											className='text-gray-300'>
+											<div className='flex justify-between uppercase w-full'>
 												<span>{`${prod.nombre} ${prod.unidadMedida}`}</span>
-												<span className="text-xs text-gray-500 ml-2 pt-1">
+												<span className='text-xs text-gray-500 ml-2 pt-1'>
 													{prod.stock} stock
 												</span>
 											</div>
@@ -187,14 +192,14 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 					</div>
 
 					{/* Grid Cantidad */}
-					<div className="space-y-1">
+					<div className='space-y-1'>
 						<label className={getLabelClasses('text-white')}>Cantidad</label>
 						<input
-							type="number"
-							inputMode="numeric" // 📱 Android: Fuerza teclado numérico
-							pattern="[0-9]*"
-							enterKeyHint="next" // 📱 Android: Botón 'Siguiente'
-							placeholder="0"
+							type='number'
+							inputMode='numeric' // 📱 Android: Fuerza teclado numérico
+							pattern='[0-9]*'
+							enterKeyHint='next' // 📱 Android: Botón 'Siguiente'
+							placeholder='0'
 							{...formik.getFieldProps('cantidad')}
 							className={`${getInputClasses(
 								formik.touched.cantidad && formik.errors.cantidad
@@ -206,12 +211,12 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 					</div>
 
 					{/* Descripción */}
-					<div className="space-y-1">
+					<div className='space-y-1'>
 						<label className={getLabelClasses()}>Descripción</label>
 						<textarea
-							rows="3"
-							enterKeyHint="done" // 📱 Android: Botón 'Listo' o 'Enviar'
-							placeholder="Motivo del movimiento..."
+							rows='3'
+							enterKeyHint='done' // 📱 Android: Botón 'Listo' o 'Enviar'
+							placeholder='Motivo del movimiento...'
 							{...formik.getFieldProps('descripcion')}
 							className={`${getInputClasses(
 								formik.touched.descripcion && formik.errors.descripcion
@@ -224,11 +229,11 @@ const FormularioCrearMovimientos = ({ onClose }) => {
 
 					{/* Botón Submit */}
 					<button
-						type="submit"
+						type='submit'
 						disabled={formik.isSubmitting || !formik.isValid}
 						className={`w-full py-4 mt-2 rounded-xl font-bold text-white shadow-lg transition-all active:scale-95 touch-manipulation ${
 							formik.isValid
-								? `bg-${colorTheme}-600 hover:bg-${colorTheme}-500 shadow-${colorTheme}-900/30`
+								? buttonClass
 								: 'bg-gray-800 text-gray-500 cursor-not-allowed'
 						}`}>
 						{formik.isSubmitting

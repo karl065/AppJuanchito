@@ -13,6 +13,8 @@ const authMiddle = async (req, res, next) => {
 
 		let decoded;
 
+		console.log(token);
+
 		try {
 			decoded = jwt.verify(token, SECRETA);
 		} catch (err) {
