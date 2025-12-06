@@ -13,7 +13,6 @@ const { SECRETA } = process.env;
 const loginController = async ({ correo, password, fingerprint }) => {
 	try {
 
-		console.log(correo, password, fingerprint)
 		const usuario = await Usuarios.findOne({ correo })
 			.select('-password')
 			.populate('dispositivos')
@@ -25,6 +24,8 @@ const loginController = async ({ correo, password, fingerprint }) => {
 					path: 'facturas', // 2. Dentro de 'caja', poblamos 'facturas'
 				},
 			});
+
+		console.log("Ususuario 1",usuario)
 
 		if (!usuario) throw new Error('Correo o contraseña incorrectos');
 
@@ -48,6 +49,8 @@ const loginController = async ({ correo, password, fingerprint }) => {
 			fingerprint,
 		});
 
+		console.log("Confiable 2",confiable)
+
 		const vigente = confiable && new Date(confiable.expiresAt) > new Date();
 		if (vigente) {
 			// 🔥 Dispositivo confiable → generar token de sesión
@@ -61,10 +64,14 @@ const loginController = async ({ correo, password, fingerprint }) => {
 				{ expiresIn: '7d' }
 			);
 
+			console.log("Vigente 3",vigente)
+
 			const usuarioActivo = await putControllerUsuario(
 				{ userStatus: true },
 				usuario._id
 			);
+
+			console.log("Usuario Activo 4",usuarioActivo)
 
 			return {
 				loginApproved: true,
