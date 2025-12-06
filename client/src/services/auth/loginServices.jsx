@@ -10,6 +10,7 @@ const loginServices = async (userLogin) => {
 		);
 		return data;
 	} catch (error) {
+		console.log(error)
 		throw new Error(error.response.data.error);
 	}
 };
