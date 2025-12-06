@@ -37,6 +37,8 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 		onSubmit: async (values) => {
 			const fingerprint = await obtenerFingerprint(); // fingerprint único del dispositivo
 
+			console.log(values)
+
 			loginAction(
 				{ ...values, fingerprint },
 				dispatch,
