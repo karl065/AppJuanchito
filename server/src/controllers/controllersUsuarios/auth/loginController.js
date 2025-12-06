@@ -12,6 +12,8 @@ const { SECRETA } = process.env;
 
 const loginController = async ({ correo, password, fingerprint }) => {
 	try {
+
+		console.log(correo, password, fingerprint)
 		const usuario = await Usuarios.findOne({ correo })
 			.select('-password')
 			.populate('dispositivos')
