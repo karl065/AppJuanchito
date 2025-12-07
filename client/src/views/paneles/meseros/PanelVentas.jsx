@@ -15,7 +15,6 @@ import {
 } from '../../../components/Icons/Icons.jsx';
 import DetalleFactura from '../admin/DetalleFactura.jsx';
 import { getInputClasses } from '../../../helpers/estilosGlobales.jsx';
-import ModalAcompanantes from '../../formularios/generales/usuarios/ModalAcompanantes.jsx';
 
 const PanelVentas = ({ usuarioId, cajaActual }) => {
 	const [categoriaActiva, setCategoriaActiva] = useState('Todo');
@@ -27,10 +26,6 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 
 	const categorias = useSelector((state) => state.categorias.categorias);
 	const productos = useSelector((state) => state.productos.productos);
-
-	// Estados para acompanantes
-	const [showModalAcompanantes, setShowModalAcompanantes] = useState(false);
-	const [productoParaAcompañar, setProductoParaAcompañar] = useState(null);
 
 	const idCaja = cajaActual._id ? cajaActual?._id : cajaActual[0]?._id;
 
@@ -64,8 +59,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 						? { ...item, cantidad: item.cantidad + 1 }
 						: item
 				);
-			// Inicializamos el array de acompanantes vacío para nuevos productos
-			return [...prev, { ...prod, cantidad: 1, acompanantes: [] }];
+			return [...prev, { ...prod, cantidad: 1 }];
 		});
 	};
 
@@ -85,26 +79,6 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 		setCarrito((prev) => prev.filter((item) => item._id !== prodId));
 	};
 
-	// --- LÓGICA DE acompanantes ---
-	const abrirModalAcompanantes = (producto) => {
-		setProductoParaAcompañar(producto);
-		setShowModalAcompanantes(true);
-	};
-
-	const confirmarAcompanantes = (listaacompanantes) => {
-		setCarrito((prev) =>
-			prev.map((item) => {
-				if (item._id === productoParaAcompañar._id) {
-					// Fusionamos o reemplazamos los acompanantes
-					return { ...item, acompanantes: listaacompanantes };
-				}
-				return item;
-			})
-		);
-		setShowModalAcompanantes(false);
-		setProductoParaAcompañar(null);
-	};
-
 	const totalCarrito = carrito.reduce(
 		(acc, item) => acc + item.precio * item.cantidad,
 		0
@@ -116,36 +90,7 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 		setFacturaReciente(null);
 	};
 
-	console.log(carrito);
-	// 🚨 NUEVA LÓGICA DE PREPARACIÓN DE DATOS
-	// Separa limpiamente en dos arrays sin modificar los objetos originales
-	const prepararDatosParaPago = () => {
-		const itemsVenta = [];
-		const itemsAcompanantes = [];
-
-		carrito.forEach((item) => {
-			// 1. El producto principal va al array de VENTA
-			itemsVenta.push(item);
-
-			// 2. Extraemos sus acompañantes y los ponemos en el array de ACOMPAÑANTES
-			if (item.acompanantes && item.acompanantes.length > 0) {
-				item.acompanantes.forEach((acomp) => {
-					itemsAcompanantes.push({
-						...acomp,
-						// Agregamos metadatos útiles para la descripción del movimiento,
-						// pero NO tocamos precio ni nombre del producto base.
-						productoPadre: item.nombre,
-						cantidadPadre: item.cantidad,
-					});
-				});
-			}
-		});
-
-		return {
-			carrito: itemsVenta, // Array puro para Factura
-			acompanantes: itemsAcompanantes, // Array puro para Movimientos (Cortesía)
-		};
-	};
+	console.log('Factura reciente', facturaReciente);
 
 	return (
 		<div className='flex flex-col h-full  relative'>
@@ -371,35 +316,6 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 												</button>
 											</div>
 										</div>
-
-										{/* Sección de Acompanantes */}
-										<div className='bg-black/30 p-2 border-t border-gray-700/50'>
-											{/* Botón para agregar acompañante */}
-											<button
-												onClick={() => abrirModalAcompanantes(item)}
-												className='w-full py-1.5 rounded-lg border border-dashed border-gray-600 hover:border-blue-500 hover:bg-blue-900/10 text-gray-400 hover:text-blue-400 text-xs font-bold transition-all flex items-center justify-center gap-1 mb-2'>
-												<PlusIcon className='w-3 h-3' />
-												Elegir Acompañantes / Cortesía
-											</button>
-
-											{/* Lista de Acompanantes seleccionados */}
-											{item.acompanantes && item.acompanantes.length > 0 && (
-												<div className='space-y-1'>
-													{item.acompanantes.map((acomp, idx) => (
-														<div
-															key={idx}
-															className='flex justify-between items-center text-[10px] pl-2 border-l-2 border-blue-500/50 ml-1'>
-															<span className='text-blue-200'>
-																{acomp.cantidad}x {acomp.nombre}
-															</span>
-															<span className='text-gray-500 uppercase font-bold'>
-																Gratis
-															</span>
-														</div>
-													))}
-												</div>
-											)}
-										</div>
 									</div>
 								))}
 							</div>
@@ -433,22 +349,13 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 			{showModalPago && (
 				<ModalPagosMixtos
 					total={totalCarrito}
-					datosPago={prepararDatosParaPago()} // Pasamos el carrito para armar los productos
+					carrito={carrito} // Pasamos el carrito para armar los productos
 					setCarrito={setCarrito}
 					usuarioId={usuarioId} // Pasamos el ID del usuario
 					cajaId={idCaja} // Pasamos el ID de la caja
 					onClose={() => setShowModalPago(false)}
 					setFacturaReciente={setFacturaReciente}
 					showModalFactura={setShowModalFactura}
-				/>
-			)}
-
-			{/* MODAL ACOMPAÑANTES */}
-			{showModalAcompanantes && productoParaAcompañar && (
-				<ModalAcompanantes
-					productoPrincipal={productoParaAcompañar}
-					onClose={() => setShowModalAcompanantes(false)}
-					onConfirm={confirmarAcompanantes}
 				/>
 			)}
 

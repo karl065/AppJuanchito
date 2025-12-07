@@ -26,6 +26,8 @@ const Informes = () => {
 	const movimientos = useSelector((state) => state.movimientos.movimientos);
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 
+	console.log(cajas);
+
 	const [subTab, setSubTab] = useState(0);
 	const [period, setPeriod] = useState('Turno');
 	const [selectedUser, setSelectedUser] = useState('all');
@@ -60,19 +62,19 @@ const Informes = () => {
 	} = datosProcesados;
 
 	const subTabsConfig = [
-		{ index: 0, label: 'Resumen', icon: <ChartPieIcon className="w-4 h-4" /> },
-		{ index: 1, label: 'x Usuario', icon: <UsersIcon className="w-4 h-4" /> },
-		{ index: 2, label: 'x Caja', icon: <CashIcon className="w-4 h-4" /> },
+		{ index: 0, label: 'Resumen', icon: <ChartPieIcon className='w-4 h-4' /> },
+		{ index: 1, label: 'x Usuario', icon: <UsersIcon className='w-4 h-4' /> },
+		{ index: 2, label: 'x Caja', icon: <CashIcon className='w-4 h-4' /> },
 		{
 			index: 3,
 			label: 'x Día Laborado',
-			icon: <CalendarIcon className="w-4 h-4" />,
+			icon: <CalendarIcon className='w-4 h-4' />,
 		}, // 🚨 NUEVA PESTAÑA
-		{ index: 4, label: 'Stock', icon: <BoxIcon className="w-4 h-4" /> },
+		{ index: 4, label: 'Stock', icon: <BoxIcon className='w-4 h-4' /> },
 		{
 			index: 5,
 			label: 'Movimientos',
-			icon: <TrendingUpIcon className="w-4 h-4" />,
+			icon: <TrendingUpIcon className='w-4 h-4' />,
 		},
 	];
 
@@ -134,9 +136,9 @@ const Informes = () => {
 	const showUserFilter = subTab === 1 || subTab === 2;
 
 	return (
-		<div className="flex flex-col h-full bg-transparent overflow-hidden">
+		<div className='flex flex-col h-full bg-transparent overflow-hidden'>
 			{/* BARRA DE PESTAÑAS Y FILTRO DE TIEMPO (FIJO) */}
-			<div className="sticky top-0 z-10  pt-2 px-3 border-b">
+			<div className='sticky top-0 z-10  pt-2 px-3 border-b'>
 				<TimeFilter selected={period} setSelected={setPeriod} />
 
 				{/* 🚨 Filtro de Usuario (Solo visible en pestañas relevantes) */}
@@ -148,7 +150,7 @@ const Informes = () => {
 					/>
 				)}
 
-				<div className="flex overflow-x-auto whitespace-nowrap -mb-px">
+				<div className='flex overflow-x-auto whitespace-nowrap -mb-px'>
 					{subTabsConfig.map((tab) => (
 						<SubTabButton
 							key={tab.index}
@@ -163,7 +165,7 @@ const Informes = () => {
 			</div>
 
 			{/* CONTENIDO DE LA PESTAÑA */}
-			<div className="flex-1 min-h-0 overflow-y-auto">{renderSubView()}</div>
+			<div className='flex-1 min-h-0 overflow-y-auto'>{renderSubView()}</div>
 		</div>
 	);
 };

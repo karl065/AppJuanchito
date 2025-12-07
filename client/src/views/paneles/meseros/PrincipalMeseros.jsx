@@ -6,7 +6,6 @@ import {
 	HomeIcon,
 } from '../../../components/Icons/Icons.jsx';
 import PanelVentas from './PanelVentas.jsx';
-import HistorialView from './HistoriasVista.jsx';
 import MiCajaView from './Caja.jsx';
 import PerfilSuperior from '../../../components/PerfilSuperior/PerfilSuperior.jsx';
 import AperturaCaja from '../../formularios/shared/AperturaCaja.jsx';

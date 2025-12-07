@@ -14,7 +14,9 @@ const getControllerUsuario = async (query) => {
 
 		const usuarios = await Usuarios.find(
 			Object.keys(filtro).length > 0 ? filtro : {}
-		).populate('dispositivos').populate("facturas");
+		)
+			.populate('dispositivos')
+			.populate('facturas');
 
 		const usuariosSanitizados = usuarios.map((u) => sanitizarUsuario(u));
 

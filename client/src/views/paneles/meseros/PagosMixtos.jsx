@@ -4,11 +4,10 @@ import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
 import { ArrowRightIcon, XIcon } from '../../../components/Icons/Icons.jsx';
 import { useDispatch } from 'react-redux';
 import { crearFacturaAction } from '../../../redux/facturas/actions/crearFacturasAction.jsx';
-import { crearMovimientosAction } from '../../../redux/movimientos/actions/crearMovimientosAction.jsx';
 
 const ModalPagosMixtos = ({
 	total,
-	datosPago,
+	carrito,
 	setCarrito,
 	usuarioId,
 	cajaId,
@@ -17,7 +16,7 @@ const ModalPagosMixtos = ({
 	showModalFactura,
 }) => {
 	const dispatch = useDispatch();
-	console.log(datosPago);
+	console.log(carrito);
 
 	// Configuración de Formik
 	const formik = useFormik({
@@ -28,108 +27,95 @@ const ModalPagosMixtos = ({
 			efectivo: total, // Inicia con el total
 		},
 		enableReinitialize: true, // Permite reiniciar si cambia el total
-		onSubmit: async (values) => {
-			const { carrito, acompanantes } = datosPago;
 
-			const valNequi = parseInt(values.nequi) || 0;
-			const valDavi = parseInt(values.daviplata) || 0;
-			const valEfectivoCliente = parseInt(values.efectivo) || 0;
+		// 1️⃣ Añadimos setSubmitting para controlar el estado de carga
+		onSubmit: async (values, { setSubmitting }) => {
+			try {
+				const valNequi = parseInt(values.nequi) || 0;
+				const valDavi = parseInt(values.daviplata) || 0;
+				const valEfectivoCliente = parseInt(values.efectivo) || 0;
 
-			const metodosConSaldo = [
-				{ nombre: 'nequi', valor: valNequi },
-				{ nombre: 'daviplata', valor: valDavi },
-				{ nombre: 'efectivo', valor: valEfectivoCliente },
-			].filter((m) => m.valor > 0);
+				const metodosConSaldo = [
+					{ nombre: 'nequi', valor: valNequi },
+					{ nombre: 'daviplata', valor: valDavi },
+					{ nombre: 'efectivo', valor: valEfectivoCliente },
+				].filter((m) => m.valor > 0);
 
-			let metodoPagoFinal = 'efectivo'; // Default
+				let metodoPagoFinal = 'efectivo'; // Default
 
-			if (metodosConSaldo.length > 1) {
-				// Si hay más de 1 método usado (ej: Nequi+Efectivo, o Nequi+Daviplata)
-				metodoPagoFinal = 'mixto';
-			} else if (metodosConSaldo.length === 1) {
-				// Si solo hay 1 método usado, tomamos su nombre
-				metodoPagoFinal = metodosConSaldo[0].nombre;
+				if (metodosConSaldo.length > 1) {
+					metodoPagoFinal = 'mixto';
+				} else if (metodosConSaldo.length === 1) {
+					metodoPagoFinal = metodosConSaldo[0].nombre;
+				}
+
+				const facturaNueva = {
+					metodoPago: metodoPagoFinal,
+					caja: cajaId,
+					detallePago: {
+						efectivoCliente: values.efectivo,
+						daviplata: values.daviplata,
+						nequi: values.nequi,
+						totalPagado: valNequi + valDavi + valEfectivoCliente,
+						cambio: valNequi + valDavi + valEfectivoCliente - total,
+					},
+					usuario: usuarioId,
+					productos: carrito.map((car) => {
+						return {
+							producto: car._id,
+							cantidad: car.cantidad,
+							precioUnitario: car.precio,
+							precioTotalProducto: car.cantidad * car.precio,
+						};
+					}),
+					precioVenta: total,
+					observaciones: values.observaciones,
+				};
+
+				// await explícito para esperar respuesta del back antes de seguir
+				const facturaCreada = await crearFacturaAction(dispatch, facturaNueva);
+
+				console.log('Pagos Mixtos Terminados', facturaCreada);
+
+				setFacturaReciente(facturaCreada);
+				setCarrito([]);
+				onClose();
+				showModalFactura(true);
+
+				// No necesitamos setSubmitting(false) aquí porque el componente se desmonta (onClose)
+			} catch (error) {
+				console.error('Error procesando pago:', error);
+				// 3️⃣ Si hay error, habilitamos el botón de nuevo
+				setSubmitting(false);
 			}
-
-			const facturaNueva = {
-				metodoPago: metodoPagoFinal,
-				caja: cajaId,
-				detallePago: {
-					efectivoCliente: values.efectivo,
-					daviplata: values.daviplata,
-					nequi: values.nequi,
-					totalPagado: totalPagado,
-					cambio: diferencia,
-				},
-				usuario: usuarioId,
-				productos: carrito.map((car) => {
-					return {
-						producto: car._id,
-						cantidad: car.cantidad,
-						precioUnitario: car.precio,
-						precioTotalProducto: car.cantidad * car.precio,
-					};
-				}),
-				precioVenta: total,
-				observaciones: values.observaciones,
-			};
-
-			const facturaCreada = await crearFacturaAction(dispatch, facturaNueva);
-
-			// =======================================================
-			// PASO B: CREAR MOVIMIENTOS (Array 'acompanantes' limpio)
-			// =======================================================
-
-			if (acompanantes && acompanantes.length > 0) {
-				acompanantes.map(async (acomp) => {
-					const payloadMovimiento = {
-						salida: acomp.cantidad,
-						// Usamos metadatos del padre para una descripción clara
-						descripcion: `Cortesía para ${acomp.productoPadre} - Ref: ${values.observaciones}`,
-						tipo: 'cortesía',
-						producto: acomp._id,
-						usuario: usuarioId,
-					};
-					await crearMovimientosAction(dispatch, payloadMovimiento);
-				});
-			}
-
-			setFacturaReciente(facturaCreada);
-			setCarrito([]);
-			onClose();
-			showModalFactura(true);
 		},
 	});
 
 	// Manejador especial para inputs digitales (Nequi/Daviplata)
-	// Recalcula automáticamente el efectivo sugerido
 	const handleDigitalChange = (e) => {
 		const { name, value } = e.target;
-		formik.handleChange(e); // Actualiza el campo digital
+		formik.handleChange(e);
 
-		// Obtenemos valores numéricos para calcular
 		const valNum = parseInt(value) || 0;
 		const currentNequi =
 			name === 'nequi' ? valNum : parseInt(formik.values.nequi) || 0;
 		const currentDavi =
 			name === 'daviplata' ? valNum : parseInt(formik.values.daviplata) || 0;
 
-		// Ajustamos efectivo a lo que falta
 		const restante = Math.max(0, total - currentNequi - currentDavi);
 		formik.setFieldValue('efectivo', restante);
 	};
 
-	// Cálculos Finales para la UI (Barra de estado)
+	// Cálculos Finales para la UI
 	const valNequi = parseInt(formik.values.nequi) || 0;
 	const valDavi = parseInt(formik.values.daviplata) || 0;
 	const valEfectivo = parseInt(formik.values.efectivo) || 0;
 
 	const totalPagado = valNequi + valDavi + valEfectivo;
-	const diferencia = totalPagado - total; // 0 = exacto, >0 = cambio, <0 = faltante
+	const diferencia = totalPagado - total;
 
 	const esValido = formik.values.observaciones.trim() !== '';
 
-	// Determinar estilo y texto de la barra de estado
 	let statusColor = 'bg-gray-800 text-white';
 	let statusText = 'Ingrese montos';
 
@@ -145,11 +131,14 @@ const ModalPagosMixtos = ({
 		statusText = `CAMBIO A DEVOLVER: ${formatearPesos(diferencia)}`;
 	}
 
+	// Lógica visual del botón deshabilitado
+	const isButtonDisabled = !esValido || formik.isSubmitting;
+
 	return (
 		<div className='fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-0 sm:p-4 animate-fade-in'>
 			<div className='bg-[linear-gradient(60deg,#2b0000_0%,#0a0000_50%,#000000_100%)] w-full max-w-sm rounded-t-2xl sm:rounded-2xl border-t sm:border border-gray-700 shadow-2xl flex flex-col max-h-[90dvh]'>
 				{/* Header */}
-				<div className='p-4 border-b border-white flex justify-between items-center  rounded-t-2xl'>
+				<div className='p-4 border-b border-white flex justify-between items-center rounded-t-2xl'>
 					<div>
 						<h3 className='text-lg font-bold text-white'>Métodos de Pago</h3>
 						<p className='text-xs text-green-400'>
@@ -159,10 +148,11 @@ const ModalPagosMixtos = ({
 							</span>
 						</p>
 					</div>
+					{/* 4️⃣ Deshabilitamos cerrar modal si está procesando para evitar estados inconsistentes */}
 					<button
 						type='button'
-						onClick={onClose}
-						className='text-white hover:text-white'>
+						onClick={formik.isSubmitting ? undefined : onClose}
+						className={`text-white hover:text-white ${formik.isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
 						<XIcon className='w-6 h-6' />
 					</button>
 				</div>
@@ -178,7 +168,8 @@ const ModalPagosMixtos = ({
 							name='observaciones'
 							placeholder='Ej: Mesa 5'
 							autoFocus
-							className='w-full  text-white p-3 rounded-xl border border-white focus:border-red-500 outline-none text-sm font-bold placeholder-gray-600'
+							disabled={formik.isSubmitting} // Deshabilitar input al enviar
+							className='w-full text-white p-3 rounded-xl border border-white focus:border-red-500 outline-none text-sm font-bold placeholder-gray-600 disabled:opacity-50'
 							value={formik.values.observaciones}
 							onChange={formik.handleChange}
 						/>
@@ -186,8 +177,8 @@ const ModalPagosMixtos = ({
 
 					<div className='space-y-3'>
 						{/* Nequi */}
-						<div className='flex items-center gap-3  p-2 rounded-xl border border-white'>
-							<div className='w-10 h-10  rounded-lg flex items-center justify-center text-xl shadow-inner'>
+						<div className='flex items-center gap-3 p-2 rounded-xl border border-white'>
+							<div className='w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-inner'>
 								📱
 							</div>
 							<div className='flex-1'>
@@ -197,7 +188,8 @@ const ModalPagosMixtos = ({
 								<input
 									type='number'
 									name='nequi'
-									className='bg-transparent w-full text-white outline-none text-base font-bold placeholder-gray-700'
+									disabled={formik.isSubmitting}
+									className='bg-transparent w-full text-white outline-none text-base font-bold placeholder-gray-700 disabled:opacity-50'
 									placeholder='0'
 									value={formik.values.nequi}
 									onChange={handleDigitalChange}
@@ -206,7 +198,7 @@ const ModalPagosMixtos = ({
 						</div>
 
 						{/* Daviplata */}
-						<div className='flex items-center gap-3  p-2 rounded-xl border border-white'>
+						<div className='flex items-center gap-3 p-2 rounded-xl border border-white'>
 							<div className='w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-inner'>
 								🔴
 							</div>
@@ -217,7 +209,8 @@ const ModalPagosMixtos = ({
 								<input
 									type='number'
 									name='daviplata'
-									className='bg-transparent w-full text-white outline-none text-base font-bold placeholder-gray-700'
+									disabled={formik.isSubmitting}
+									className='bg-transparent w-full text-white outline-none text-base font-bold placeholder-gray-700 disabled:opacity-50'
 									placeholder='0'
 									value={formik.values.daviplata}
 									onChange={handleDigitalChange}
@@ -227,9 +220,8 @@ const ModalPagosMixtos = ({
 
 						{/* Efectivo */}
 						<div className='flex items-center gap-3 bg-gray-800 p-2 rounded-xl border border-gray-600 shadow-lg relative overflow-hidden'>
-							{/* Glow effect for cash focus */}
 							<div className='absolute top-0 left-0 w-1 h-full bg-green-500'></div>
-							<div className='w-10 h-10  rounded-lg flex items-center justify-center text-xl'>
+							<div className='w-10 h-10 rounded-lg flex items-center justify-center text-xl'>
 								💵
 							</div>
 							<div className='flex-1'>
@@ -239,7 +231,8 @@ const ModalPagosMixtos = ({
 								<input
 									type='number'
 									name='efectivo'
-									className='bg-transparent w-full text-white outline-none text-xl font-black placeholder-gray-700'
+									disabled={formik.isSubmitting}
+									className='bg-transparent w-full text-white outline-none text-xl font-black placeholder-gray-700 disabled:opacity-50'
 									placeholder='0'
 									value={formik.values.efectivo}
 									onChange={formik.handleChange}
@@ -259,16 +252,33 @@ const ModalPagosMixtos = ({
 				</div>
 
 				<div className='p-4 bg-gray-900 border-t border-gray-800'>
+					{/* 5️⃣ Botón con lógica de isSubmitting */}
 					<button
+						type='button' // Importante para evitar submits accidentales fuera del onClick
 						onClick={formik.handleSubmit}
-						disabled={!esValido}
-						className={`w-full py-4 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all uppercase tracking-wide ${esValido ? 'bg-red-600 hover:bg-red-500 text-white shadow-red-900/40 active:scale-95' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}>
-						<span>Confirmar Venta</span>
-						<ArrowRightIcon className='w-4 h-4' />
+						disabled={isButtonDisabled}
+						className={`w-full py-4 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all uppercase tracking-wide ${
+							isButtonDisabled
+								? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+								: 'bg-red-600 hover:bg-red-500 text-white shadow-red-900/40 active:scale-95'
+						}`}>
+						{formik.isSubmitting ? (
+							<>
+								{/* Spinner simple con Tailwind */}
+								<div className='animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2'></div>
+								<span>Procesando...</span>
+							</>
+						) : (
+							<>
+								<span>Confirmar Venta</span>
+								<ArrowRightIcon className='w-4 h-4' />
+							</>
+						)}
 					</button>
 				</div>
 			</div>
 		</div>
 	);
 };
+
 export default ModalPagosMixtos;

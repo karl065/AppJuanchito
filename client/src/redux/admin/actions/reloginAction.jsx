@@ -10,6 +10,8 @@ export const reloginAction = async (dispatch, navigate) => {
 
 		if (data === 'Token no valido') throw new Error(data);
 
+		console.log(data);
+
 		if (data.caja.length > 0) {
 			const verificarCajaAbierta = data.caja.filter(
 				(caj) => caj.estado === 'abierta'

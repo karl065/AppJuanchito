@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import putControllerUsuario from '../../controllers/controllersUsuarios/putControllerUsuario.js';
 dotenv.config();
 const { SECRETA } = process.env;
 
@@ -13,14 +14,15 @@ const authMiddle = async (req, res, next) => {
 
 		let decoded;
 
-		console.log(token);
-
 		try {
 			decoded = jwt.verify(token, SECRETA);
+			console.log(decoded);
 		} catch (err) {
 			if (err.name === 'TokenExpiredError') {
+				await putControllerUsuario({ userStatus: true }, decoded.id);
 				throw new Error('Token expirado');
 			}
+			await putControllerUsuario({ userStatus: true }, decoded.id);
 
 			throw new Error('Token no válido');
 		}

@@ -1,7 +1,4 @@
-import {
-	actualizarCaja,
-	cargarCajaActual,
-} from '../../../redux/cajas/slices/cajasSlices.jsx';
+import { actualizarCaja } from '../../../redux/cajas/slices/cajasSlices.jsx';
 import { agregarFactura } from '../../../redux/facturas/slices/facturasSlices.jsx';
 import { agregarMovimiento } from '../../../redux/movimientos/slices/movimientosSlices.jsx';
 import { actualizarProducto } from '../../../redux/productos/slices/productosSlice.jsx';
@@ -22,7 +19,7 @@ const facturasSocketsListeners = (socket) => {
 		for (const mov of factura[0].movimientos) {
 			dispatch(agregarMovimiento(mov));
 		}
-		dispatch(cargarCajaActual(factura[0].caja));
+
 		dispatch(actualizarCaja(factura[0].caja));
 
 		dispatch(agregarFactura(factura));

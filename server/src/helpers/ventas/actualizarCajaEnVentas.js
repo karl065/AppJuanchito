@@ -5,11 +5,11 @@ const actualizarCajaEnVenta = async (factura) => {
 		const caja = await Caja.findById(factura.caja);
 		if (!caja) throw new Error('Caja no encontrada');
 
-		caja.totalEfectivo += factura.precioVenta || 0;
+		caja.totalEfectivo +=
+			factura.detallePago.efectivoCliente - factura.detallePago.cambio || 0;
 		caja.totalNequi += factura.detallePago.nequi || 0;
 		caja.totalDaviplata += factura.detallePago.daviplata || 0;
-		caja.totalVentas += factura.precioVenta +=
-			factura.detallePago.nequi + factura.detallePago.daviplata || 0;
+		caja.totalVentas += factura.precioVenta || 0;
 
 		await caja.save();
 

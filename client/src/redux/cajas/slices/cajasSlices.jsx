@@ -5,7 +5,7 @@ const cajasSlice = createSlice({
 	initialState: {
 		cajas: [],
 		estadosCierre: [],
-		cajaActual: {},
+		cajaActual: null,
 	},
 	reducers: {
 		cargarCajas: (state, action) => {

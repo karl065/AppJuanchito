@@ -27,7 +27,7 @@ const MiCajaView = () => {
 					Total Recaudado Hoy
 				</p>
 				<h2 className='text-3xl font-black text-white mb-2 tracking-tight'>
-					{formatearPesos(cajaActual.totalVentas)}
+					{cajaActual.totalVentas ? formatearPesos(cajaActual.totalVentas) : 0}
 				</h2>
 				<div className='flex flex-col items-center gap-1'>
 					<span className='inline-block px-3 py-0.5 bg-green-900/30 text-green-400 text-[10px] font-bold rounded-full border border-green-800/50'>

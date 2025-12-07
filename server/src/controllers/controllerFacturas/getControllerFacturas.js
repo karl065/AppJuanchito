@@ -34,6 +34,9 @@ const getControllerFacturas = async (query) => {
 					path: 'usuario', // ... el campo 'usuario'
 					select: '-password', // 3. Excluyendo el password
 				},
+				populate: {
+					path: 'facturas',
+				},
 			});
 
 		return facturas;

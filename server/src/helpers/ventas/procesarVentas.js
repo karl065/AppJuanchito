@@ -7,8 +7,6 @@ const procesarVenta = async (dataFactura) => {
 		// Extraemos la info que viene del front
 		const { productos, usuario } = dataFactura;
 
-		console.log(productos)
-
 		let movimientosGenerados = [];
 
 		// 1. Crear movimientos por cada producto
@@ -31,8 +29,6 @@ const procesarVenta = async (dataFactura) => {
 			...dataFactura,
 			movimientos: movimientosGenerados,
 		};
-
-		console.log(facturaCompleta)
 
 		// 3. Registrar factura en DB
 		const facturaNueva = await postControllerFacturas(facturaCompleta);
