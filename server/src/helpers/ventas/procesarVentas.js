@@ -32,6 +32,8 @@ const procesarVenta = async (dataFactura) => {
 			movimientos: movimientosGenerados,
 		};
 
+		console.log(facturaCompleta)
+
 		// 3. Registrar factura en DB
 		const facturaNueva = await postControllerFacturas(facturaCompleta);
 
