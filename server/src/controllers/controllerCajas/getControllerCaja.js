@@ -27,6 +27,8 @@ const getControllerCaja = async (query) => {
 				path: 'facturas',
 			});
 
+		console.log(cajas)
+
 		return cajas;
 	} catch (error) {
 		return error;
