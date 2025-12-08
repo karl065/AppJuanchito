@@ -8,6 +8,8 @@ const loginHandler = async (req, res) => {
 			return res.status(200).json(respuesta);
 		}
 
+		console.log(respuesta)
+
 		// TOKEN viene desde el controller
 		const token = respuesta.token;
 
