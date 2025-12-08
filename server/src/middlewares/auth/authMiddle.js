@@ -8,8 +8,6 @@ const authMiddle = async (req, res, next) => {
 	try {
 		const token = req.cookies.token; // viene de cookie httpOnly
 
-		console.log(token)
-
 		if (!token) {
 			throw new Error('Token no válido');
 		}
@@ -18,7 +16,6 @@ const authMiddle = async (req, res, next) => {
 
 		try {
 			decoded = jwt.verify(token, SECRETA);
-			console.log(decoded);
 		} catch (err) {
 			if (err.name === 'TokenExpiredError') {
 				await putControllerUsuario({ userStatus: true }, decoded.id);

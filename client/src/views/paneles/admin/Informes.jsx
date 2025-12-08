@@ -26,8 +26,6 @@ const Informes = () => {
 	const movimientos = useSelector((state) => state.movimientos.movimientos);
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
 
-	console.log(cajas);
-
 	const [subTab, setSubTab] = useState(0);
 	const [period, setPeriod] = useState('Turno');
 	const [selectedUser, setSelectedUser] = useState('all');

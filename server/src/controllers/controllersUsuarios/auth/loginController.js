@@ -12,7 +12,6 @@ const { SECRETA } = process.env;
 
 const loginController = async ({ correo, password, fingerprint }) => {
 	try {
-
 		const usuario = await Usuarios.findOne({ correo })
 			.populate('dispositivos')
 			.populate('movimientos')
@@ -63,7 +62,6 @@ const loginController = async ({ correo, password, fingerprint }) => {
 				{ userStatus: true },
 				usuario._id
 			);
-
 			return {
 				loginApproved: true,
 				require2FA: false,

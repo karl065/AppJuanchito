@@ -14,8 +14,6 @@ const Facturas = ({ facturas, cajero }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
 
-	console.log(facturas);
-
 	// --- 1. Lógica de Filtrado ---
 	const facturasFiltradas = useMemo(() => {
 		if (!facturas) return [];
@@ -88,8 +86,6 @@ const Facturas = ({ facturas, cajero }) => {
 			if (detalle.nequi > 0)
 				metodosUsados.push({ name: 'Nequi', amount: detalle.nequi });
 		}
-
-		console.log(factura);
 
 		return {
 			id: factura._id,

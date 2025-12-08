@@ -90,8 +90,6 @@ const PanelVentas = ({ usuarioId, cajaActual }) => {
 		setFacturaReciente(null);
 	};
 
-	console.log('Factura reciente', facturaReciente);
-
 	return (
 		<div className='flex flex-col h-full  relative'>
 			{/* Buscador y Categorías */}

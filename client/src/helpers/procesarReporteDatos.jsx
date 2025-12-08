@@ -22,8 +22,6 @@ export const procesarReporteDatos = (
 	const safeProductos = productos || [];
 	const safeMovimientos = movimientos || [];
 	const safeUsuarios = usuarios || [];
-
-	console.log(cajas);
 	// ==============================================================================================
 	// 🚨 FILTRO POR USUARIO (Primer Nivel)
 	// Se aplica a Facturas y Cajas, a menos que userId sea 'all' o no se haya pasado.

@@ -16,7 +16,6 @@ const ModalPagosMixtos = ({
 	showModalFactura,
 }) => {
 	const dispatch = useDispatch();
-	console.log(carrito);
 
 	// Configuración de Formik
 	const formik = useFormik({
@@ -74,8 +73,6 @@ const ModalPagosMixtos = ({
 
 				// await explícito para esperar respuesta del back antes de seguir
 				const facturaCreada = await crearFacturaAction(dispatch, facturaNueva);
-
-				console.log('Pagos Mixtos Terminados', facturaCreada);
 
 				setFacturaReciente(facturaCreada);
 				setCarrito([]);

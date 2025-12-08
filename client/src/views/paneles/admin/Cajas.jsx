@@ -3,12 +3,7 @@ import { useSelector } from 'react-redux';
 import { usePaginacionResponsiva } from '../../../Hooks/usePaginacionResponsiva.jsx';
 import { formatearFechaHora } from '../../../helpers/formatearFechaHora.jsx';
 import { formatearPesos } from '../../../helpers/formatearPesos.jsx';
-import {
-	SearchIcon,
-	PlusIcon,
-	CashIcon,
-	CheckCircleIcon,
-} from '../../../components/Icons/Icons.jsx';
+import { CashIcon, CheckCircleIcon } from '../../../components/Icons/Icons.jsx';
 import MobileTable from '../../../components/MobileTable/MobileTable.jsx';
 import Paginado from '../../../components/Paginado/Paginado.jsx';
 import Filtros from '../../../components/CabeceraFiltros/Filtros.jsx';
