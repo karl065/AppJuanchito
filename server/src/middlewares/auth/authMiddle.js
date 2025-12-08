@@ -8,6 +8,8 @@ const authMiddle = async (req, res, next) => {
 	try {
 		const token = req.cookies.token; // viene de cookie httpOnly
 
+		console.log(token)
+
 		if (!token) {
 			throw new Error('Token no válido');
 		}
