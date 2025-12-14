@@ -25,10 +25,10 @@ const AuthLoader = () => {
 	const login = useSelector((state) => state.login.login);
 
 	useEffect(() => {
+		obtenerUsuariosAction(dispatch);
 		connectSocket();
 		setAppDispatch(dispatch);
 		reloginAction(dispatch, navigate);
-		obtenerUsuariosAction(dispatch);
 	}, []);
 
 	useEffect(() => {
@@ -36,7 +36,7 @@ const AuthLoader = () => {
 			obtenerImpresorasAction(dispatch);
 			obtenerProductosAction(dispatch);
 			obtenerCategoriasAction(dispatch);
-			obtenerCajasAction(dispatch, {usuario: login._id});
+			obtenerCajasAction(dispatch, { usuario: login._id });
 		} else if (login.role === 'Administrador' || login.role === 'Supervisor') {
 			obtenerImpresorasAction(dispatch);
 			obtenerProductosAction(dispatch);
