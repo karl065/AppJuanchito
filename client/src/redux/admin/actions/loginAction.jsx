@@ -25,7 +25,7 @@ export const loginAction = async (
 			fingerprint,
 		});
 
-		console.log(data);
+		console.log('data login', data);
 
 		data.fingerprint = fingerprint;
 
