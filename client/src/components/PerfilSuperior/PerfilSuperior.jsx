@@ -15,6 +15,8 @@ const PerfilSuperior = () => {
 	const login = useSelector((state) => state.login.login);
 	const cajaActual = useSelector((state) => state.cajas.cajaActual);
 
+	console.log(cajaActual);
+
 	const path = location.pathname;
 
 	const [showModalCierre, setShowModalCierre] = useState(false);
