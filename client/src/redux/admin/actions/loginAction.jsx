@@ -25,6 +25,8 @@ export const loginAction = async (
 			fingerprint,
 		});
 
+		console.log(data);
+
 		data.fingerprint = fingerprint;
 
 		if (data.require2FASetup) {
