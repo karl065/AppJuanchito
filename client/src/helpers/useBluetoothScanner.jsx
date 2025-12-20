@@ -38,6 +38,7 @@ export const useBluetoothScanner = () => {
 					d.name && // Asegurarse que el nombre existe
 					(d.name.toLowerCase().includes('printer') ||
 						d.name.toLowerCase().includes('pos') ||
+						d.name.toLowerCase().includes('pt') ||
 						d.name.toLowerCase().includes('impresora'))
 			);
 
