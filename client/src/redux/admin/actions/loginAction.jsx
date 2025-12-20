@@ -48,7 +48,9 @@ export const loginAction = async (
 
 			console.log('caja abierta', cajaActual);
 
-			dispatch(cargarCajaActual(cajaActual[0]));
+			if (cajaActual.length !== 0) {
+				dispatch(cargarCajaActual(cajaActual[0]));
+			}
 
 			dispatch(setLogin(data.usuario));
 			dispatch(actualizarUsuario(data.usuario));
