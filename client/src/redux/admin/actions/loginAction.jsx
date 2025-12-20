@@ -25,8 +25,6 @@ export const loginAction = async (
 			fingerprint,
 		});
 
-		console.log('data login', data);
-
 		data.fingerprint = fingerprint;
 
 		if (data.require2FASetup) {
@@ -47,6 +45,8 @@ export const loginAction = async (
 			const cajaActual = data.usuario.caja.filter(
 				(caj) => caj.estado === 'abierta'
 			);
+
+			console.log('caja abierta', cajaActual);
 
 			dispatch(cargarCajaActual(cajaActual[0]));
 
