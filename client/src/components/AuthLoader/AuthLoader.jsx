@@ -18,6 +18,7 @@ import {
 	connectSocket,
 	setAppDispatch,
 } from '../../services/sockets/socketServices.jsx';
+import solicitarPermisosApp from '../SolucitudPermisosApp/SolicitudPermisosApp.jsx';
 
 const AuthLoader = () => {
 	const dispatch = useDispatch();
@@ -25,6 +26,8 @@ const AuthLoader = () => {
 	const login = useSelector((state) => state.login.login);
 
 	useEffect(() => {
+		solicitarPermisosApp();
+
 		obtenerUsuariosAction(dispatch);
 		connectSocket();
 		setAppDispatch(dispatch);
