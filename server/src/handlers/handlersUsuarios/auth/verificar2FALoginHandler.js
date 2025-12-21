@@ -58,6 +58,8 @@ const verificar2FALoginHandler = async (req, res) => {
 			`Cookie enviada: Secure=${secureSetting}, SameSite=${sameSiteSetting} (HTTPS Detectado: ${isSecureConnection})`
 		);
 
+		console.log(data);
+
 		return res.status(200).json(data.usuario);
 	} catch (error) {
 		console.error('Error en verificar2FALoginHandler:', error);
