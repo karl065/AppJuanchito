@@ -5,7 +5,8 @@ const generar2FAServices = async (id, setQrCode, setSecret) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}auth/generar-2fa`,
-			id
+			id,
+			{ withCredentials: true }
 		);
 
 		setQrCode(data.qr);

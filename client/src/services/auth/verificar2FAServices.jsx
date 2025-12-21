@@ -5,7 +5,8 @@ const verificar2FAServices = async (verificar) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}auth/verificar-2fa-setup`,
-			verificar
+			verificar,
+			{ withCredentials: true }
 		);
 
 		return data;
