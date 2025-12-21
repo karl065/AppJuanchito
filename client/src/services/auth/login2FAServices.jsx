@@ -5,7 +5,8 @@ const login2FAServices = async (loginData) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}auth/login-2fa`,
-			loginData
+			loginData,
+			{ withCredentials: true }
 		);
 
 		return data;
