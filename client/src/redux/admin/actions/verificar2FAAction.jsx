@@ -1,5 +1,6 @@
 import { obtenerNombreDispositivo } from '../../../helpers/obtenerNombreDispositivo.jsx';
 import verificar2FAServices from '../../../services/auth/verificar2FAServices.jsx';
+import { emitEvent } from '../../../services/sockets/socketServices.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
 
 export const verificar2FAAction = async (verificar, dispatch) => {
@@ -11,6 +12,7 @@ export const verificar2FAAction = async (verificar, dispatch) => {
 		const data = await verificar2FAServices(verificar);
 
 		dispatch(setLogin(data));
+		emitEvent('usuario:login', data);
 		return data;
 	} catch (error) {
 		throw new Error(error.message);

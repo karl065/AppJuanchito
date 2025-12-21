@@ -9,8 +9,6 @@ const verificar2FAServices = async (verificar) => {
 			{ withCredentials: true }
 		);
 
-		console.log('Data en verificar2FAServices', data);
-
 		return data;
 	} catch (error) {
 		throw new Error(error.response.data.error);
