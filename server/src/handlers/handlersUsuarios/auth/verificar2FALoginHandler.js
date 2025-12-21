@@ -15,7 +15,7 @@ const verificar2FALoginHandler = async (req, res) => {
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 
-		return res.json(data.usuario);
+		return res.status(200).json(data.usuario);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}

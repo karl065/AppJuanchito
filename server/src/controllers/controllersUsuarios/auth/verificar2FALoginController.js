@@ -29,11 +29,11 @@ const verificar2FALoginController = async ({
 		});
 		if (!validacion) throw new Error('Código 2FA incorrecto');
 
-		let confiable;
+		// let confiable;
 
 		// Si eligió recordar dispositivo
 		if (recordar) {
-			confiable = await postControllerDispositivos(
+			const confiable = await postControllerDispositivos(
 				userId,
 				fingerprint,
 				nombreDispositivo,
@@ -47,11 +47,11 @@ const verificar2FALoginController = async ({
 		);
 		const vigente = confiable && new Date(confiable.expiresAt) > new Date();
 
-		let tokenSesion;
+		// let tokenSesion;
 
 		if (vigente) {
 			// 🔥 Dispositivo confiable → generar token de sesión
-			tokenSesion = jwt.sign(
+			const tokenSesion = jwt.sign(
 				{
 					id: usuario._id,
 					role: usuario.role,
