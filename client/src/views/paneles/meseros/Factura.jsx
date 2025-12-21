@@ -9,6 +9,8 @@ import {
 const ModalFactura = ({ carrito, datosPago, total, onBack, onConfirm }) => {
 	const [imprimir, setImprimir] = useState(true);
 
+	console.log(carrito);
+
 	return (
 		<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-fade-in'>
 			<div className='bg-white w-full max-w-sm rounded-none sm:rounded-lg shadow-2xl flex flex-col max-h-[90vh] text-black font-mono overflow-hidden relative'>
