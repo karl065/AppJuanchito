@@ -18,7 +18,7 @@ const verificar2FALoginController = async ({
 }) => {
 	try {
 		// 1. Buscar usuario
-		const usuario = await Usuarios.findOne({ correo })
+		const usuario = await Usuarios.findById(userId)
 			.populate('dispositivos')
 			.populate('movimientos')
 			.populate('facturas')
