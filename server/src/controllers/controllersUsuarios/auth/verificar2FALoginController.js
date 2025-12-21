@@ -18,7 +18,16 @@ const verificar2FALoginController = async ({
 }) => {
 	try {
 		// 1. Buscar usuario
-		const usuario = await Usuarios.findById(userId).populate('dispositivos');
+		const usuario = await Usuarios.findById(userId)
+			.populate('dispositivos')
+			.populate('movimientos')
+			.populate('facturas')
+			.populate({
+				path: 'caja', // 1. Entramos a 'caja'
+				populate: {
+					path: 'facturas', // 2. Dentro de 'caja', poblamos 'facturas'
+				},
+			});
 		if (!usuario) throw new Error('Usuario no encontrado');
 
 		// 2. Verificar código 2FA
