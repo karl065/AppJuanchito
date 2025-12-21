@@ -8,8 +8,6 @@ const login2FAServices = async (loginData) => {
 			loginData
 		);
 
-		console.log('login2FAServices', data);
-
 		return data;
 	} catch (error) {
 		console.log(error);
