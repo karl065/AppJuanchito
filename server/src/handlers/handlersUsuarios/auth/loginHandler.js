@@ -19,6 +19,7 @@ const loginHandler = async (req, res) => {
 			secure: !isCapacitor, // Capacitor permite secure:false
 			sameSite: isCapacitor ? 'lax' : 'none',
 			maxAge: 7 * 24 * 60 * 60 * 1000,
+			path: '/',
 		});
 
 		// Devolver usuario sin token
