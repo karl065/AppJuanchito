@@ -4,6 +4,8 @@ const facturaMiddle = async (req, res, next) => {
 	try {
 		const { usuario, caja } = req.body;
 
+		console.log(caja);
+
 		if (!usuario) {
 			return res.status(400).json({
 				error: 'El usuario es obligatorio para registrar una factura.',
