@@ -10,6 +10,10 @@ import helmet from 'helmet';
 const server = express();
 const httpServer = http.createServer(server); // Crea un servidor HTTP
 
+// 🚨 AGREGA ESTA LÍNEA OBLIGATORIAMENTE PARA RENDER/PRODUCCIÓN 🚨
+// Esto permite que Express confíe en que el proxy (Render) ya manejó el HTTPS
+server.set('trust proxy', 1);
+
 server.use(cookieParser());
 // ⚠️ Configura aquí los dominios permitidos
 const allowedOrigins = [

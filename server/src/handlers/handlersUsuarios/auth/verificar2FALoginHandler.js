@@ -3,7 +3,7 @@ import verificar2FALoginController from './../../../controllers/controllersUsuar
 const verificar2FALoginHandler = async (req, res) => {
 	try {
 		const data = await verificar2FALoginController(req.body);
-
+		console.log('data verificar', data);
 		const token = data.token;
 
 		const isCapacitor = req.headers.origin?.includes('capacitor://');
