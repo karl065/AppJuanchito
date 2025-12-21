@@ -16,12 +16,12 @@ const authMiddle = async (req, res, next) => {
 
 		try {
 			decoded = jwt.verify(token, SECRETA);
+			console.log('Decoded ', decoded);
 		} catch (err) {
 			if (err.name === 'TokenExpiredError') {
 				await putControllerUsuario({ userStatus: false }, decoded.id);
 				throw new Error('Token expirado');
 			}
-			console.log('Decoded ', decoded);
 			await putControllerUsuario({ userStatus: false }, decoded.id);
 
 			throw new Error('Token no válido');
