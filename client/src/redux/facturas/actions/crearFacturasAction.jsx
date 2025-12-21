@@ -1,7 +1,6 @@
-// import obtenerCajasServices from '../../../services/cajas/obtenerCajasServices.jsx';
 import crearFacturasServices from '../../../services/facturas/crearFacturasServices.jsx';
 import { emitEvent } from '../../../services/sockets/socketServices.jsx';
-// import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
+import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 import { agregarFactura } from '../slices/facturasSlices.jsx';
 
 export const crearFacturaAction = async (dispatch, factura) => {
@@ -10,11 +9,7 @@ export const crearFacturaAction = async (dispatch, factura) => {
 
 		dispatch(agregarFactura(data[0]));
 
-		console.log(data);
-
-		// const cajaActual = await obtenerCajasServices({ _id: data.caja });
-
-		// dispatch(cargarCajaActual(cajaActual[0]));
+		dispatch(cargarCajaActual(data.caja));
 
 		emitEvent('factura:creada', data);
 
