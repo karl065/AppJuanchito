@@ -9,6 +9,8 @@ export const crearFacturaAction = async (dispatch, factura) => {
 
 		dispatch(agregarFactura(data[0]));
 
+		console.log(data);
+
 		dispatch(cargarCajaActual(data.caja));
 
 		emitEvent('factura:creada', data);
