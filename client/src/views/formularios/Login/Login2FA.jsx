@@ -13,16 +13,15 @@ const Login2FA = ({ data }) => {
 			recordar: false,
 		},
 		onSubmit: (values) => {
-			dispatch(
-				login2FAAction(
-					{
-						userId: data.userId,
-						fingerprint: data.fingerprint,
-						code: values.code,
-						recordar: values.recordar, // 👈 se envía también
-					},
-					navigate
-				)
+			login2FAAction(
+				{
+					userId: data.userId,
+					fingerprint: data.fingerprint,
+					code: values.code,
+					recordar: values.recordar, // 👈 se envía también
+				},
+				navigate,
+				dispatch
 			);
 		},
 	});

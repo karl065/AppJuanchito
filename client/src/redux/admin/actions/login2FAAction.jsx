@@ -2,8 +2,9 @@ import { setLogin } from '../slices/loginSlice.jsx';
 import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import { obtenerNombreDispositivo } from '../../../helpers/obtenerNombreDispositivo.jsx';
 import login2FAServices from '../../../services/auth/login2FAServices.jsx';
+import { emitEvent } from '../../../services/sockets/socketServices.jsx';
 
-export const login2FAAction = (datos, navigate) => async (dispatch) => {
+export const login2FAAction = async (datos, navigate, dispatch) => {
 	try {
 		const nombreDispositivo = obtenerNombreDispositivo();
 
@@ -16,6 +17,7 @@ export const login2FAAction = (datos, navigate) => async (dispatch) => {
 		});
 
 		dispatch(setLogin(data));
+		emitEvent('usuario:login', data);
 		alertSuccess(`Bienvenido ${data.nombre}`);
 
 		if (data.autorizado) {
