@@ -7,6 +7,8 @@ const reloginServices = async () => {
 			withCredentials: true,
 		});
 
+		console.log('data Relogin', data);
+
 		return data;
 	} catch (error) {
 		throw new Error(error.response.data.msg);

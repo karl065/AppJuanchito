@@ -6,9 +6,9 @@ import putHandlerImpresoras from '../../handlers/handlerImpresoras/putHandlerImp
 import authMiddle from '../../middlewares/auth/authMiddle.js';
 const router = express.Router();
 
-router.post('/', authMiddle,postHandlerImpresoras);
+router.post('/', authMiddle, postHandlerImpresoras);
 router.delete('/:id', authMiddle, deleteHandlerImpresoras);
-router.put('/:id', authMiddle, putHandlerImpresoras)
-router.get('/', authMiddle, getHandlerImpresoras);
+router.put('/:id', authMiddle, putHandlerImpresoras);
+router.get('/', getHandlerImpresoras);
 
-export default router
+export default router;
