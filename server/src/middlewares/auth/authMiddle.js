@@ -10,7 +10,7 @@ const authMiddle = async (req, res, next) => {
 
 		console.log('Token ', token);
 		if (!token) {
-			throw new Error('Token no válido');
+			throw new Error('No hay token');
 		}
 
 		let decoded;

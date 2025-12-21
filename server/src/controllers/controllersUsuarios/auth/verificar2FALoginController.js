@@ -17,23 +17,24 @@ const verificar2FALoginController = async ({
 	recordar,
 }) => {
 	try {
+		// 1. Buscar usuario
 		const usuario = await Usuarios.findById(userId).populate('dispositivos');
-
 		if (!usuario) throw new Error('Usuario no encontrado');
 
+		// 2. Verificar código 2FA
 		const validacion = speakeasy.totp.verify({
 			secret: usuario.twoFactorSecret,
 			encoding: 'base32',
 			token: code,
 			window: 1,
 		});
+
 		if (!validacion) throw new Error('Código 2FA incorrecto');
 
-		// let confiable;
-
-		// Si eligió recordar dispositivo
+		// 3. Lógica de Dispositivos (Solo si recordar es true)
+		// Esto es un proceso secundario, no bloquea el login
 		if (recordar) {
-			const confiable = await postControllerDispositivos(
+			await postControllerDispositivos(
 				userId,
 				fingerprint,
 				nombreDispositivo,
@@ -41,28 +42,33 @@ const verificar2FALoginController = async ({
 			);
 		}
 
+		// 4. Actualizar estado del usuario
 		const usuarioAutorizado = await putControllerUsuario(
 			{ userStatus: true },
 			userId
 		);
-		const vigente = confiable && new Date(confiable.expiresAt) > new Date();
 
-		// let tokenSesion;
+		// 5. GENERAR TOKEN (Siempre, porque ya pasó el 2FA)
+		// Opcional: Puedes dar más tiempo de vida al token si 'recordar' es true
+		const tiempoExpiracion = recordar ? '7d' : '1d';
 
-		if (vigente) {
-			// 🔥 Dispositivo confiable → generar token de sesión
-			const tokenSesion = jwt.sign(
-				{
-					id: usuario._id,
-					role: usuario.role,
-					correo: usuario.correo,
-				},
-				SECRETA,
-				{ expiresIn: '7d' }
-			);
-		}
+		const tokenSesion = jwt.sign(
+			{
+				id: usuario._id,
+				role: usuario.role,
+				correo: usuario.correo,
+			},
+			SECRETA,
+			{ expiresIn: tiempoExpiracion }
+		);
 
-		const usuarioSanitizado = await sanitizarUsuario(usuarioAutorizado[0]);
+		// 6. Preparar respuesta
+		// Nota: putControllerUsuario suele devolver un array, aseguramos tomar el primero
+		const usuarioActualizadoData = Array.isArray(usuarioAutorizado)
+			? usuarioAutorizado[0]
+			: usuarioAutorizado;
+
+		const usuarioSanitizado = await sanitizarUsuario(usuarioActualizadoData);
 		usuarioSanitizado.autorizado = true;
 
 		return {
