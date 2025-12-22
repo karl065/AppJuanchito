@@ -10,29 +10,44 @@ const authMiddle = async (req, res, next) => {
 		const { id } = req.query;
 
 		console.log('Token ', token);
+
 		if (!token) {
 			throw new Error('No hay token');
 		}
 
-		let decoded;
-
-		try {
-			decoded = jwt.verify(token, SECRETA);
-			console.log(decoded);
-		} catch (err) {
-			if (err.name === 'TokenExpiredError') {
-				await putControllerUsuario({ userStatus: false }, id);
-				throw new Error('Token expirado');
-			}
-			await putControllerUsuario({ userStatus: false }, id);
-
-			throw new Error('Token no válido');
-		}
+		// 2. Verificamos el token (Plan A - Camino Feliz)
+		const decoded = jwt.verify(token, SECRETA);
 
 		req.usuario = decoded;
 		next();
-	} catch (error) {
-		return res.status(401).json({ msg: error.message });
+	} catch (err) {
+		console.log('Error en AuthMiddle:', err.message);
+
+		// Si no tenemos ID del query param, intentamos sacarlo del token expirado
+		if (!idUsuarioParaCerrar) {
+			const decodedUnverified = jwt.decode(req.cookies?.token);
+			if (decodedUnverified?.id) {
+				idUsuarioParaCerrar = decodedUnverified.id;
+			}
+		}
+
+		// 3. Ejecutamos la actualización de estado si conseguimos un ID
+		if (idUsuarioParaCerrar) {
+			console.log(
+				`Cerrando sesión en DB para usuario ID: ${idUsuarioParaCerrar}`
+			);
+			try {
+				await putControllerUsuario({ userStatus: false }, idUsuarioParaCerrar);
+			} catch (dbError) {
+				console.log('Error al actualizar estado de usuario:', dbError.message);
+			}
+		}
+
+		if (err.name === 'TokenExpiredError') {
+			return res.status(401).json({ msg: 'Token expirado' });
+		}
+
+		return res.status(401).json({ msg: 'Token no válido' });
 	}
 };
 
