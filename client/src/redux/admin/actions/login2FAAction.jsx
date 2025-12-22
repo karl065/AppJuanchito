@@ -15,8 +15,14 @@ export const login2FAAction = async (datos, navigate, dispatch) => {
 			nombreDispositivo,
 			recordar: datos.recordar,
 		});
-
 		dispatch(setLogin(data));
+
+		// Guardar ID en LocalStorage (NUEVO)
+		// Verificamos si data.id o data._id existe antes de guardar
+		if (data._id) {
+			localStorage.setItem('userId', data._id);
+		}
+
 		emitEvent('usuario:login', data);
 		alertSuccess(`Bienvenido ${data.nombre}`);
 

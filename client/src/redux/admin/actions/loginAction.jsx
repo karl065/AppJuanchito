@@ -54,10 +54,20 @@ export const loginAction = async (
 
 			dispatch(setLogin(data.usuario));
 			dispatch(actualizarUsuario(data.usuario));
+			// Guardar ID en LocalStorage (NUEVO)
+			// Verificamos si data.id o data._id existe antes de guardar
+			if (data._id) {
+				localStorage.setItem('userId', data._id);
+			}
 
 			emitEvent('usuario:login', data);
 			data.usuario.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
 			alertSuccess(`Bienvenido ${data.usuario.nombre}`);
+		}
+		// Guardar ID en LocalStorage (NUEVO)
+		// Verificamos si data.id o data._id existe antes de guardar
+		if (data._id) {
+			localStorage.setItem('userId', data._id);
 		}
 		emitEvent('usuario:login', data.usuario);
 

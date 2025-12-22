@@ -7,6 +7,7 @@ const { SECRETA } = process.env;
 const authMiddle = async (req, res, next) => {
 	try {
 		const token = req.cookies.token; // viene de cookie httpOnly
+		const { id } = req.query;
 
 		console.log('Token ', token);
 		if (!token) {
@@ -19,10 +20,10 @@ const authMiddle = async (req, res, next) => {
 			decoded = jwt.verify(token, SECRETA);
 		} catch (err) {
 			if (err.name === 'TokenExpiredError') {
-				await putControllerUsuario({ userStatus: false }, decoded.id);
+				await putControllerUsuario({ userStatus: false }, id);
 				throw new Error('Token expirado');
 			}
-			await putControllerUsuario({ userStatus: false }, decoded.id);
+			await putControllerUsuario({ userStatus: false }, id);
 
 			throw new Error('Token no válido');
 		}
@@ -30,7 +31,6 @@ const authMiddle = async (req, res, next) => {
 		req.usuario = decoded;
 		next();
 	} catch (error) {
-		console.log(error.message);
 		return res.status(401).json({ msg: error.message });
 	}
 };

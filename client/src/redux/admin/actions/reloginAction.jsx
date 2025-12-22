@@ -6,7 +6,9 @@ import { setLogin } from '../slices/loginSlice.jsx';
 // 👉 Se recibe dispatch y navigate
 export const reloginAction = async (dispatch, navigate) => {
 	try {
-		const data = await reloginServices();
+		const id = localStorage.getItem('userId');
+
+		const data = await reloginServices(id);
 
 		if (data === 'Token no valido') throw new Error(data);
 
@@ -22,6 +24,12 @@ export const reloginAction = async (dispatch, navigate) => {
 		}
 
 		dispatch(setLogin(data));
+
+		// Guardar ID en LocalStorage (NUEVO)
+		// Verificamos si data.id o data._id existe antes de guardar
+		if (data._id) {
+			localStorage.setItem('userId', data._id);
+		}
 
 		alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);
 
