@@ -24,20 +24,18 @@ const authMiddle = async (req, res, next) => {
 		console.log('Error en AuthMiddle:', err.message);
 
 		// Si no tenemos ID del query param, intentamos sacarlo del token expirado
-		if (!idUsuarioParaCerrar) {
+		if (!id) {
 			const decodedUnverified = jwt.decode(req.cookies?.token);
 			if (decodedUnverified?.id) {
-				idUsuarioParaCerrar = decodedUnverified.id;
+				id = decodedUnverified.id;
 			}
 		}
 
 		// 3. Ejecutamos la actualización de estado si conseguimos un ID
-		if (idUsuarioParaCerrar) {
-			console.log(
-				`Cerrando sesión en DB para usuario ID: ${idUsuarioParaCerrar}`
-			);
+		if (id) {
+			console.log(`Cerrando sesión en DB para usuario ID: ${id}`);
 			try {
-				await putControllerUsuario({ userStatus: false }, idUsuarioParaCerrar);
+				await putControllerUsuario({ userStatus: false }, id);
 			} catch (dbError) {
 				console.log('Error al actualizar estado de usuario:', dbError.message);
 			}
