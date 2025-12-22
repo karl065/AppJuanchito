@@ -1,32 +1,9 @@
-import loginController from './../../../controllers/controllersUsuarios/auth/loginController.js';
+import loginController from '../../../controllers/controllersUsuarios/auth/loginController.js';
 
 const loginHandler = async (req, res) => {
 	try {
 		const respuesta = await loginController(req.body);
-		// Si aún no debe emitir token, retornar igual
-		if (!respuesta.loginApproved) {
-			return res.status(200).json(respuesta);
-		}
-
-		// TOKEN viene desde el controller
-		const token = respuesta.token;
-
-		// Setear cookie segura
-		const isCapacitor = req.headers.origin?.includes('capacitor://');
-
-		res.cookie('token', token, {
-			httpOnly: true,
-			secure: !isCapacitor, // Capacitor permite secure:false
-			sameSite: isCapacitor ? 'lax' : 'none',
-			maxAge: 7 * 24 * 60 * 60 * 1000,
-			path: '/',
-		});
-
-		// Devolver usuario sin token
-		return res.status(200).json({
-			loginApproved: true,
-			usuario: respuesta.usuario,
-		});
+		return res.status(200).json(respuesta);
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}

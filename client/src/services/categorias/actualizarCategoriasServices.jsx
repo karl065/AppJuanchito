@@ -5,10 +5,7 @@ const actualizarCategoriasServices = async (id, dataUpdate) => {
 	try {
 		const { data } = await axios.put(
 			`${server.api.baseURL}categorias/${id}`,
-			dataUpdate,
-			{
-				withCredentials: true,
-			}
+			dataUpdate
 		);
 		return data;
 	} catch (error) {

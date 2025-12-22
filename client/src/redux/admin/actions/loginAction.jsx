@@ -1,77 +1,56 @@
 import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import { loadingAction } from '../../app/actions/loadingAction.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
-import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx'; // función que veremos abajo
 import loginServices from '../../../services/auth/loginServices.jsx';
 import { emitEvent } from '../../../services/sockets/socketServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 import { actualizarUsuario } from '../slices/usuariosSlice.jsx';
 
-export const loginAction = async (
-	userLogin,
-	dispatch,
-	navigate,
-	setStep,
-	set2FAData
-) => {
+export const loginAction = async (userLogin, dispatch, navigate) => {
 	try {
 		loadingAction(true, dispatch);
 
-		// Obtener fingerprint del dispositivo
-		const fingerprint = await obtenerFingerprint();
+		// Enviamos solo los datos del usuario (correo/password)
+		const data = await loginServices(userLogin);
 
-		const data = await loginServices({
-			...userLogin,
-			fingerprint,
-		});
+		// 1. Verificación basada en la nueva respuesta del controlador
+		// El controlador devuelve { token: "...", usuario: {...} }
+		if (data.token && data.usuario) {
+			// --- PERSISTENCIA CON LOCALSTORAGE ---
+			// Guardamos el token devuelto directamente
+			localStorage.setItem('token', data.token);
 
-		data.fingerprint = fingerprint;
+			// 2. Lógica de Cajas (Mantenida)
+			if (data.usuario.caja) {
+				const cajaActual = data.usuario.caja.filter(
+					(caj) => caj.estado === 'abierta'
+				);
 
-		if (data.require2FASetup) {
-			// Paso 1: Usuario necesita configurar 2FA
-			set2FAData({
-				data,
-				qrCode: null,
-				secret: null,
-			});
-			setStep('setup2FA'); // Cambia la vista al componente de setup2FA
-		} else if (data.require2FA) {
-			// Paso 2: Usuario necesita ingresar código 2FA
-			set2FAData({ userId: data.userId, fingerprint: data.fingerprint });
-			setStep('login2FA'); // Cambia la vista al componente de login2FA
-		} else if (data.loginApproved) {
-			// Login completo
-
-			const cajaActual = data.usuario.caja.filter(
-				(caj) => caj.estado === 'abierta'
-			);
-
-			if (cajaActual.length !== 0) {
-				dispatch(cargarCajaActual(cajaActual[0]));
+				if (cajaActual.length !== 0) {
+					dispatch(cargarCajaActual(cajaActual[0]));
+				}
 			}
 
+			// 3. Actualizar estado de Redux
 			dispatch(setLogin(data.usuario));
 			dispatch(actualizarUsuario(data.usuario));
-			// Guardar ID en LocalStorage (NUEVO)
-			// Verificamos si data.id o data._id existe antes de guardar
-			if (data.usuario._id) {
-				localStorage.setItem('userId', data.usuario._id);
-			}
 
-			emitEvent('usuario:login', data);
-			data.usuario.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
+			// 4. Emitir evento de Socket (Solo una vez)
+			emitEvent('usuario:login', data.usuario);
+
+			// 5. Navegación y Alertas
 			alertSuccess(`Bienvenido ${data.usuario.nombre}`);
+			data.usuario.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
+		} else {
+			// Si no viene token o usuario, algo falló aunque no saltara excepción
+			throw new Error('Respuesta inválida del servidor');
 		}
-		// Guardar ID en LocalStorage (NUEVO)
-		// Verificamos si data.id o data._id existe antes de guardar
-		if (data.usuario._id) {
-			localStorage.setItem('userId', data.usuario._id);
-		}
-		emitEvent('usuario:login', data.usuario);
 
 		loadingAction(false, dispatch);
 	} catch (error) {
-		alertInfo(error.message);
+		// Manejo de errores mejorado
+		console.error('Error en loginAction:', error);
+		alertInfo(error.message || 'Ocurrió un error al iniciar sesión');
 		loadingAction(false, dispatch);
 	}
 };

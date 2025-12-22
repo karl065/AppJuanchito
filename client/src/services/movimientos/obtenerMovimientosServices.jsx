@@ -3,9 +3,7 @@ import server from '../../conexiones/conexiones.jsx';
 
 const obtenerMovimientosServices = async () => {
 	try {
-		const { data } = await axios.get(`${server.api.baseURL}movimientos`, {
-			withCredentials: true,
-		});
+		const { data } = await axios.get(`${server.api.baseURL}movimientos`);
 
 		return data;
 	} catch (error) {

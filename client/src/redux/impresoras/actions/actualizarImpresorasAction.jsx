@@ -3,7 +3,9 @@ import { actualizarImpresora } from '../slices/impresorasSlice.jsx';
 
 export const actualizarImpresorasAction = async (dispatch, id, dataUpdate) => {
 	try {
-		const data = await actualizarImpresorasServices(id, dataUpdate);
+		const token = localStorage.getItem('token');
+
+		const data = await actualizarImpresorasServices(id, dataUpdate, token);
 		dispatch(actualizarImpresora(data));
 	} catch (error) {
 		console.log(error);

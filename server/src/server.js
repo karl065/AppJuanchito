@@ -1,7 +1,7 @@
 import express from 'express';
 import http from 'http';
 import { Server as socketIO } from 'socket.io';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser'; // ❌ Eliminado: Ya no usamos cookies
 import router from './routes/index.js';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -14,7 +14,8 @@ const httpServer = http.createServer(server); // Crea un servidor HTTP
 // Esto permite que Express confíe en que el proxy (Render) ya manejó el HTTPS
 server.set('trust proxy', 1);
 
-server.use(cookieParser());
+// server.use(cookieParser()); // ❌ Eliminado
+
 // ⚠️ Configura aquí los dominios permitidos
 const allowedOrigins = [
 	'http://localhost:5173',
@@ -38,11 +39,15 @@ const io = new socketIO(httpServer, {
 	},
 }); // Crea una instancia de Socket.io
 
+// 🔥 CLAVE: Guardamos la instancia de IO en la app de Express
+// Esto permite acceder a ella en middlewares y controladores con req.app.get('io')
+server.set('io', io);
+
 server.use(morgan('dev'));
 server.use(express.json({ limit: '10mb' }));
 server.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// CORS seguro: permite cookies entre front y back
+// CORS seguro: permite cookies/headers entre front y back
 server.use(
 	cors({
 		origin: function (origin, callback) {

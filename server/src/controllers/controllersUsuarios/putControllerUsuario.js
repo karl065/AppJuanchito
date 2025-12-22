@@ -19,9 +19,7 @@ const putControllerUsuario = async (dataUpdate, id) => {
 		}
 
 		await Usuarios.findByIdAndUpdate(id, dataUpdate);
-		const usuarioActualizado = await Usuarios.findById(id)
-			.populate('dispositivos')
-			.populate('caja');
+		const usuarioActualizado = await Usuarios.findById(id).populate('caja');
 
 		const usuarioPlano = [usuarioActualizado.toObject()];
 

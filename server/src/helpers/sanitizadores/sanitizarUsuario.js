@@ -8,9 +8,6 @@ const sanitizarUsuario = (usuario) => {
 		celular: usuario.celular,
 		role: usuario.role,
 		userStatus: usuario.userStatus,
-		dispositivos: usuario.dispositivos
-			? usuario.dispositivos.map((d) => sanitizarDispositivo(d))
-			: [],
 		movimientos: usuario.movimientos,
 		facturas: usuario.facturas,
 		caja: usuario.caja,

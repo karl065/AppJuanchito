@@ -1,24 +1,27 @@
 import axios from 'axios';
 import server from '../../conexiones/conexiones.jsx';
 
-const reloginServices = async (id) => {
+const reloginServices = async (token) => {
 	try {
 		const config = {
-			withCredentials: true,
-			params: {},
+			headers: {
+				'x-auth-token': token, // Enviamos el token en los headers en lugar de cookies
+			},
 		};
 
-		if (id) {
-			config.params.id = id;
-		}
 		const { data } = await axios.get(
 			`${server.api.baseURL}auth/relogin`,
 			config
 		);
 
+		console.log(data);
+
 		return data;
 	} catch (error) {
-		throw new Error(error.response.data.msg);
+		// Manejo robusto del error
+		throw new Error(
+			error.response?.data?.msg || 'Error al intentar renovar la sesión'
+		);
 	}
 };
 

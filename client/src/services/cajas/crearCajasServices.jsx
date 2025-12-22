@@ -3,9 +3,7 @@ import server from '../../conexiones/conexiones.jsx';
 
 const crearCajasServices = async (nuevaCaja) => {
 	try {
-		const { data } = await axios.post(`${server.api.baseURL}cajas`, nuevaCaja, {
-			withCredentials: true,
-		});
+		const { data } = await axios.post(`${server.api.baseURL}cajas`, nuevaCaja);
 
 		return data;
 	} catch (error) {

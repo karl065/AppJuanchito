@@ -6,10 +6,7 @@ const crearMovimientosServices = async (nuevoMovimiento) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}movimientos`,
-			nuevoMovimiento,
-			{
-				withCredentials: true,
-			}
+			nuevoMovimiento
 		);
 		emitEvent('movimiento:crear', data[0]);
 		return data;

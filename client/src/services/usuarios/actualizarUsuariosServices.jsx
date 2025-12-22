@@ -5,10 +5,7 @@ const actualizarUsuariosServices = async (id, dataUpdate) => {
 	try {
 		const { data } = await axios.put(
 			`${server.api.baseURL}usuarios/${id}`,
-			dataUpdate,
-			{
-				withCredentials: true,
-			}
+			dataUpdate
 		);
 
 		return data;

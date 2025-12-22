@@ -20,14 +20,6 @@ const usuarioSchema = new mongoose.Schema(
 			default: false,
 			required: true,
 		},
-		twoFactorEnabled: { type: Boolean, default: false },
-		twoFactorSecret: { type: String, default: null },
-		dispositivos: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Dispositivos',
-			},
-		],
 		movimientos: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
@@ -49,9 +41,9 @@ const usuarioSchema = new mongoose.Schema(
 		impresoras: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref:"Impresoras"
-			}
-		]
+				ref: 'Impresoras',
+			},
+		],
 	},
 	{
 		timestamps: false,

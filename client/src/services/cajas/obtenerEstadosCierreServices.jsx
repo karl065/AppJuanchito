@@ -4,10 +4,7 @@ import server from '../../conexiones/conexiones.jsx';
 const obtenerEstadosCierreServices = async () => {
 	try {
 		const { data } = await axios.get(
-			`${server.api.baseURL}cajas?obtenerEstadoCierre=true`,
-			{
-				withCredentials: true,
-			}
+			`${server.api.baseURL}cajas?obtenerEstadoCierre=true`
 		);
 		return data;
 	} catch (error) {

@@ -1,51 +1,82 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import putControllerUsuario from '../../controllers/controllersUsuarios/putControllerUsuario.js';
+
 dotenv.config();
 const { SECRETA } = process.env;
 
 const authMiddle = async (req, res, next) => {
-	const { id } = req.query;
+	// 1. Obtener el token del Header
+	const token = req.header('x-auth-token');
+
+	console.log(token);
+
+	// Buscamos el ID en query params por si acaso
+	const { idUsuario } = req.query;
+
+	if (!token) {
+		return res.status(401).json({ msg: 'Permiso denegado, no hay token' });
+	}
+
 	try {
-		const token = req.cookies.token; // viene de cookie httpOnly
-
-		console.log('Token ', token);
-
-		if (!token) {
-			throw new Error('No hay token');
-		}
-
-		// 2. Verificamos el token (Plan A - Camino Feliz)
+		// 2. Verificar el token
 		const decoded = jwt.verify(token, SECRETA);
 
 		req.usuario = decoded;
+
 		next();
-	} catch (err) {
-		console.log('Error en AuthMiddle:', err.message);
+	} catch (error) {
+		console.log('Error en token:', error.message);
 
-		// Si no tenemos ID del query param, intentamos sacarlo del token expirado
-		if (!id) {
-			const decodedUnverified = jwt.decode(req.cookies?.token);
+		// --- Lógica de Respaldo para cerrar sesión (logout forzado en BD) ---
+		let idParaCerrar = idUsuario;
+
+		if (!idParaCerrar) {
+			const decodedUnverified = jwt.decode(token);
 			if (decodedUnverified?.id) {
-				id = decodedUnverified.id;
+				idParaCerrar = decodedUnverified.id;
 			}
 		}
 
-		// 3. Ejecutamos la actualización de estado si conseguimos un ID
-		if (id) {
-			console.log(`Cerrando sesión en DB para usuario ID: ${id}`);
+		if (idParaCerrar) {
 			try {
-				await putControllerUsuario({ userStatus: false }, id);
+				// 1. Actualizamos la BD
+				const usuarioDesconectado = await putControllerUsuario(
+					{ userStatus: false },
+					idParaCerrar
+				);
+
+				// 2. 🔥 SOCKET: Emitimos evento a todos los clientes
+				// req.app.get('io') funciona si en tu index.js hiciste: app.set('io', io)
+				const io = req.app.get('io');
+
+				if (io) {
+					// Normalizamos la respuesta por si putController devuelve array
+					const payloadUsuario = Array.isArray(usuarioDesconectado)
+						? usuarioDesconectado[0]
+						: usuarioDesconectado;
+
+					console.log(
+						`Emitiendo socket usuario:desconectado para ID: ${idParaCerrar}`
+					);
+
+					// Emitimos el evento globalmente
+					io.emit('usuario:desconectado', payloadUsuario);
+				} else {
+					console.log(
+						'No se encontró instancia de Socket.io en req.app.get("io")'
+					);
+				}
 			} catch (dbError) {
-				console.log('Error al actualizar estado de usuario:', dbError.message);
+				console.log(
+					'Error actualizando estado userStatus o emitiendo socket:',
+					dbError.message
+				);
 			}
 		}
+		// ---------------------------------------------------------------------
 
-		if (err.name === 'TokenExpiredError') {
-			return res.status(401).json({ msg: 'Token expirado' });
-		}
-
-		return res.status(401).json({ msg: 'Token no válido' });
+		return res.status(401).json({ msg: 'Token no válido o expirado' });
 	}
 };
 

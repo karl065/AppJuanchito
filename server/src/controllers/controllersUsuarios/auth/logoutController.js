@@ -8,10 +8,10 @@ const logoutController = async (dataUpdate, id) => {
 
 		const logoutSanitizado = sanitizarUsuario(logout);
 
-		if (!logout.userStatus) return logoutSanitizado;
+		return logoutSanitizado;
 	} catch (error) {
 		console.log(error);
-		return error;
+		throw new Error('Error al cerrar sesión en base de datos');
 	}
 };
 

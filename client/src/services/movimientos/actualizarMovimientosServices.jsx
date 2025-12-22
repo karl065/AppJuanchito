@@ -5,10 +5,7 @@ const actualizarMovimientosServices = async (id, dataUpdate) => {
 	try {
 		const { data } = await axios.put(
 			`${server.api.baseURL}movimientos/${id}`,
-			dataUpdate,
-			{
-				withCredentials: true,
-			}
+			dataUpdate
 		);
 
 		return data;

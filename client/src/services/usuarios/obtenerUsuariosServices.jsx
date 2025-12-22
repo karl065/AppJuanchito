@@ -3,9 +3,7 @@ import server from '../../conexiones/conexiones.jsx';
 
 const obtenerUsuariosServices = async () => {
 	try {
-		const { data } = await axios.get(`${server.api.baseURL}usuarios`, {
-			withCredentials: true,
-		});
+		const { data } = await axios.get(`${server.api.baseURL}usuarios`);
 
 		return data;
 	} catch (error) {

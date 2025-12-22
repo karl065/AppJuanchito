@@ -4,10 +4,7 @@ import server from '../../conexiones/conexiones.jsx';
 const eliminarMovimientosServices = async (id) => {
 	try {
 		const { data } = await axios.delete(
-			`${server.api.baseURL}movimientos${id}`,
-			{
-				withCredentials: true,
-			}
+			`${server.api.baseURL}movimientos${id}`
 		);
 
 		return data;

@@ -4,7 +4,9 @@ import { actualizarCaja } from '../slices/cajasSlices.jsx';
 
 export const actualizarCajasAction = async (dispatch, id, dataUpdate) => {
 	try {
-		const data = await actualizarCajasServices(id, dataUpdate);
+		const token = localStorage.getItem('token');
+
+		const data = await actualizarCajasServices(id, dataUpdate, token);
 		dispatch(actualizarCaja(data));
 		emitEvent('caja:verificacion', data);
 	} catch (error) {

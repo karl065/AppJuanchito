@@ -5,10 +5,7 @@ const cierreCajaServices = async (id, dataUpdate) => {
 	try {
 		const { data } = await axios.put(
 			`${server.api.baseURL}cajas/cerrar/${id}`,
-			dataUpdate,
-			{
-				withCredentials: true,
-			}
+			dataUpdate
 		);
 		return data;
 	} catch (error) {

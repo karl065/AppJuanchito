@@ -2,48 +2,78 @@ import { alertInfo, alertSuccess } from '../../../helpers/alertas.jsx';
 import reloginServices from '../../../services/auth/reloginServices.jsx';
 import { cargarCajaActual } from '../../cajas/slices/cajasSlices.jsx';
 import { setLogin } from '../slices/loginSlice.jsx';
+import { actualizarUsuario } from '../slices/usuariosSlice.jsx';
+import { emitEvent } from '../../../services/sockets/socketServices.jsx';
 
-// 👉 Se recibe dispatch y navigate
 export const reloginAction = async (dispatch, navigate) => {
+	// 1. Obtener el token almacenado
+	const token = localStorage.getItem('token');
+
+	console.log(token);
+
 	try {
-		const id = localStorage.getItem('userId');
+		// Validación inicial: Si no hay token, no podemos hacer relogin
+		if (!token) {
+			localStorage.removeItem('token');
+			if (navigate) navigate('/');
+			return false;
+		}
 
-		const data = await reloginServices(id);
+		// 2. Llamar al servicio enviando el token
+		const data = await reloginServices(token);
 
-		if (data === 'Token no valido') throw new Error(data);
+		// Verificamos si la respuesta trae al usuario (asumiendo estructura { usuario, token? })
+		if (data) {
+			// --- A. Lógica de Cajas ---
+			if (data.caja && data.caja.length > 0) {
+				const cajaActual = data.caja.filter((caj) => caj.estado === 'abierta');
 
-		if (data.caja.length > 0) {
-			const verificarCajaAbierta = data.caja.filter(
-				(caj) => caj.estado === 'abierta'
-			);
-			if (verificarCajaAbierta.length > 0) {
-				dispatch(cargarCajaActual(verificarCajaAbierta[0]));
-			} else {
-				dispatch(cargarCajaActual(null));
+				if (cajaActual.length > 0) {
+					dispatch(cargarCajaActual(cajaActual[0]));
+				} else {
+					dispatch(cargarCajaActual(null));
+				}
 			}
+
+			// --- B. Actualizar Redux ---
+			dispatch(setLogin(data));
+			dispatch(actualizarUsuario(data));
+
+			// --- D. Reconexión de Sockets ---
+			// Importante para volver a unir al usuario a sus salas/eventos
+			emitEvent('usuario:login', data);
+			if (
+				window.location.pathname === '/' ||
+				window.location.pathname === '/login'
+			) {
+				data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
+				alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);
+			}
+
+			return true;
+		} else {
+			throw new Error('Respuesta de sesión inválida');
 		}
-
-		dispatch(setLogin(data));
-
-		// Guardar ID en LocalStorage (NUEVO)
-		// Verificamos si data.id o data._id existe antes de guardar
-		if (data._id) {
-			localStorage.setItem('userId', data._id);
-		}
-
-		alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);
-
-		data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
-
-		return true;
 	} catch (error) {
-		if (
-			error.message === 'Token no válido' ||
-			error.message === 'Token expirado'
-		)
-			alertInfo('Sesion expirada, por favor inicie sesion nuevamente');
+		console.error('Error en relogin:', error);
 
-		// ⚠️ Si falla → redirecciona al login
+		// Si el token expiró o es inválido:
+		// 1. Limpiamos el almacenamiento local
+		localStorage.removeItem('token');
+		localStorage.removeItem('usuario');
+		localStorage.removeItem('userId');
+
+		// 2. Notificamos al usuario solo si es un error de sesión (no de red)
+		const msg = error.message || '';
+		if (
+			msg.includes('token') ||
+			msg.includes('sesión') ||
+			msg.includes('expirado')
+		) {
+			alertInfo('Tu sesión ha expirado, por favor inicia sesión nuevamente.');
+		}
+
+		// 3. Redirigimos al login
 		if (navigate) navigate('/');
 
 		return false;

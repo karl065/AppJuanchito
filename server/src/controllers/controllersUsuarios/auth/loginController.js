@@ -1,25 +1,23 @@
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Usuarios from '../../../models/Usuarios.js';
-import Dispositivos from '../../../models/DispositivosConfiables.js';
-
 import dotenv from 'dotenv';
-import sanitizarUsuario from '../../../helpers/sanitizadores/sanitizarUsuario.js';
 import putControllerUsuario from './../putControllerUsuario.js';
 dotenv.config();
 
 const { SECRETA } = process.env;
 
-const loginController = async ({ correo, password, fingerprint }) => {
+// Eliminamos 'fingerprint' de los argumentos
+const loginController = async ({ correo, password }) => {
 	try {
 		const usuario = await Usuarios.findOne({ correo })
-			.populate('dispositivos')
+			// Se eliminó .populate('dispositivos')
 			.populate('movimientos')
 			.populate('facturas')
 			.populate({
-				path: 'caja', // 1. Entramos a 'caja'
+				path: 'caja',
 				populate: {
-					path: 'facturas', // 2. Dentro de 'caja', poblamos 'facturas'
+					path: 'facturas',
 				},
 			});
 
@@ -31,50 +29,29 @@ const loginController = async ({ correo, password, fingerprint }) => {
 		const passOk = await bcryptjs.compare(password, usuario.password);
 		if (!passOk) throw new Error('Correo o contraseña incorrectos');
 
-		// 1️⃣ Si el usuario NO tiene 2FA → forzar configuración
-		if (!usuario.twoFactorEnabled) {
-			return {
-				require2FASetup: true,
-				userId: usuario._id,
-			};
-		}
+		// --- INICIO LOGIN DIRECTO ---
 
-		// 2️⃣ Revisar si este dispositivo ya es confiable
-		const confiable = await Dispositivos.findOne({
-			userId: usuario._id,
-			fingerprint,
-		});
+		// 1. Generar token de sesión (JWT)
+		const tokenSesion = jwt.sign(
+			{
+				id: usuario._id,
+				role: usuario.role,
+				correo: usuario.correo,
+			},
+			SECRETA,
+			{ expiresIn: '7d' }
+		);
 
-		const vigente = confiable && new Date(confiable.expiresAt) > new Date();
-		if (vigente) {
-			// 🔥 Dispositivo confiable → generar token de sesión
-			const tokenSesion = jwt.sign(
-				{
-					id: usuario._id,
-					role: usuario.role,
-					correo: usuario.correo,
-				},
-				SECRETA,
-				{ expiresIn: '7d' }
-			);
+		// 2. Actualizar estado del usuario a conectado
+		const usuarioActivo = await putControllerUsuario(
+			{ userStatus: true },
+			usuario._id
+		);
 
-			const usuarioActivo = await putControllerUsuario(
-				{ userStatus: true },
-				usuario._id
-			);
-			return {
-				loginApproved: true,
-				require2FA: false,
-				token: tokenSesion,
-				usuario: usuarioActivo[0],
-			};
-		}
-
-		// 3️⃣ Requiere código 2FA
+		// 3. Retornar datos (Token + Usuario)
 		return {
-			require2FA: true,
-			userId: usuario._id,
-			fingerprint,
+			token: tokenSesion,
+			usuario: Array.isArray(usuarioActivo) ? usuarioActivo[0] : usuarioActivo,
 		};
 	} catch (error) {
 		throw new Error(error.message);

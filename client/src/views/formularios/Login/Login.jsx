@@ -1,16 +1,20 @@
 import { useFormik } from 'formik';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { CirclesWithBar, FallingLines } from 'react-loader-spinner';
 import { loginAction } from '../../../redux/admin/actions/loginAction.jsx';
-import { obtenerFingerprint } from '../../../helpers/obtenerFingerPrint.jsx';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useState } from 'react';
 import { Dropdown, DropdownItem } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom';
 
-const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
+const LoginForm = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const loading = useSelector((state) => state.loading.isLoading);
 	const usuarios = useSelector((state) => state.usuarios.usuarios);
+
 	const [verContrasena, setVerContrasena] = useState(false);
 
 	// 📌 Estado para el nombre visible en el botón del Dropdown
@@ -35,16 +39,7 @@ const LoginForm = ({ dispatch, setStep, set2FAData, navigate }) => {
 		},
 		validationSchema,
 		onSubmit: async (values) => {
-			const fingerprint = await obtenerFingerprint(); // fingerprint único del dispositivo
-
-
-			loginAction(
-				{ ...values, fingerprint },
-				dispatch,
-				navigate,
-				setStep,
-				set2FAData
-			);
+			loginAction({ ...values }, dispatch, navigate);
 		},
 	});
 

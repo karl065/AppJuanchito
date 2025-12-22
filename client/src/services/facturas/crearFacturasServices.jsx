@@ -5,10 +5,7 @@ const crearFacturasServices = async (nuevaFactura) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}facturas`,
-			nuevaFactura,
-			{
-				withCredentials: true,
-			}
+			nuevaFactura
 		);
 
 		return data;

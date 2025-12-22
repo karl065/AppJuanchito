@@ -4,7 +4,6 @@ import server from '../../conexiones/conexiones.jsx';
 const obtenerCajasServices = async (query = {}) => {
 	try {
 		const { data } = await axios.get(`${server.api.baseURL}cajas`, {
-			withCredentials: true,
 			params: query,
 		});
 

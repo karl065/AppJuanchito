@@ -3,9 +3,7 @@ import server from '../../conexiones/conexiones.jsx';
 
 const eliminarUsuariosServices = async (id) => {
 	try {
-		const { data } = await axios.delete(`${server.api.baseURL}usuarios/${id}`, {
-			withCredentials: true,
-		});
+		const { data } = await axios.delete(`${server.api.baseURL}usuarios/${id}`);
 
 		return data;
 	} catch (error) {

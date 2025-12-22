@@ -5,10 +5,7 @@ const crearCategoriasServices = async (nuevaCategoria) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}categorias`,
-			nuevaCategoria,
-			{
-				withCredentials: true,
-			}
+			nuevaCategoria
 		);
 		return data;
 	} catch (error) {

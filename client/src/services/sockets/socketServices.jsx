@@ -15,9 +15,7 @@ export const getAppDispatch = () => appDispatch;
 
 export const connectSocket = () => {
 	// Inicializa la conexión
-	socket = io(SOCKET_URL, {
-		withCredentials: true, // Importante para enviar cookies/tokens si tu back lo requiere
-	});
+	socket = io(SOCKET_URL);
 
 	socket.on('connect', () => {
 		console.log('✅ Conectado al servidor Socket.io:', socket.id);

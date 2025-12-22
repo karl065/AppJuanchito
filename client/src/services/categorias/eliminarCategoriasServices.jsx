@@ -4,10 +4,7 @@ import server from '../../conexiones/conexiones.jsx';
 const eliminarCategoriasServices = async (id) => {
 	try {
 		const { data } = await axios.delete(
-			`${server.api.baseURL}categorias/${id}`,
-			{
-				withCredentials: true,
-			}
+			`${server.api.baseURL}categorias/${id}`
 		);
 		return data;
 	} catch (error) {

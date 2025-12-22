@@ -5,10 +5,7 @@ const crearUsuariosServices = async (nuevoUsuario) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}usuarios`,
-			nuevoUsuario,
-			{
-				withCredentials: true,
-			}
+			nuevoUsuario
 		);
 
 		return data;

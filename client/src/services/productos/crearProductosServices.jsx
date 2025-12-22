@@ -5,10 +5,7 @@ const crearProductosServices = async (productoNuevo) => {
 	try {
 		const { data } = await axios.post(
 			`${server.api.baseURL}productos`,
-			productoNuevo,
-			{
-				withCredentials: true,
-			}
+			productoNuevo
 		);
 		return data;
 	} catch (error) {
