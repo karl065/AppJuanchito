@@ -46,15 +46,12 @@ export const loginAction = async (
 				(caj) => caj.estado === 'abierta'
 			);
 
-			console.log('caja abierta', cajaActual);
-
 			if (cajaActual.length !== 0) {
 				dispatch(cargarCajaActual(cajaActual[0]));
 			}
 
 			dispatch(setLogin(data.usuario));
 			dispatch(actualizarUsuario(data.usuario));
-			console.log('dentro del if', data);
 			// Guardar ID en LocalStorage (NUEVO)
 			// Verificamos si data.id o data._id existe antes de guardar
 			if (data.usuario._id) {
@@ -67,7 +64,6 @@ export const loginAction = async (
 		}
 		// Guardar ID en LocalStorage (NUEVO)
 		// Verificamos si data.id o data._id existe antes de guardar
-		console.log('fuera del if', data);
 		if (data.usuario._id) {
 			localStorage.setItem('userId', data.usuario._id);
 		}
