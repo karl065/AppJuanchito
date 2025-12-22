@@ -10,6 +10,7 @@ export const logoutAction = async (id, userStatus, dispatch, navigate) => {
 
 		if (data) {
 			dispatch(setLogin({}));
+			localStorage.removeItem('userId');
 			navigate('/');
 		}
 	} catch (error) {
