@@ -5,9 +5,9 @@ dotenv.config();
 const { SECRETA } = process.env;
 
 const authMiddle = async (req, res, next) => {
+	const { id } = req.query;
 	try {
 		const token = req.cookies.token; // viene de cookie httpOnly
-		const { id } = req.query;
 
 		console.log('Token ', token);
 
