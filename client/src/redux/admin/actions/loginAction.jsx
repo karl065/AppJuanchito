@@ -56,8 +56,8 @@ export const loginAction = async (
 			dispatch(actualizarUsuario(data.usuario));
 			// Guardar ID en LocalStorage (NUEVO)
 			// Verificamos si data.id o data._id existe antes de guardar
-			if (data._id) {
-				localStorage.setItem('userId', data._id);
+			if (data.usuario._id) {
+				localStorage.setItem('userId', data.usuario._id);
 			}
 
 			emitEvent('usuario:login', data);
@@ -66,8 +66,8 @@ export const loginAction = async (
 		}
 		// Guardar ID en LocalStorage (NUEVO)
 		// Verificamos si data.id o data._id existe antes de guardar
-		if (data._id) {
-			localStorage.setItem('userId', data._id);
+		if (data.usuario._id) {
+			localStorage.setItem('userId', data.usuario._id);
 		}
 		emitEvent('usuario:login', data.usuario);
 
