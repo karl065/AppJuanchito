@@ -12,7 +12,7 @@ export const crearFacturaAction = async (dispatch, factura) => {
 
 		const cajaActual = await obtenerCajasServices({ _id: data[0].caja._id });
 
-		dispatch(cargarCajaActual(cajaActual));
+		dispatch(cargarCajaActual(cajaActual[0]));
 
 		emitEvent('factura:creada', data);
 
