@@ -19,9 +19,6 @@ const actualizarCajaEnVenta = async (factura) => {
 		caja.totalVentas += factura.precioVenta || 0;
 
 		await caja.save();
-
-		console.log(caja);
-
 		return caja;
 	} catch (error) {
 		throw error;
