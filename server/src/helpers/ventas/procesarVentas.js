@@ -35,8 +35,6 @@ const procesarVenta = async (dataFactura) => {
 
 		const facturaFull = await getControllerFacturas({ _id: facturaNueva._id });
 
-		console.log(facturaFull);
-
 		// 4. Retornar factura ya procesada
 		return facturaFull;
 	} catch (error) {
