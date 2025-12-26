@@ -20,6 +20,8 @@ const actualizarCajaEnVenta = async (factura) => {
 
 		await caja.save();
 
+		console.log(caja);
+
 		return caja;
 	} catch (error) {
 		throw error;
