@@ -42,13 +42,9 @@ export const reloginAction = async (dispatch, navigate) => {
 			// --- D. Reconexión de Sockets ---
 			// Importante para volver a unir al usuario a sus salas/eventos
 			emitEvent('usuario:login', data);
-			if (
-				window.location.pathname === '/' ||
-				window.location.pathname === '/login'
-			) {
-				data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
-				alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);
-			}
+
+			data.role === 'Mesero' ? navigate('/caja') : navigate('/admin');
+			alertSuccess(`Bienvenido de nuevo: ${data.nombre}`);
 
 			return true;
 		} else {
