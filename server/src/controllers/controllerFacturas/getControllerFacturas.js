@@ -29,11 +29,13 @@ const getControllerFacturas = async (query) => {
 			})
 			.populate({
 				path: 'caja', // 1. Poblamos 'caja'
-				populate: {
-					// 2. Dentro de 'caja', poblamos...
-					path: 'usuario', // ... el campo 'usuario'
-					select: '-password', // 3. Excluyendo el password
-				},
+				populate: [
+					{
+						// 2. Dentro de 'caja', poblamos...
+						path: 'usuario', // ... el campo 'usuario'
+						select: '-password', // 3. Excluyendo el password
+					},
+				],
 				populate: {
 					path: 'facturas',
 				},
