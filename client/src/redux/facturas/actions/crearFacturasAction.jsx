@@ -14,6 +14,8 @@ export const crearFacturaAction = async (dispatch, factura) => {
 
 		dispatch(cargarCajaActual(cajaActual[0]));
 
+		console.log('Factura antes del emit: ', data);
+
 		emitEvent('factura:creada', data);
 
 		return data;

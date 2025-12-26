@@ -14,6 +14,8 @@ const Cajas = () => {
 	const [busqueda, setBusqueda] = useState('');
 	const tableContainerRef = useRef(null);
 
+	console.log(cajas);
+
 	// 🚨 ESTADO PARA MOSTRAR EL DETALLE
 	const [cajaSeleccionada, setCajaSeleccionada] = useState(null);
 

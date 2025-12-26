@@ -20,6 +20,8 @@ const facturasSocketsListeners = (socket) => {
 			dispatch(agregarMovimiento(mov));
 		}
 
+		console.log('factura Socket: ', factura);
+
 		dispatch(actualizarCaja(factura[0].caja));
 
 		dispatch(agregarFactura(factura));

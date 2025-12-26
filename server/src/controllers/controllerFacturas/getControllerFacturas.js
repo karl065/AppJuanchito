@@ -39,8 +39,6 @@ const getControllerFacturas = async (query) => {
 				},
 			});
 
-		console.log(facturas);
-
 		return facturas;
 	} catch (error) {
 		return error;
