@@ -13,7 +13,7 @@ const getControllerFacturas = async (query) => {
 		const facturas = await Factura.find(
 			Object.keys(filtro).length > 0 ? filtro : {}
 		)
-			.populate('usuario', '_id nombre role')
+			.populate({ path: 'usuario', select: '-password' })
 			.populate({
 				path: 'productos.producto',
 				populate: {
