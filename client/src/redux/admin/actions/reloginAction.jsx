@@ -9,8 +9,6 @@ export const reloginAction = async (dispatch, navigate) => {
 	// 1. Obtener el token almacenado
 	const token = localStorage.getItem('token');
 
-	console.log(token);
-
 	try {
 		// Validación inicial: Si no hay token, no podemos hacer relogin
 		if (!token) {

@@ -14,8 +14,6 @@ const reloginServices = async (token) => {
 			config
 		);
 
-		console.log(data);
-
 		return data;
 	} catch (error) {
 		// Manejo robusto del error

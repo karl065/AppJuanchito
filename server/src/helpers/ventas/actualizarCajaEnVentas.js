@@ -2,7 +2,14 @@ import Caja from '../../models/Caja.js';
 
 const actualizarCajaEnVenta = async (factura) => {
 	try {
-		const caja = await Caja.findById(factura.caja);
+		const caja = await Caja.findById(factura.caja)
+			.populate({
+				path: 'usuario',
+				select: '-password',
+			})
+			.populate({
+				path: 'facturas',
+			});
 		if (!caja) throw new Error('Caja no encontrada');
 
 		caja.totalEfectivo +=

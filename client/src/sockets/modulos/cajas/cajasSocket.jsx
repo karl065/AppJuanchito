@@ -24,6 +24,7 @@ const cajaListeners = (socket) => {
 
 	// Escucha cuando un supervisor valida un cierre
 	socket.on('caja:verificacionActualizada', (data) => {
+		console.log('En socket0:', data);
 		dispatch(actualizarCaja(data));
 	});
 };
